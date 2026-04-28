@@ -1,0 +1,37 @@
+{
+  "name": "sistemaxpro",
+  "version": "1.0.0",
+  "description": "## Estructura del Proyecto",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:css": "npx tailwindcss -i ./src/styles/tailwind.css -o ./public/assets/tailwind.css --minify",
+    "build:icons": "node scripts/generate-heroicons-map.js && node scripts/generate-tabler-icons-map.js && node scripts/generate-hugeicons-map.js && node scripts/generate-material-symbols-map.js && node scripts/generate-unicons-map.js",
+    "build:heroicons": "node scripts/generate-heroicons-map.js",
+    "build:tabler": "node scripts/generate-tabler-icons-map.js",
+    "build:huge": "node scripts/generate-hugeicons-map.js",
+    "build:material": "node scripts/generate-material-symbols-map.js",
+    "build:unicons": "node scripts/generate-unicons-map.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@iconify-json/hugeicons": "^1.2.26",
+    "@iconify-json/material-symbols": "^1.2.69",
+    "@iconscout/unicons": "^4.2.0",
+    "ag-grid-community": "^32.3.3",
+    "ag-grid-enterprise": "^32.3.3",
+    "autoprefixer": "^10.4.24",
+    "postcss": "^8.5.6",
+    "tabler-icons": "^1.35.0",
+    "tailwindcss": "^4.1.18",
+    "web-push": "^3.6.7"
+  },
+  "devDependencies": {
+    "heroicons": "^2.2.0"
+  }
+}

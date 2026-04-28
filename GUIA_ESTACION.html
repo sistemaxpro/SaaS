@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía - Módulo Estación de Servicio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-50">
+    <div class="min-h-screen py-8">
+        <div class="max-w-6xl mx-auto px-4">
+            <!-- Header -->
+            <div class="text-center mb-12">
+                <h1 class="text-5xl font-bold text-indigo-900 mb-2 flex items-center justify-center gap-3">
+                    <i class="fas fa-gas-pump text-orange-500"></i>
+                    Módulo Estación de Servicio
+                </h1>
+                <p class="text-xl text-gray-600">Sistema completo de gestión operativa</p>
+                <div class="mt-4 inline-block bg-green-100 text-green-800 px-4 py-2 rounded-full">
+                    <i class="fas fa-check-circle"></i> Sistema Listo para Prueba
+                </div>
+            </div>
+
+            <!-- Status Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-12">
+                <div class="bg-white rounded-lg shadow-lg p-6 border-l-4 border-green-500">
+                    <div class="text-3xl font-bold text-green-600 mb-2">6</div>
+                    <div class="text-gray-600">Módulos Implementados</div>
+                </div>
+                <div class="bg-white rounded-lg shadow-lg p-6 border-l-4 border-blue-500">
+                    <div class="text-3xl font-bold text-blue-600 mb-2">12</div>
+                    <div class="text-gray-600">Tablas de Base de Datos</div>
+                </div>
+                <div class="bg-white rounded-lg shadow-lg p-6 border-l-4 border-purple-500">
+                    <div class="text-3xl font-bold text-purple-600 mb-2">3</div>
+                    <div class="text-gray-600">Surtidores Configurados</div>
+                </div>
+                <div class="bg-white rounded-lg shadow-lg p-6 border-l-4 border-orange-500">
+                    <div class="text-3xl font-bold text-orange-600 mb-2">2</div>
+                    <div class="text-gray-600">Tanques Configurados</div>
+                </div>
+            </div>
+
+            <!-- Modules Grid -->
+            <div class="mb-12">
+                <h2 class="text-3xl font-bold text-indigo-900 mb-6 flex items-center gap-2">
+                    <i class="fas fa-th-large text-indigo-500"></i> Módulos Disponibles
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Module 1: Dashboard -->
+                    <a href="public/estacion/" target="_blank" class="group">
+                        <div class="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all p-6 border-l-4 border-blue-500 h-full">
+                            <div class="flex items-start justify-between mb-4">
+                                <div>
+                                    <h3 class="text-2xl font-bold text-gray-800 group-hover:text-blue-600 transition">
+                                        <i class="fas fa-chart-line text-blue-500 mr-2"></i>Dashboard
+                                    </h3>
+                                    <p class="text-gray-600 text-sm mt-1">Estación</p>
+                                </div>
+                                <i class="fas fa-arrow-right text-gray-400 group-hover:text-blue-600 transition text-xl"></i>
+                            </div>
+                            <p class="text-gray-700">Panel de control con KPIs en tiempo real: turnos activos, despachos del día, ingresos, estado de surtidores y tanques.</p>
+                            <div class="mt-4 text-sm text-blue-600 font-semibold">Acceso: Supervisor</div>
+                        </div>
+                    </a>
+
+                    <!-- Module 2: Surtidores -->
+                    <a href="public/estacion-surtidores/" target="_blank" class="group">
+                        <div class="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all p-6 border-l-4 border-green-500 h-full">
+                            <div class="flex items-start justify-between mb-4">
+                                <div>
+                                    <h3 class="text-2xl font-bold text-gray-800 group-hover:text-green-600 transition">
+                                        <i class="fas fa-oil-can text-green-500 mr-2"></i>Surtidores
+                                    </h3>
+                                    <p class="text-gray-600 text-sm mt-1">Gestión de Surtidores</p>
+                                </div>
+                                <i class="fas fa-arrow-right text-gray-400 group-hover:text-green-600 transition text-xl"></i>
+                            </div>
+                            <p class="text-gray-700">CRUD completo: crear/editar surtidores, asignar picos, configurar surtidores automáticos, test de conexión TCP.</p>
+                            <div class="mt-4 text-sm text-green-600 font-semibold">Acceso: Supervisor</div>
+                        </div>
+                    </a>
+
+                    <!-- Module 3: Tanques -->
+                    <a href="public/estacion-tanques/" target="_blank" class="group">
+                        <div class="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all p-6 border-l-4 border-purple-500 h-full">
+                            <div class="flex items-start justify-between mb-4">
+                                <div>
+                                    <h3 class="text-2xl font-bold text-gray-800 group-hover:text-purple-600 transition">
+                                        <i class="fas fa-water text-purple-500 mr-2"></i>Tanques
+                                    </h3>
+                                    <p class="text-gray-600 text-sm mt-1">Control de Tanques</p>
+                                </div>
+                                <i class="fas fa-arrow-right text-gray-400 group-hover:text-purple-600 transition text-xl"></i>
+                            </div>
+                            <p class="text-gray-700">Gestión de tanques de almacenamiento: CRUD, asignación de combustible, lecturas manuales, historial, soporte para sensores ATG.</p>
+                            <div class="mt-4 text-sm text-purple-600 font-semibold">Acceso: Supervisor</div>
+                        </div>
+                    </a>
+
+                    <!-- Module 4: Turnos -->
+                    <a href="public/estacion-turnos/" target="_blank" class="group">
+                        <div class="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all p-6 border-l-4 border-yellow-500 h-full">
+                            <div class="flex items-start justify-between mb-4">
+                                <div>
+                                    <h3 class="text-2xl font-bold text-gray-800 group-hover:text-yellow-600 transition">
+                                        <i class="fas fa-clock text-yellow-500 mr-2"></i>Turnos
+                                    </h3>
+                                    <p class="text-gray-600 text-sm mt-1">Turnos de Playero</p>
+                                </div>
+                                <i class="fas fa-arrow-right text-gray-400 group-hover:text-yellow-600 transition text-xl"></i>
+                            </div>
+                            <p class="text-gray-700">Apertura/cierre de turnos: registra totalizadores, efectivo, asigna picos, cierra turno con reconciliación de caja.</p>
+                            <div class="mt-4 text-sm text-yellow-600 font-semibold">Acceso: Playero</div>
+                        </div>
+                    </a>
+
+                    <!-- Module 5: Despachos -->
+                    <a href="public/estacion-despachos/" target="_blank" class="group">
+                        <div class="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all p-6 border-l-4 border-red-500 h-full">
+                            <div class="flex items-start justify-between mb-4">
+                                <div>
+                                    <h3 class="text-2xl font-bold text-gray-800 group-hover:text-red-600 transition">
+                                        <i class="fas fa-file-invoice-dollar text-red-500 mr-2"></i>Despachos
+                                    </h3>
+                                    <p class="text-gray-600 text-sm mt-1">Registro de Despachos</p>
+                                </div>
+                                <i class="fas fa-arrow-right text-gray-400 group-hover:text-red-600 transition text-xl"></i>
+                            </div>
+                            <p class="text-gray-700">Registro manual de despachos: cálculo automático litros↔monto, selección de pico, combustible, cliente, facturación.</p>
+                            <div class="mt-4 text-sm text-red-600 font-semibold">Acceso: Playero</div>
+                        </div>
+                    </a>
+
+                    <!-- Module 6: Cierres -->
+                    <a href="public/estacion-cierres/" target="_blank" class="group">
+                        <div class="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all p-6 border-l-4 border-indigo-500 h-full">
+                            <div class="flex items-start justify-between mb-4">
+                                <div>
+                                    <h3 class="text-2xl font-bold text-gray-800 group-hover:text-indigo-600 transition">
+                                        <i class="fas fa-lock text-indigo-500 mr-2"></i>Cierres
+                                    </h3>
+                                    <p class="text-gray-600 text-sm mt-1">Cierre de Playa</p>
+                                </div>
+                                <i class="fas fa-arrow-right text-gray-400 group-hover:text-indigo-600 transition text-xl"></i>
+                            </div>
+                            <p class="text-gray-700">Consolidación diaria: resumen de todos los turnos, despachos por combustible, control cruzado, cierre supervisor.</p>
+                            <div class="mt-4 text-sm text-indigo-600 font-semibold">Acceso: Supervisor</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Configuration Section -->
+            <div class="mb-12">
+                <h2 class="text-3xl font-bold text-indigo-900 mb-6 flex items-center gap-2">
+                    <i class="fas fa-cogs text-indigo-500"></i> Configuración Actual
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Surtidores -->
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                            <i class="fas fa-oil-can text-green-500"></i> Surtidores
+                        </h3>
+                        <ul class="space-y-2">
+                            <li class="flex items-center gap-2"><i class="fas fa-check text-green-500"></i> <span>Surtidor 1 (Manual)</span></li>
+                            <li class="flex items-center gap-2"><i class="fas fa-check text-green-500"></i> <span>Surtidor 2 (Manual)</span></li>
+                            <li class="flex items-center gap-2"><i class="fas fa-check text-green-500"></i> <span>Surtidor 3 (Manual)</span></li>
+                        </ul>
+                        <div class="mt-4 p-3 bg-blue-50 rounded text-sm text-blue-700">
+                            <strong>Total: 3 surtidores</strong> <br>
+                            6 picos (2 por surtidor)
+                        </div>
+                    </div>
+
+                    <!-- Tanques -->
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                            <i class="fas fa-water text-blue-500"></i> Tanques
+                        </h3>
+                        <ul class="space-y-2">
+                            <li class="flex items-center gap-2">
+                                <i class="fas fa-circle text-blue-400" style="font-size: 0.5rem;"></i>
+                                <span><strong>Nafta</strong> (5000L)</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i class="fas fa-circle text-amber-400" style="font-size: 0.5rem;"></i>
+                                <span><strong>Diésel</strong> (3000L)</span>
+                            </li>
+                        </ul>
+                        <div class="mt-4 p-3 bg-blue-50 rounded text-sm text-blue-700">
+                            <strong>Total: 2 tanques</strong> <br>
+                            Estado: Activos
+                        </div>
+                    </div>
+
+                    <!-- Combustibles -->
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                            <i class="fas fa-droplet text-orange-500"></i> Combustibles
+                        </h3>
+                        <ul class="space-y-2 text-sm">
+                            <li>✓ Nafta Común</li>
+                            <li>✓ Nafta Super</li>
+                            <li>✓ Nafta Premium</li>
+                            <li>✓ Diésel/Gas Oil</li>
+                            <li>✓ GNV (Gas Natural)</li>
+                            <li>✓ GLP (Gas Licuado)</li>
+                        </ul>
+                        <div class="mt-4 p-3 bg-blue-50 rounded text-sm text-blue-700">
+                            <strong>Total: 6 combustibles</strong> <br>
+                            Precargados en sistema
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Test Scripts -->
+            <div class="mb-12">
+                <h2 class="text-3xl font-bold text-indigo-900 mb-6 flex items-center gap-2">
+                    <i class="fas fa-flask text-indigo-500"></i> Scripts de Verificación
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <a href="public/api/v1/test_estacion_integral.php" target="_blank" class="group">
+                        <div class="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all p-6 border-l-4 border-green-500 h-full cursor-pointer">
+                            <h3 class="text-xl font-bold text-gray-800 group-hover:text-green-600 transition mb-2">
+                                <i class="fas fa-check-double text-green-500 mr-2"></i>Test Integral
+                            </h3>
+                            <p class="text-gray-700 text-sm mb-4">Verifica: apps SaaS, tablas BD, combustibles, plantillas, configuración.</p>
+                            <div class="text-sm text-green-600 font-semibold">Ver JSON de verificación →</div>
+                        </div>
+                    </a>
+
+                    <a href="public/api/v1/test_catalogo.php" target="_blank" class="group">
+                        <div class="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all p-6 border-l-4 border-blue-500 h-full cursor-pointer">
+                            <h3 class="text-xl font-bold text-gray-800 group-hover:text-blue-600 transition mb-2">
+                                <i class="fas fa-book text-blue-500 mr-2"></i>Test Catálogo
+                            </h3>
+                            <p class="text-gray-700 text-sm mb-4">Verifica: 6 apps de Estación registrados en catálogo SaaS.</p>
+                            <div class="text-sm text-blue-600 font-semibold">Ver JSON del catálogo →</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Workflow Section -->
+            <div class="mb-12">
+                <h2 class="text-3xl font-bold text-indigo-900 mb-6 flex items-center gap-2">
+                    <i class="fas fa-stream text-indigo-500"></i> Flujo de Operación
+                </h2>
+                <div class="bg-white rounded-xl shadow-lg p-8">
+                    <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+                        <!-- Step 1 -->
+                        <div class="flex flex-col items-center">
+                            <div class="w-16 h-16 rounded-full bg-blue-500 flex items-center justify-center text-white text-2xl font-bold mb-4">1</div>
+                            <h4 class="font-bold text-gray-800 text-center mb-2">Configuración</h4>
+                            <p class="text-sm text-gray-600 text-center">Surtidores, tanques y picos</p>
+                        </div>
+                        <div class="flex items-center justify-center mb-8 md:mb-0">
+                            <i class="fas fa-arrow-right text-gray-400 text-2xl"></i>
+                        </div>
+                        <!-- Step 2 -->
+                        <div class="flex flex-col items-center">
+                            <div class="w-16 h-16 rounded-full bg-yellow-500 flex items-center justify-center text-white text-2xl font-bold mb-4">2</div>
+                            <h4 class="font-bold text-gray-800 text-center mb-2">Apertura</h4>
+                            <p class="text-sm text-gray-600 text-center">Playero abre turno</p>
+                        </div>
+                        <div class="flex items-center justify-center mb-8 md:mb-0">
+                            <i class="fas fa-arrow-right text-gray-400 text-2xl"></i>
+                        </div>
+                        <!-- Step 3 -->
+                        <div class="flex flex-col items-center">
+                            <div class="w-16 h-16 rounded-full bg-green-500 flex items-center justify-center text-white text-2xl font-bold mb-4">3</div>
+                            <h4 class="font-bold text-gray-800 text-center mb-2">Despachos</h4>
+                            <p class="text-sm text-gray-600 text-center">Registra ventas</p>
+                        </div>
+                        <div class="flex items-center justify-center mb-8 md:mb-0">
+                            <i class="fas fa-arrow-right text-gray-400 text-2xl"></i>
+                        </div>
+                        <!-- Step 4 -->
+                        <div class="flex flex-col items-center">
+                            <div class="w-16 h-16 rounded-full bg-purple-500 flex items-center justify-center text-white text-2xl font-bold mb-4">4</div>
+                            <h4 class="font-bold text-gray-800 text-center mb-2">Cierre</h4>
+                            <p class="text-sm text-gray-600 text-center">Supervisor consolida</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="text-center text-gray-600 border-t pt-8">
+                <p class="mb-2"><i class="fas fa-info-circle text-blue-500"></i> Módulo Estación de Servicio - SistemaX</p>
+                <p class="text-sm">Implementación completada: 23-24 de Abril, 2026</p>
+                <p class="text-sm mt-4"><strong>Requiere:</strong> Login en el sistema + Permisos de Supervisor o Playero</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
