@@ -5,15 +5,7 @@
  * Color accent: Cyan
  */
 
-// Detección de móvil y redirección automática
-$userAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
-$isMobile = preg_match('/Mobile|Android|iPhone|iPad|iPod|webOS|BlackBerry|IEMobile|Opera Mini/i', $userAgent);
-$forceDesktop = isset($_GET['desktop']) || isset($_COOKIE['productos_desktop']);
-
-if ($isMobile && !$forceDesktop && !isset($_GET['no_redirect'])) {
-    header('Location: /public/productos/mobile.php');
-    exit;
-}
+// Modo desktop siempre activo; la vista móvil quedó deprecada.
 
 if (isset($_GET['desktop'])) {
     setcookie('productos_desktop', '1', time() + 86400 * 30, '/');
@@ -27,6 +19,7 @@ $permisos = Permission::getAppPermissions('app_grid_mercaderias');
 
 $id_empresa = Session::get('id_empresa', 169);
 $id_login = Session::get('id_login');
+$id_sucursal = (int)Session::get('id_sucursal', 0);
 
 $masterPdo = Database::getMasterConnection();
 $stmtEmpresa = $masterPdo->prepare("SELECT * FROM empresa WHERE id_empresa = ?");
@@ -60,6 +53,23 @@ $pageTitle = 'Productos';
             });
             return window.__fontAwesomeReady;
         };
+    </script>
+    <link rel="stylesheet" href="/public/_lib/ag-grid/ag-grid-enterprise/package/styles/ag-grid.css">
+    <link rel="stylesheet" href="/public/_lib/ag-grid/ag-grid-enterprise/package/styles/ag-theme-quartz.css">
+    <script src="/public/assets/js/ag-grid-locale.js"></script>
+    <script>
+        window.__agGridReady = new Promise(function(resolve){
+            if (window.agGrid) { resolve(); return; }
+            const s = document.createElement('script');
+            s.src = '/public/_lib/ag-grid/ag-grid-enterprise/package/dist/ag-grid-enterprise.min.noStyle.js';
+            s.onload = function(){
+                const l = document.createElement('script');
+                l.src = '/public/_lib/ag-grid/license.js';
+                l.onload = resolve;
+                document.head.appendChild(l);
+            };
+            document.head.appendChild(s);
+        });
     </script>
     
     <script>
@@ -97,8 +107,96 @@ $pageTitle = 'Productos';
         }
         .table-row:hover { background: rgba(6, 182, 212, 0.05); }
         .dark .table-row:hover { background: rgba(6, 182, 212, 0.1); }
+        .productos-grid td,
+        .productos-grid th {
+            font-size: 13px;
+            font-weight: 300;
+        }
+        .productos-grid th,
+        .productos-grid td {
+            padding-top: 0.4rem;
+            padding-bottom: 0.4rem;
+        }
+        .productos-grid th:nth-child(even),
+        .productos-grid td:nth-child(even) {
+            background: rgba(255, 255, 255, 0.03);
+        }
+        .dark .productos-grid th:nth-child(even),
+        .dark .productos-grid td:nth-child(even) {
+            background: rgba(255, 255, 255, 0.02);
+        }
         .tab-active { border-bottom: 2px solid #0891b2; color: #0891b2; }
         .dark .tab-active { color: #22d3ee; border-color: #22d3ee; }
+        .ag-theme-quartz,
+        .ag-theme-quartz-dark {
+            --ag-font-family: Inter, sans-serif;
+            --ag-font-size: 13px;
+            --ag-row-height: 42px;
+            --ag-header-height: 44px;
+            --ag-border-color: rgba(148, 163, 184, 0.18);
+            --ag-row-border-color: rgba(148, 163, 184, 0.14);
+            --ag-background-color: transparent;
+            --ag-odd-row-background-color: transparent;
+            --ag-header-background-color: rgba(248, 250, 252, 0.96);
+            --ag-row-hover-color: rgba(8, 145, 178, 0.08);
+            --ag-selected-row-background-color: rgba(8, 145, 178, 0.1);
+            --ag-checkbox-checked-color: #0891b2;
+            --ag-range-selection-border-color: #0891b2;
+            --ag-input-focus-border-color: #0891b2;
+            --ag-menu-background-color: rgba(255, 255, 255, 0.98);
+            --ag-popup-shadow: 0 20px 45px rgba(15, 23, 42, 0.18);
+            --ag-card-shadow: 0 20px 45px rgba(15, 23, 42, 0.18);
+        }
+        .ag-theme-quartz-dark {
+            --ag-border-color: rgba(71, 85, 105, 0.45);
+            --ag-row-border-color: rgba(71, 85, 105, 0.3);
+            --ag-header-background-color: rgba(30, 41, 59, 0.94);
+            --ag-foreground-color: rgb(226, 232, 240);
+            --ag-secondary-foreground-color: rgb(148, 163, 184);
+            --ag-row-hover-color: rgba(8, 145, 178, 0.12);
+            --ag-selected-row-background-color: rgba(8, 145, 178, 0.16);
+            --ag-menu-background-color: rgba(15, 23, 42, 0.98);
+            --ag-popup-shadow: 0 22px 50px rgba(2, 6, 23, 0.55);
+            --ag-card-shadow: 0 22px 50px rgba(2, 6, 23, 0.55);
+        }
+        .ag-theme-quartz .ag-side-bar,
+        .ag-theme-quartz-dark .ag-side-bar {
+            border-left: 1px solid rgba(148, 163, 184, 0.16);
+            background: inherit;
+        }
+        .ag-theme-quartz .ag-tool-panel-wrapper,
+        .ag-theme-quartz-dark .ag-tool-panel-wrapper {
+            background: inherit;
+        }
+        .productos-grid-shell {
+            height: calc(100vh - 215px);
+            min-height: 520px;
+        }
+        .productos-ag-grid {
+            width: 100%;
+            height: 100%;
+            border-radius: 1rem;
+            overflow: hidden;
+        }
+        .productos-ag-grid .ag-row { font-weight: 300; }
+        .productos-ag-grid .prod-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            line-height: 1.15;
+            padding: 3px 0;
+        }
+        .productos-ag-grid .prod-stack .main { font-weight: 400; }
+        .productos-ag-grid .prod-stack .meta { font-size: 11px; color: rgb(100 116 139); }
+        .dark .productos-ag-grid .prod-stack .meta { color: rgb(148 163 184); }
+        .productos-ag-grid .stock-negative { color: #ef4444; font-weight: 400; }
+        .productos-ag-grid .stock-low { color: #f59e0b; font-weight: 400; }
+        .productos-ag-grid .stock-ok { color: #10b981; font-weight: 400; }
+        .productos-ag-grid .action-btn {
+            min-height: 34px;
+            min-width: 34px;
+            border-radius: 10px;
+        }
         input[type="number"]::-webkit-inner-spin-button,
         input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         input[type="number"] { -moz-appearance: textfield; }
@@ -113,47 +211,10 @@ $pageTitle = 'Productos';
 window.__PERMISOS__ = <?= json_encode($permisos) ?>;
 window.__PRODUCTOS_CONFIG__ = {
     idEmpresa: <?= (int)$id_empresa ?>,
-    idLogin: <?= (int)$id_login ?>
+    idLogin: <?= (int)$id_login ?>,
+    idSucursal: <?= (int)$id_sucursal ?>
 };
 </script>
-    
-    <!-- ============ HEADER ============ -->
-    <header class="bg-white dark:bg-slate-800 border-b border-gray-200 dark:border-slate-700 sticky top-0 z-40">
-        <div class="w-full px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <div class="flex items-center gap-4">
-                    <button onclick="try{if(typeof parent.cerrarApp==='function'){parent.cerrarApp();return;}}catch(e){} window.location.href='/public/menu/menu.php';" 
-                            class="w-10 h-10 rounded-lg bg-red-600/10 border border-red-500/40 flex items-center justify-center text-red-600 dark:text-red-400 hover:bg-red-600/20 active:scale-95 transition-all cursor-pointer"
-                            title="Salir">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" class="w-5 h-5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0-3-3m0 0 3-3m-3 3H15" />
-                        </svg>
-                    </button>
-                    <div>
-                        <h1 class="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                            <i class="fas fa-boxes text-cyan-600 dark:text-cyan-400"></i> Productos
-                        </h1>
-                        <p class="text-xs text-gray-500 dark:text-gray-400"><?= htmlspecialchars($empresa['empresa'] ?? 'Empresa') ?></p>
-                    </div>
-                </div>
-                
-                <div class="flex items-center gap-2">
-                    <!-- Nuevo Producto -->
-                    <button x-show="permisos.priv_insert === 'Y'" @click="nuevoProducto()"
-                            class="inline-flex items-center gap-2 px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded-lg font-medium transition-colors active:scale-95">
-                        <i class="fas fa-plus"></i>
-                        <span class="hidden sm:inline">Nuevo</span>
-                    </button>
-                    
-                    <!-- Dark mode -->
-                    <button @click="toggleTheme()" 
-                            class="w-10 h-10 rounded-lg bg-gray-100 dark:bg-slate-700 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-600 transition-colors">
-                        <i class="fas" :class="isDark ? 'fa-sun' : 'fa-moon'"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </header>
     
     <div class="w-full px-4 sm:px-6 lg:px-8 py-6">
         <!-- ============ TABLA ============ -->
@@ -164,167 +225,137 @@ window.__PRODUCTOS_CONFIG__ = {
                 <p class="text-gray-500 dark:text-gray-400">Cargando productos...</p>
             </div>
 
-            <div x-show="!loading" class="px-4 py-2.5 bg-gray-50 dark:bg-slate-700/50 border-b border-gray-200 dark:border-slate-700 flex flex-wrap items-center justify-between gap-2">
-                <div class="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
-                    Mostrando <span x-text="((currentPage-1)*perPage)+1"></span> - <span x-text="Math.min(currentPage*perPage, totalRecords)"></span> de <span x-text="totalRecords"></span>
-                </div>
-                <div class="flex items-center gap-2 text-xs sm:text-sm text-gray-500 dark:text-gray-400">
-                    <span class="whitespace-nowrap">Registros por página</span>
-                    <select :value="perPage" @change="setPerPage($event.target.value)"
-                            class="px-2 py-1 rounded-lg bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 text-xs sm:text-sm text-gray-700 dark:text-gray-200">
-                        <template x-for="n in perPageOptions" :key="n">
-                            <option :value="n" x-text="n"></option>
-                        </template>
-                    </select>
+            <div x-show="!loading" class="px-3 py-3 bg-gray-50 dark:bg-slate-700/50 border-b border-gray-200 dark:border-slate-700">
+                <div class="rounded-2xl bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 shadow-sm overflow-hidden">
+                    <div class="flex flex-wrap items-center justify-between gap-3 px-4 py-4 border-b border-gray-200 dark:border-slate-700">
+                        <div class="min-w-0">
+                            <h1 class="text-lg sm:text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                                <i class="fas fa-boxes text-cyan-600 dark:text-cyan-400"></i> Productos
+                            </h1>
+                            <p class="text-xs text-gray-500 dark:text-gray-400"><?= htmlspecialchars($empresa['empresa'] ?? 'Empresa') ?></p>
+                        </div>
+                        <div class="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
+                            Mostrando <span x-text="((currentPage-1)*perPage)+1"></span> - <span x-text="Math.min(currentPage*perPage, totalRecords)"></span> de <span x-text="totalRecords"></span>
+                            <span x-show="selectedCount > 0" class="ml-2 inline-flex items-center px-2 py-0.5 rounded-full bg-cyan-100 text-cyan-800 dark:bg-cyan-900/30 dark:text-cyan-300">
+                                <span x-text="selectedCount"></span> seleccionados
+                            </span>
+                        </div>
+                        <div class="flex items-center gap-2 shrink-0">
+                            <button x-show="permisos.priv_insert === 'Y'" @click="nuevoProducto()"
+                                    class="inline-flex items-center gap-2 px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded-lg font-medium transition-colors active:scale-95">
+                                <i class="fas fa-plus"></i>
+                                <span class="hidden sm:inline">Nuevo</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="p-4 space-y-3">
+                        <div class="flex flex-wrap items-center justify-between gap-3 text-xs sm:text-sm text-gray-500 dark:text-gray-400">
+                            <div class="flex items-center gap-2">
+                                <span class="whitespace-nowrap">Registros por página</span>
+                                <select x-model.number="perPage" @change="setPerPage(perPage)"
+                                        class="px-2 py-1 rounded-lg bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 text-xs sm:text-sm text-gray-700 dark:text-gray-200">
+                                    <template x-for="n in perPageOptions" :key="n">
+                                        <option :value="n" x-text="n"></option>
+                                    </template>
+                                </select>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <button @click="prevPage()" :disabled="currentPage===1"
+                                        :class="currentPage===1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-200 dark:hover:bg-slate-600'"
+                                        class="px-3 py-1 rounded-lg bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300">
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
+                                <span class="px-3 py-1 text-sm text-gray-600 dark:text-gray-300 whitespace-nowrap">
+                                    Pág. <span x-text="currentPage"></span> de <span x-text="totalPages"></span>
+                                </span>
+                                <button @click="nextPage()" :disabled="currentPage===totalPages"
+                                        :class="currentPage===totalPages ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-200 dark:hover:bg-slate-600'"
+                                        class="px-3 py-1 rounded-lg bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300">
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="relative max-w-3xl">
+                            <div class="flex items-center gap-3 px-4 py-3 rounded-2xl bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 shadow-sm focus-within:ring-2 focus-within:ring-cyan-500/30">
+                                <i class="fas fa-search text-gray-400"></i>
+                                <input type="text"
+                                       x-model="searchQuery"
+                                       @input="scheduleSearch()"
+                                       @focus="showSearchHints = searchHints.length > 0"
+                                       @keydown.enter.prevent="runSearch()"
+                                       @keydown.escape="showSearchHints = false"
+                                       placeholder="Buscar por código, producto, marca, grupo, modelo, color, precio, stock o estado"
+                                       class="w-full bg-transparent border-0 outline-none text-sm text-gray-900 dark:text-white placeholder:text-gray-400">
+                                <button x-show="searchHasValue" @click="searchQuery=''; clearFilters()"
+                                        class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+
+                            <div x-show="showSearchHints && searchHints.length > 0" x-cloak
+                                 class="absolute z-30 mt-2 w-full rounded-2xl bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 shadow-xl overflow-hidden">
+                                <template x-for="hint in searchHints" :key="hint.idproducto">
+                                    <button type="button" @click="applySearchHint(hint)" class="w-full px-4 py-3 text-left hover:bg-cyan-50 dark:hover:bg-slate-700 border-b border-gray-100 dark:border-slate-700 last:border-b-0">
+                                        <div class="text-sm font-medium text-gray-900 dark:text-white" x-text="hint.label"></div>
+                                        <div class="text-xs text-gray-500 dark:text-gray-400 truncate" x-text="hint.meta"></div>
+                                    </button>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             
-            <div x-show="!loading" x-cloak class="overflow-x-auto">
-                <table class="w-full">
-                    <thead class="bg-gray-50 dark:bg-slate-700/50">
-                        <tr>
-                            <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider w-16"></th>
-                            <th @click="setSort('cve_producto')" class="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-pointer hover:text-cyan-600 select-none">
-                                Código <i class="fas" :class="sortIcon('cve_producto')"></i>
-                            </th>
-                            <th @click="setSort('desproducto')" class="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-pointer hover:text-cyan-600 select-none">
-                                Producto <i class="fas" :class="sortIcon('desproducto')"></i>
-                            </th>
-                            <th @click="setSort('precio_venta')" class="px-4 py-3 text-right text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-pointer hover:text-cyan-600 select-none">
-                                P. Venta <i class="fas" :class="sortIcon('precio_venta')"></i>
-                            </th>
-                            <th @click="setSort('saldo')" class="px-4 py-3 text-right text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-pointer hover:text-cyan-600 select-none">
-                                Stock <i class="fas" :class="sortIcon('saldo')"></i>
-                            </th>
-                            <th class="px-4 py-3 text-center text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Estado</th>
-                            <th class="px-4 py-3 text-center text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider w-32">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-200 dark:divide-slate-700">
-                        <template x-for="p in productos" :key="p.idproducto">
-                            <tr class="table-row transition-colors">
-                                <!-- Código -->
-                                <td class="px-4 py-3 whitespace-nowrap">
-                                    <span class="font-mono text-sm font-medium text-gray-900 dark:text-white" x-text="capitalizeText(p.cve_producto)"></span>
-                                    <select x-show="p.codigos_barra?.length > 0"
-                                            class="block mt-0.5 text-xs font-mono text-gray-500 dark:text-gray-400 bg-transparent dark:bg-slate-900 border border-gray-200 dark:border-slate-600 rounded py-0 pr-5 cursor-pointer focus:ring-1 focus:ring-cyan-500 max-w-[150px]">
-                                        <template x-for="(cb, i) in (p.codigos_barra || [])" :key="i">
-                                            <option x-text="capitalizeText(cb)"></option>
-                                        </template>
-                                    </select>
-                                    <span x-show="!p.codigos_barra?.length && p.codigo_barra" class="block text-[10px] text-gray-400 dark:text-gray-500 font-mono mt-0.5" x-text="'CB: ' + capitalizeText(p.codigo_barra)"></span>
-                                </td>
-                                <!-- Nombre -->
-                                <td class="px-4 py-3">
-                                    <div class="text-sm font-medium text-gray-900 dark:text-white" x-text="capitalizeText(p.desproducto)"></div>
-                                </td>
-                                <!-- Precio -->
-                                <td class="px-4 py-3 text-right whitespace-nowrap">
-                                    <select x-show="p.precios?.length > 0"
-                                            class="text-sm font-semibold text-gray-900 dark:text-white bg-transparent dark:bg-slate-900 border border-gray-200 dark:border-slate-600 rounded-lg text-right cursor-pointer focus:ring-1 focus:ring-cyan-500 py-0.5 pr-6 -mr-1 max-w-[200px]">
-                                        <template x-for="(pr, i) in getPreciosOrdenados(p)" :key="'pr_' + (pr.tipo ?? i)">
-                                            <option x-text="(pr.tipo_nombre || ('Tipo ' + (pr.tipo || ''))) + ':  ₲ ' + formatMoney(pr.precio)"></option>
-                                        </template>
-                                    </select>
-                                    <span x-show="!p.precios?.length"
-                                          class="text-sm font-semibold text-gray-900 dark:text-white"
-                                          x-text="formatMoney(precioMaximo(p))"></span>
-                                </td>
-                                <!-- Stock -->
-                                <td class="px-4 py-3 text-right whitespace-nowrap">
-                                    <template x-if="p.controla_stock == 1">
-                                        <span>
-                                            <select x-show="p.stock_sucursales?.length > 1"
-                                                    class="text-sm font-semibold bg-transparent dark:bg-slate-900 border border-gray-200 dark:border-slate-600 rounded-lg text-right cursor-pointer focus:ring-1 focus:ring-cyan-500 py-0.5 pr-6 -mr-1 max-w-[220px]"
-                                                    :class="stockClass(p)">
-                                                <option x-text="'Total: ' + formatNumber(p.saldo)"></option>
-                                                <template x-for="ss in (p.stock_sucursales || [])" :key="ss.id_sucursal">
-                                                    <option x-text="capitalizeText(ss.sucursal) + ': ' + formatNumber(ss.stock)"></option>
-                                                </template>
-                                            </select>
-                                            <span x-show="!p.stock_sucursales?.length || p.stock_sucursales?.length <= 1"
-                                                  class="text-sm font-semibold" 
-                                                  :class="stockClass(p)"
-                                                  x-text="formatNumber(p.saldo)"></span>
-                                        </span>
-                                    </template>
-                                    <span x-show="p.controla_stock != 1"
-                                          class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-gray-100 text-gray-500 dark:bg-slate-700 dark:text-gray-400">
-                                        N/controla stock
-                                    </span>
-                                </td>
-                                <!-- Estado -->
-                                <td class="px-4 py-3 text-center">
-                                    <span x-show="(p.descontinuado || 0) == 1" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400" x-text="capitalizeText('descontinuado')"></span>
-                                    <span x-show="p.Estado == 1" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400" x-text="capitalizeText('activo')"></span>
-                                    <span x-show="p.Estado == 0 && (p.descontinuado || 0) != 1" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400" x-text="capitalizeText('inactivo')"></span>
-                                </td>
-                                <!-- Acciones -->
-                                <td class="px-4 py-3">
-                                    <div class="flex items-center justify-center gap-1">
-                                        <button x-show="permisos.priv_update === 'Y'" @click="editarProducto(p.idproducto)" 
-                                                class="w-8 h-8 rounded-lg bg-cyan-50 hover:bg-cyan-100 dark:bg-cyan-900/20 dark:hover:bg-cyan-900/40 text-cyan-600 dark:text-cyan-400 flex items-center justify-center transition-colors" title="Editar">
-                                            <i class="fas fa-edit text-sm"></i>
-                                        </button>
-                                        <button @click="verStock(p)" 
-                                                class="w-8 h-8 rounded-lg bg-blue-50 hover:bg-blue-100 dark:bg-blue-900/20 dark:hover:bg-blue-900/40 text-blue-600 dark:text-blue-400 flex items-center justify-center transition-colors" title="Stock">
-                                            <i class="fas fa-warehouse text-sm"></i>
-                                        </button>
-                                        <div class="relative" x-data="{ open: false }">
-                                            <button @click="open = !open" class="w-8 h-8 rounded-lg bg-gray-50 hover:bg-gray-100 dark:bg-slate-700 dark:hover:bg-slate-600 text-gray-600 dark:text-gray-400 flex items-center justify-center transition-colors">
-                                                <i class="fas fa-ellipsis-v text-sm"></i>
-                                            </button>
-                                            <div x-show="open" @click.away="open = false" x-transition
-                                                 class="absolute right-0 mt-2 w-44 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-gray-200 dark:border-slate-700 py-1 z-50">
-                                                <button @click="verDetalle(p.idproducto); open = false" class="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 flex items-center gap-2">
-                                                    <i class="fas fa-eye w-4"></i> Ver detalle
-                                                </button>
-                                                <button @click="duplicarProducto(p); open = false" class="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 flex items-center gap-2">
-                                                    <i class="fas fa-copy w-4"></i> Duplicar
-                                                </button>
-                                                <hr class="my-1 border-gray-200 dark:border-slate-700">
-                                                <button x-show="p.Estado == 1 && permisos.priv_delete === 'Y'" @click="desactivarProducto(p); open = false" class="w-full px-4 py-2 text-left text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-2">
-                                                    <i class="fas fa-ban w-4"></i> Descontinuar
-                                                </button>
-                                                <button x-show="p.Estado == 0" @click="activarProducto(p); open = false" class="w-full px-4 py-2 text-left text-sm text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 flex items-center gap-2">
-                                                    <i class="fas fa-check w-4"></i> Activar
-                                                </button>
-                                            </div>
-                                        </div>
+            <div x-show="!loading" x-cloak class="md:hidden p-3 space-y-2">
+                <template x-for="p in visibleProductos" :key="'m-' + p.idproducto">
+                    <button @click="editarProducto(p.idproducto)"
+                            class="w-full text-left rounded-2xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-3 shadow-sm active:scale-[0.99] transition-transform">
+                        <div class="flex items-start gap-3">
+                            <div class="w-12 h-12 rounded-2xl bg-gray-100 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 flex items-center justify-center shrink-0 overflow-hidden">
+                                <img x-show="p.foto_url" :src="p.foto_url" class="w-full h-full object-cover" @error="$el.style.display='none'">
+                                <i x-show="!p.foto_url" class="fas fa-box text-gray-400"></i>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-start justify-between gap-2">
+                                    <div class="min-w-0">
+                                        <p class="text-sm font-medium text-gray-900 dark:text-white truncate" x-text="capitalizeText(p.desproducto)"></p>
+                                        <p class="text-[10px] text-gray-500 dark:text-gray-400 font-mono mt-0.5" x-text="capitalizeText(p.cve_producto)"></p>
                                     </div>
-                                </td>
-                            </tr>
-                        </template>
-                    </tbody>
-                </table>
-                
-                <!-- Sin resultados -->
-                <div x-show="productos.length === 0 && !loading" class="p-12 text-center">
+                                    <span class="text-[10px] px-2 py-0.5 rounded-full bg-gray-100 dark:bg-slate-700 text-gray-500 dark:text-gray-300" x-text="p.grupo_nombre || 'Sin grupo'"></span>
+                                </div>
+                                <div class="mt-3 grid grid-cols-2 gap-3">
+                                    <div>
+                                        <p class="text-[10px] uppercase tracking-[0.14em] text-gray-400">Precio</p>
+                                        <p class="text-sm font-semibold text-gray-900 dark:text-white" x-text="formatMoney(precioMaximo(p))"></p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="text-[10px] uppercase tracking-[0.14em] text-gray-400">Stock</p>
+                                        <p class="text-sm font-semibold" :class="stockClass(p)" x-text="formatNumber(stockSesion(p))"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </button>
+                </template>
+                <div x-show="visibleProductos.length === 0 && !loading" class="py-10 text-center rounded-2xl border border-dashed border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800">
+                    <i class="fas fa-boxes text-4xl text-gray-300 dark:text-slate-600"></i>
+                    <p class="mt-3 text-gray-500 dark:text-gray-400 text-sm">No se encontraron productos</p>
+                </div>
+            </div>
+
+            <div x-show="!loading" x-cloak class="hidden md:block px-3 pb-3">
+                <div class="productos-grid-shell">
+                    <div x-ref="productosGrid" :class="isDark ? 'ag-theme-quartz-dark' : 'ag-theme-quartz'" class="productos-ag-grid"></div>
+                </div>
+                <div x-show="!loading && visibleProductos.length === 0" class="p-12 text-center">
                     <i class="fas fa-boxes text-5xl text-gray-300 dark:text-slate-600 mb-4"></i>
                     <p class="text-gray-500 dark:text-gray-400 text-lg">No se encontraron productos</p>
                     <p class="text-gray-400 dark:text-gray-500 text-sm mt-1">Intenta con otros filtros o crea uno nuevo</p>
                 </div>
             </div>
             
-            <!-- Paginación -->
-            <div x-show="totalPages > 1" class="px-4 py-3 bg-gray-50 dark:bg-slate-700/50 border-t border-gray-200 dark:border-slate-700 flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                    <button @click="prevPage()" :disabled="currentPage===1"
-                            :class="currentPage===1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-200 dark:hover:bg-slate-600'"
-                            class="px-3 py-1 rounded-lg bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300">
-                        <i class="fas fa-chevron-left"></i>
-                    </button>
-                    <span class="px-3 py-1 text-sm text-gray-600 dark:text-gray-300">
-                        Pág. <span x-text="currentPage"></span> de <span x-text="totalPages"></span>
-                    </span>
-                    <button @click="nextPage()" :disabled="currentPage===totalPages"
-                            :class="currentPage===totalPages ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-200 dark:hover:bg-slate-600'"
-                            class="px-3 py-1 rounded-lg bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300">
-                        <i class="fas fa-chevron-right"></i>
-                    </button>
-                </div>
-            </div>
-
         </div>
     </div>
     
@@ -332,20 +363,38 @@ window.__PRODUCTOS_CONFIG__ = {
     <div x-show="showForm" x-cloak class="fixed inset-0 z-50 overflow-y-auto"
          x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
          x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
-        <div class="flex items-start justify-center min-h-screen px-4 pt-8 pb-20">
+        <div class="flex items-center justify-center min-h-screen px-4 py-4">
             <div class="fixed inset-0 bg-black/60" @click="closeForm()"></div>
             
-            <div class="relative bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-[96vw] xl:max-w-[1800px] mx-2 overflow-hidden fade-in"
-                 @click.stop>
+            <div class="relative bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-[80vw] h-[80vh] max-w-none mx-2 overflow-hidden fade-in flex flex-col"
+                  @click.stop>
                 <!-- Header modal -->
                 <div class="px-6 py-4 border-b border-gray-200 dark:border-slate-700 flex items-center justify-between bg-gradient-to-r from-cyan-600 to-cyan-700">
                     <h3 class="text-lg font-bold text-white flex items-center gap-2">
                         <i class="fas" :class="form.idproducto ? 'fa-edit' : 'fa-plus-circle'"></i>
                         <span x-text="form.idproducto ? 'Editar Producto' : 'Nuevo Producto'"></span>
                     </h3>
-                    <button @click="closeForm()" class="w-10 h-10 rounded-lg hover:bg-white/20 flex items-center justify-center text-white/80 hover:text-white">
-                        <i class="fas fa-times"></i>
-                    </button>
+                    <div class="flex items-center gap-2">
+                        <button x-show="form.idproducto" @click="abrirAjustarInventarioForm()"
+                                class="px-3 py-2 rounded-lg bg-emerald-500/90 hover:bg-emerald-500 text-white text-sm font-medium transition-colors">
+                            Ajustar Inventario
+                        </button>
+                        <button x-show="form.idproducto" @click="abrirTransferenciaInventarioForm()"
+                                class="px-3 py-2 rounded-lg bg-violet-500/90 hover:bg-violet-500 text-white text-sm font-medium transition-colors">
+                            Transferencia entre sucursales
+                        </button>
+                        <button x-show="form.idproducto" @click="anularProductoForm()"
+                                class="px-3 py-2 rounded-lg bg-white/15 hover:bg-white/25 text-white text-sm font-medium transition-colors">
+                            Anular
+                        </button>
+                        <button x-show="form.idproducto" @click="descontinuarProductoForm()"
+                                class="px-3 py-2 rounded-lg bg-amber-500/90 hover:bg-amber-500 text-white text-sm font-medium transition-colors">
+                            Descontinuar
+                        </button>
+                        <button @click="closeForm()" class="w-10 h-10 rounded-lg hover:bg-white/20 flex items-center justify-center text-white/80 hover:text-white">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
                 </div>
                 
                 <!-- Tabs -->
@@ -361,7 +410,7 @@ window.__PRODUCTOS_CONFIG__ = {
                 </div>
                 
                 <!-- Body -->
-                <div class="px-6 py-5 max-h-[65vh] overflow-y-auto">
+                <div class="px-6 py-5 flex-1 min-h-0 overflow-y-auto">
                     
                     <!-- TAB: Datos Generales -->
                     <div x-show="formTab === 'general'" class="space-y-4">
@@ -1086,6 +1135,38 @@ window.__PRODUCTOS_CONFIG__ = {
                                        class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-cyan-500 text-right text-sm">
                             </div>
                         </div>
+                        <div class="bg-gray-50 dark:bg-slate-700/30 rounded-xl border border-gray-200 dark:border-slate-700 p-4 space-y-3">
+                            <div class="flex items-center justify-between gap-3">
+                                <h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2">
+                                    <i class="fas fa-map-location-dot"></i> Ubicación en góndola
+                                </h4>
+                                <button type="button" @click="sugerirUbicacion()" class="text-sm text-cyan-600 dark:text-cyan-400 hover:underline">
+                                    Sugerir ubicación
+                                </button>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Ubicación</label>
+                                    <input type="text" x-model="form.ubicacion" placeholder="MOTOR / FRENOS / GENERAL"
+                                           class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-cyan-500 text-sm uppercase">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Góndola</label>
+                                    <input type="text" x-model="form.gondola" placeholder="12"
+                                           class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-cyan-500 text-sm text-right">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Fila</label>
+                                    <input type="text" x-model="form.fila" placeholder="A"
+                                           class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-cyan-500 text-sm text-center uppercase">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Celda</label>
+                                    <input type="text" x-model="form.celda" placeholder="01"
+                                           class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-cyan-500 text-sm text-right">
+                                </div>
+                            </div>
+                        </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Observaciones</label>
@@ -1116,7 +1197,7 @@ window.__PRODUCTOS_CONFIG__ = {
     <div x-show="showProductCameraModal" x-cloak class="fixed inset-0 z-[70] overflow-y-auto"
          x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
          x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
-        <div class="flex items-center justify-center min-h-screen px-4">
+        <div class="flex items-center justify-center min-h-screen px-4 py-4">
             <div class="fixed inset-0 bg-black/70" @click="closeProductCamera()"></div>
             <div class="relative bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-3xl overflow-hidden">
                 <div class="px-4 py-3 border-b border-gray-200 dark:border-slate-700 flex items-center justify-between">
@@ -1152,7 +1233,7 @@ window.__PRODUCTOS_CONFIG__ = {
          x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
         <div class="flex items-center justify-center min-h-screen px-4">
             <div class="fixed inset-0 bg-black/60" @click="showStock = false"></div>
-            <div class="relative bg-white dark:bg-slate-800 rounded-2xl shadow-xl max-w-2xl w-full mx-4 overflow-hidden fade-in">
+            <div class="relative bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-[80vw] h-[80vh] mx-4 overflow-hidden fade-in flex flex-col">
                 <div class="px-6 py-4 border-b border-gray-200 dark:border-slate-700 flex items-center justify-between">
                     <div>
                         <h3 class="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
@@ -1164,7 +1245,9 @@ window.__PRODUCTOS_CONFIG__ = {
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
-                <div class="px-6 py-4 max-h-[60vh] overflow-y-auto space-y-4">
+                <div class="px-6 border-b border-gray-200 dark:border-slate-700 flex gap-0 overflow-x-auto">
+                </div>
+                <div class="px-6 py-4 flex-1 min-h-0 overflow-y-auto space-y-4">
                     <!-- Stock por sucursal -->
                     <div class="border border-gray-200 dark:border-slate-700 rounded-lg overflow-hidden">
                         <table class="w-full text-sm">
@@ -1183,38 +1266,6 @@ window.__PRODUCTOS_CONFIG__ = {
                                 </template>
                             </tbody>
                         </table>
-                    </div>
-                    <!-- Ajuste manual -->
-                    <div class="bg-gray-50 dark:bg-slate-700/30 rounded-lg p-4">
-                        <h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3 flex items-center gap-2">
-                            <i class="fas fa-sliders-h"></i> Ajuste Manual de Inventario
-                        </h4>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                            <div>
-                                <label class="block text-xs text-gray-500 dark:text-gray-400 mb-1">Sucursal</label>
-                                <select x-model="ajuste.id_sucursal"
-                                        class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-cyan-500">
-                                    <option value="">Seleccionar...</option>
-                                    <template x-for="s in sucursalesList" :key="s.id_sucursal">
-                                        <option :value="s.id_sucursal" x-text="s.sucursal"></option>
-                                    </template>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-xs text-gray-500 dark:text-gray-400 mb-1">Cantidad (+/-)</label>
-                                <input type="number" x-model.number="ajuste.cantidad" step="1"
-                                       class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white text-sm text-right focus:ring-2 focus:ring-cyan-500">
-                            </div>
-                            <div>
-                                <label class="block text-xs text-gray-500 dark:text-gray-400 mb-1">Motivo</label>
-                                <input type="text" x-model="ajuste.motivo" placeholder="Ajuste inventario"
-                                       class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-cyan-500">
-                            </div>
-                        </div>
-                        <button @click="guardarAjuste()" :disabled="!ajuste.id_sucursal || !ajuste.cantidad"
-                                class="mt-3 px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg text-sm font-medium transition-colors">
-                            <i class="fas fa-save mr-1"></i> Aplicar Ajuste
-                        </button>
                     </div>
                     <!-- Últimos movimientos -->
                     <div x-show="stockMovimientos.length > 0">
@@ -1237,8 +1288,125 @@ window.__PRODUCTOS_CONFIG__ = {
                         </div>
                     </div>
                 </div>
-                <div class="px-6 py-4 bg-gray-50 dark:bg-slate-700/50 border-t border-gray-200 dark:border-slate-700 flex justify-end">
+                <div class="px-6 py-4 bg-gray-50 dark:bg-slate-700/50 border-t border-gray-200 dark:border-slate-700 flex flex-wrap items-center justify-between gap-2">
+                    <div class="flex items-center gap-2">
+                        <button @click="showStock = false; showAjusteInventarioModal = true"
+                                class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors">
+                            Ajustar Inventario
+                        </button>
+                        <button @click="showStock = false; showTransferenciaModal = true"
+                                class="px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white rounded-lg font-medium transition-colors">
+                            Transferencia entre sucursales
+                        </button>
+                    </div>
                     <button @click="showStock = false" class="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded-lg font-medium transition-colors">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ MODAL: AJUSTE INVENTARIO ============ -->
+    <div x-show="showAjusteInventarioModal" x-cloak class="fixed inset-0 z-50 overflow-y-auto"
+         x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+         x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+        <div class="flex items-center justify-center min-h-screen px-4">
+            <div class="fixed inset-0 bg-black/60" @click="showAjusteInventarioModal = false"></div>
+            <div class="relative bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-[60vw] max-w-3xl mx-4 overflow-hidden fade-in flex flex-col">
+                <div class="px-6 py-4 border-b border-gray-200 dark:border-slate-700 flex items-center justify-between">
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                            <i class="fas fa-sliders-h text-blue-600"></i> Ajustar Inventario
+                        </h3>
+                        <p class="text-sm text-gray-500 dark:text-gray-400" x-text="stockProductoNombre"></p>
+                    </div>
+                    <button @click="showAjusteInventarioModal = false" class="w-10 h-10 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700 flex items-center justify-center text-gray-500">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="p-6 space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <div>
+                            <label class="block text-xs text-gray-500 dark:text-gray-400 mb-1">Sucursal</label>
+                            <select x-model="ajuste.id_sucursal" class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-cyan-500">
+                                <option value="">Seleccionar...</option>
+                                <template x-for="s in sucursalesList" :key="s.id_sucursal">
+                                    <option :value="s.id_sucursal" x-text="s.sucursal"></option>
+                                </template>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-500 dark:text-gray-400 mb-1">Cantidad (+/-)</label>
+                            <input type="number" x-model.number="ajuste.cantidad" step="1" class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white text-sm text-right focus:ring-2 focus:ring-cyan-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-500 dark:text-gray-400 mb-1">Motivo</label>
+                            <input type="text" x-model="ajuste.motivo" placeholder="Ajuste inventario" class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-cyan-500">
+                        </div>
+                    </div>
+                    <div class="flex justify-end gap-2">
+                        <button @click="showAjusteInventarioModal = false" class="px-4 py-2 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-600 font-medium transition-colors">Cancelar</button>
+                        <button @click="guardarAjuste()" :disabled="!ajuste.id_sucursal || !ajuste.cantidad" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg text-sm font-medium transition-colors">
+                            <i class="fas fa-save mr-1"></i> Aplicar Ajuste
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ MODAL: TRANSFERENCIA ============ -->
+    <div x-show="showTransferenciaModal" x-cloak class="fixed inset-0 z-50 overflow-y-auto"
+         x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+         x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+        <div class="flex items-center justify-center min-h-screen px-4">
+            <div class="fixed inset-0 bg-black/60" @click="showTransferenciaModal = false"></div>
+            <div class="relative bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-[60vw] max-w-3xl mx-4 overflow-hidden fade-in flex flex-col">
+                <div class="px-6 py-4 border-b border-gray-200 dark:border-slate-700 flex items-center justify-between">
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                            <i class="fas fa-right-left text-violet-600"></i> Transferencia entre sucursales
+                        </h3>
+                        <p class="text-sm text-gray-500 dark:text-gray-400" x-text="stockProductoNombre"></p>
+                    </div>
+                    <button @click="showTransferenciaModal = false" class="w-10 h-10 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700 flex items-center justify-center text-gray-500">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="p-6 space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs text-gray-500 dark:text-gray-400 mb-1">Sucursal origen</label>
+                            <select x-model="transferencia.id_sucursal_origen" class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-cyan-500">
+                                <option value="">Seleccionar...</option>
+                                <template x-for="s in sucursalesList" :key="'o-' + s.id_sucursal">
+                                    <option :value="s.id_sucursal" x-text="s.sucursal"></option>
+                                </template>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-500 dark:text-gray-400 mb-1">Sucursal destino</label>
+                            <select x-model="transferencia.id_sucursal_destino" class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-cyan-500">
+                                <option value="">Seleccionar...</option>
+                                <template x-for="s in sucursalesList" :key="'d-' + s.id_sucursal">
+                                    <option :value="s.id_sucursal" x-text="s.sucursal"></option>
+                                </template>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-500 dark:text-gray-400 mb-1">Cantidad</label>
+                            <input type="number" x-model.number="transferencia.cantidad" step="1" min="0" class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white text-sm text-right focus:ring-2 focus:ring-cyan-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-500 dark:text-gray-400 mb-1">Motivo / Observación</label>
+                            <input type="text" x-model="transferencia.obs" placeholder="Traslado interno" class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-cyan-500">
+                        </div>
+                    </div>
+                    <div class="flex justify-end gap-2">
+                        <button @click="showTransferenciaModal = false" class="px-4 py-2 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-600 font-medium transition-colors">Cancelar</button>
+                        <button @click="guardarTraslado()" :disabled="!transferencia.id_sucursal_origen || !transferencia.id_sucursal_destino || !transferencia.cantidad" class="px-4 py-2 bg-violet-600 hover:bg-violet-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg text-sm font-medium transition-colors inline-flex items-center gap-2">
+                            <i class="fas fa-right-left"></i> Registrar traslado
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

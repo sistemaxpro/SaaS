@@ -228,6 +228,9 @@ if ($platform === 'android') $platformLabel = 'Android';
 if ($platform === 'ios') $platformLabel = 'iOS';
 if ($platform === 'windows') $platformLabel = 'Windows';
 if ($platform === 'macos') $platformLabel = 'macOS';
+$androidNativePackage = 'pro.sistemax.main';
+$androidNativeFallbackUrl = supportAbsoluteUrl('/public/apps-moviles.php?platform=android');
+$androidNativeOpenUrl = 'intent://open#Intent;scheme=sistemaxpro;package=' . rawurlencode($androidNativePackage) . ';S.browser_fallback_url=' . rawurlencode($androidNativeFallbackUrl) . ';end';
 
 $supportWinCandidates = glob(__DIR__ . '/soporte/downloads/sistemax-support-desktop-windows*.exe') ?: [];
 $supportMacCandidates = glob(__DIR__ . '/soporte/downloads/sistemax-support-desktop-macos*.tar.gz') ?: [];
@@ -1638,11 +1641,17 @@ endif;
         <?php if ($showAll || $platform === 'android'): ?>
         <section class="rounded-2xl border border-slate-800 bg-slate-900 p-5 space-y-3">
             <div class="flex items-center justify-between">
-                <h2 class="text-lg font-bold text-emerald-300">Android - Paso a Paso</h2>
+                <h2 class="text-lg font-bold text-emerald-300">Android - APK nativo</h2>
                 <span class="text-xs bg-emerald-600 text-white px-2 py-1 rounded-full">✨ Con Soporte de Cámara</span>
             </div>
             <div class="rounded-xl border border-emerald-700/40 bg-emerald-900/20 px-3 py-2 text-sm text-emerald-100">
-                1) Instalá <strong>SistemaX Pro</strong>. 2) Instalá <strong>SistemaX Print</strong>. 3) Abrí SistemaX Print y elegí tu impresora Bluetooth.
+                Instalá el <strong>APK nativo de SistemaX Pro</strong> para tener Bluetooth, geolocalización y notificaciones en Android.
+            </div>
+            <div class="flex flex-wrap gap-2 text-[11px]">
+                <span class="px-2 py-1 rounded-full bg-slate-800 text-slate-200">Bluetooth BT</span>
+                <span class="px-2 py-1 rounded-full bg-slate-800 text-slate-200">Geolocalización</span>
+                <span class="px-2 py-1 rounded-full bg-slate-800 text-slate-200">Notificaciones</span>
+                <span class="px-2 py-1 rounded-full bg-slate-800 text-slate-200">Cámara</span>
             </div>
             
             <!-- Nueva sección: Características de Cámara -->
@@ -1661,12 +1670,18 @@ endif;
                     <?php if ($isMobile): ?>
                         <a id="btnInstallMainNow" href="<?php echo htmlspecialchars($mainApkUrl); ?>"
                                 class="block w-full text-center bg-indigo-600 hover:bg-indigo-500 text-white font-black py-3 rounded-xl transition-colors">
-                            Paso 1: Instalar SistemaX Pro Vers. <?php echo htmlspecialchars($mainApkVersion); ?>
+                            Instalar APK nativo SistemaX Pro v<?php echo htmlspecialchars($mainApkVersion); ?>
                         </a>
+                        <?php if ($isAndroid): ?>
+                            <a href="<?php echo htmlspecialchars($androidNativeOpenUrl); ?>"
+                               class="block w-full text-center bg-slate-800 hover:bg-slate-700 text-white font-semibold py-2.5 rounded-xl transition-colors">
+                                Abrir SistemaX Pro si ya está instalado
+                            </a>
+                        <?php endif; ?>
                     <?php else: ?>
                         <a href="<?php echo htmlspecialchars($mainApkUrl); ?>"
                            class="block w-full text-center bg-indigo-700 hover:bg-indigo-600 text-white font-bold py-3 rounded-xl transition-colors">
-                            Paso 1: Descargar SistemaX Pro Vers. <?php echo htmlspecialchars($mainApkVersion); ?>
+                            Descargar APK nativo SistemaX Pro v<?php echo htmlspecialchars($mainApkVersion); ?>
                         </a>
                     <?php endif; ?>
                 </div>

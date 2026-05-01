@@ -20,6 +20,14 @@ if (!empty($redirectUrl) && (strpos($redirectUrl, '/') !== 0 || strpos($redirect
 $defaultRedirect = '/public/menu/menu.php';
 $finalRedirect = !empty($redirectUrl) ? $redirectUrl : $defaultRedirect;
 
+$userAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
+$isNativeAndroidApp = stripos($userAgent, 'SistemaxProAndroid/') !== false;
+$isAndroidBrowser = (bool)preg_match('/Android/i', $userAgent) && !$isNativeAndroidApp;
+if ($isAndroidBrowser && empty($_GET['force_login'])) {
+    header('Location: /public/apps-moviles.php?platform=android');
+    exit;
+}
+
 // Intentar auto-login desde cookie "Recordarme"
 if (Auth::loginFromRememberCookie()) {
     header('Location: ' . $finalRedirect);

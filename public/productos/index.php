@@ -79,128 +79,157 @@ $empresa = $stmtEmpresa->fetch(PDO::FETCH_ASSOC) ?: [];
         }
     </style>
 </head>
-<body class="min-h-screen font-sans text-slate-100">
-<div class="min-h-screen px-4 py-6 sm:px-6 lg:px-8">
-    <header class="mx-auto mb-6 flex w-full max-w-7xl items-center justify-between gap-4">
-        <div>
-            <h1 class="text-3xl font-extrabold tracking-tight text-white"><?= htmlspecialchars(t('productos.title')) ?></h1>
-            <p class="mt-1 text-sm text-slate-400"><?= htmlspecialchars((string)($empresa['empresa'] ?? t('common.company'))) ?></p>
+<body class="min-h-screen bg-slate-950 font-sans text-slate-100 antialiased">
+<div class="min-h-screen bg-[radial-gradient(circle_at_top_left,rgba(34,211,238,.10),transparent_24%),radial-gradient(circle_at_top_right,rgba(59,130,246,.08),transparent_22%),linear-gradient(180deg,#0f172a_0%,#020617_100%)] px-4 py-5 sm:px-6 lg:px-8">
+    <header class="mx-auto mb-5 flex w-full max-w-7xl flex-col gap-4 rounded-3xl border border-white/8 bg-slate-900/70 px-5 py-4 shadow-[0_24px_60px_rgba(2,6,23,.28)] backdrop-blur-xl sm:flex-row sm:items-center sm:justify-between">
+        <div class="flex items-start gap-4">
+            <div class="flex h-12 w-12 items-center justify-center rounded-2xl border border-cyan-400/20 bg-cyan-400/10 text-cyan-300 shadow-inner">
+                <i class="fas fa-boxes-stacked text-lg"></i>
+            </div>
+            <div>
+                <div class="flex flex-wrap items-center gap-2">
+                    <h1 class="text-2xl font-semibold tracking-tight text-white sm:text-[28px]"><?= htmlspecialchars(t('productos.title')) ?></h1>
+                    <span class="rounded-full border border-cyan-400/20 bg-cyan-400/10 px-2.5 py-1 text-[11px] font-medium text-cyan-200">Listado vivo</span>
+                </div>
+                <p class="mt-1 text-sm text-slate-400"><?= htmlspecialchars((string)($empresa['empresa'] ?? t('common.company'))) ?></p>
+                <p class="mt-1 text-xs text-slate-500">Sucursal: <strong class="text-slate-300"><?= htmlspecialchars($sucursal !== '' ? $sucursal : ('#' . $id_sucursal)) ?></strong></p>
+            </div>
         </div>
-        <div class="flex items-center gap-2">
+        <div class="flex flex-wrap items-center gap-2 sm:justify-end">
             <button onclick="try{if(typeof parent.cerrarApp==='function'){parent.cerrarApp();return;}}catch(e){} window.location.href='/public/menu/menu.php';"
-                    class="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-red-500/40 bg-red-500/10 text-red-300 hover:bg-red-500/20">
-                <i class="fas fa-arrow-left"></i>
+                    class="inline-flex h-11 items-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-4 text-sm font-medium text-slate-200 transition hover:border-white/20 hover:bg-white/10">
+                <i class="fas fa-arrow-left text-xs text-slate-400"></i>
+                Volver
             </button>
             <button x-show="permisos.priv_insert === 'Y'"
-                    @click="openLegacyCreate()"
-                    class="inline-flex items-center gap-2 rounded-xl bg-cyan-500 px-4 py-3 text-sm font-semibold text-slate-950 hover:bg-cyan-400">
+                    @click="openProductModal('create')"
+                    class="inline-flex h-11 items-center gap-2 rounded-2xl bg-cyan-400 px-4 text-sm font-semibold text-slate-950 transition hover:bg-cyan-300">
                 <i class="fas fa-plus text-xs"></i>
-                Nuevo
+                Nuevo producto
             </button>
         </div>
     </header>
 
-    <section class="panel mx-auto mb-5 w-full max-w-7xl rounded-3xl p-4 sm:p-5">
-        <div class="grid gap-3 lg:grid-cols-[minmax(0,1.2fr),180px,180px,160px,auto]">
+    <section class="mx-auto mb-5 grid w-full max-w-7xl gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        <div class="rounded-3xl border border-white/8 bg-slate-900/70 p-4 shadow-[0_18px_40px_rgba(2,6,23,.22)] backdrop-blur-xl">
+            <div class="text-xs uppercase tracking-[0.22em] text-slate-500">Visibles</div>
+            <div class="mt-2 text-2xl font-semibold text-white" x-text="formatNumber(visibleProductos.length)"></div>
+            <div class="mt-1 text-sm text-slate-400">de <span x-text="formatNumber(totalRecords)"></span> productos</div>
+        </div>
+        <div class="rounded-3xl border border-white/8 bg-slate-900/70 p-4 shadow-[0_18px_40px_rgba(2,6,23,.22)] backdrop-blur-xl">
+            <div class="text-xs uppercase tracking-[0.22em] text-slate-500">Orden</div>
+            <div class="mt-2 text-2xl font-semibold text-white" x-text="sortBy"></div>
+            <div class="mt-1 text-sm text-slate-400" x-text="sortDir === 'ASC' ? 'Ascendente' : 'Descendente'"></div>
+        </div>
+        <div class="rounded-3xl border border-white/8 bg-slate-900/70 p-4 shadow-[0_18px_40px_rgba(2,6,23,.22)] backdrop-blur-xl">
+            <div class="text-xs uppercase tracking-[0.22em] text-slate-500">Estado</div>
+            <div class="mt-2 text-2xl font-semibold text-white" x-text="filtroEstado === '1' ? 'Activos' : (filtroEstado === '0' ? 'Inactivos' : 'Todos')"></div>
+            <div class="mt-1 text-sm text-slate-400">Filtro actual</div>
+        </div>
+        <div class="rounded-3xl border border-white/8 bg-slate-900/70 p-4 shadow-[0_18px_40px_rgba(2,6,23,.22)] backdrop-blur-xl">
+            <div class="text-xs uppercase tracking-[0.22em] text-slate-500">Carga</div>
+            <div class="mt-2 text-2xl font-semibold text-white" x-text="loading ? 'Leyendo' : (loadingMore ? 'Más...' : 'Lista')"></div>
+            <div class="mt-1 text-sm text-slate-400" x-text="loadingMore ? 'Trayendo siguientes filas' : 'Scroll infinito ligero'"></div>
+        </div>
+    </section>
+
+    <section class="mx-auto mb-5 w-full max-w-7xl rounded-3xl border border-white/8 bg-slate-900/70 p-4 shadow-[0_24px_60px_rgba(2,6,23,.28)] backdrop-blur-xl sm:p-5">
+        <div class="grid gap-3 lg:grid-cols-[minmax(0,1.5fr),170px,170px,170px,auto]">
             <div class="relative">
                 <i class="fas fa-search pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"></i>
                 <input type="text"
                        x-model="search"
                        @input.debounce.350ms="resetAndLoad()"
-                       placeholder="Buscar por codigo, descripcion o codigo de barra"
-                       class="toolbar-input h-12 w-full rounded-2xl pl-11 pr-4 text-sm outline-none focus:border-cyan-500">
+                       placeholder="Buscar codigo, descripcion o barra"
+                       class="h-12 w-full rounded-2xl border border-white/8 bg-slate-950/80 pl-11 pr-4 text-sm text-slate-100 outline-none transition placeholder:text-slate-500 focus:border-cyan-400/40 focus:ring-2 focus:ring-cyan-400/10">
             </div>
-            <select x-model="filtroEstado" @change="resetAndLoad()" class="toolbar-select h-12 rounded-2xl px-4 text-sm outline-none focus:border-cyan-500">
+            <select x-model="filtroEstado" @change="resetAndLoad()" class="h-12 rounded-2xl border border-white/8 bg-slate-950/80 px-4 text-sm text-slate-100 outline-none transition focus:border-cyan-400/40 focus:ring-2 focus:ring-cyan-400/10">
                 <option value="1">Solo activos</option>
                 <option value="0">Inactivos</option>
                 <option value="all">Todos</option>
             </select>
-            <select x-model="filtroMarca" @change="resetAndLoad()" class="toolbar-select h-12 rounded-2xl px-4 text-sm outline-none focus:border-cyan-500">
+            <select x-model="filtroMarca" @change="resetAndLoad()" class="h-12 rounded-2xl border border-white/8 bg-slate-950/80 px-4 text-sm text-slate-100 outline-none transition focus:border-cyan-400/40 focus:ring-2 focus:ring-cyan-400/10">
                 <option value="">Todas las marcas</option>
                 <template x-for="m in catMarcas" :key="'marca-' + m.id">
                     <option :value="m.id" x-text="m.marca"></option>
                 </template>
             </select>
-            <select x-model="filtroGrupo" @change="resetAndLoad()" class="toolbar-select h-12 rounded-2xl px-4 text-sm outline-none focus:border-cyan-500">
+            <select x-model="filtroGrupo" @change="resetAndLoad()" class="h-12 rounded-2xl border border-white/8 bg-slate-950/80 px-4 text-sm text-slate-100 outline-none transition focus:border-cyan-400/40 focus:ring-2 focus:ring-cyan-400/10">
                 <option value="">Todos los grupos</option>
                 <template x-for="g in catGrupos" :key="'grupo-' + g.id">
                     <option :value="g.id" x-text="g.grupo"></option>
                 </template>
             </select>
-            <button type="button"
-                    @click="clearFilters()"
-                    class="inline-flex h-12 items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-slate-950/80 px-4 text-sm font-medium text-slate-200 hover:border-slate-500 hover:text-white">
-                <i class="fas fa-filter-circle-xmark text-xs"></i>
+            <button type="button" @click="clearFilters()" class="inline-flex h-12 items-center justify-center gap-2 rounded-2xl border border-white/8 bg-white/5 px-4 text-sm font-medium text-slate-200 transition hover:border-white/15 hover:bg-white/10 hover:text-white">
+                <i class="fas fa-filter-circle-xmark text-xs text-slate-400"></i>
                 Limpiar
             </button>
         </div>
 
-        <div class="mt-4 flex flex-wrap items-center gap-3 text-sm text-slate-300">
-            <span class="rounded-full border border-cyan-500/30 bg-cyan-500/10 px-3 py-1.5 text-cyan-200">
+        <div class="mt-4 flex flex-wrap items-center gap-2 text-sm text-slate-400">
+            <span class="rounded-full border border-cyan-400/20 bg-cyan-400/10 px-3 py-1.5 text-cyan-200">
                 Mostrando <strong x-text="formatNumber(visibleProductos.length)"></strong> de <strong x-text="formatNumber(totalRecords)"></strong>
             </span>
-            <span class="rounded-full border border-slate-700 bg-slate-950/80 px-3 py-1.5">
-                Orden: <strong x-text="sortBy + ' / ' + sortDir"></strong>
+            <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-slate-300">
+                Orden <strong x-text="sortBy"></strong>
             </span>
-            <span x-show="loadingMore" class="rounded-full border border-cyan-500/30 bg-cyan-500/10 px-3 py-1.5 text-cyan-200">
-                <i class="fas fa-spinner fa-spin mr-1"></i>Cargando 4 mas
+            <span x-show="loadingMore" class="inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-400/10 px-3 py-1.5 text-cyan-200">
+                <i class="fas fa-spinner fa-spin text-xs"></i> Cargando más
             </span>
         </div>
     </section>
 
-    <section class="panel mx-auto w-full max-w-7xl overflow-hidden rounded-3xl">
-        <div x-show="loading" class="p-10 text-center">
-            <i class="fas fa-spinner fa-spin text-3xl text-cyan-400"></i>
-            <p class="mt-3 text-sm text-slate-400">Cargando productos...</p>
+    <section class="mx-auto w-full max-w-7xl overflow-hidden rounded-3xl border border-white/8 bg-slate-900/70 shadow-[0_24px_60px_rgba(2,6,23,.28)] backdrop-blur-xl">
+        <div x-show="loading" class="p-12 text-center">
+            <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border border-cyan-400/20 bg-cyan-400/10 text-cyan-300">
+                <i class="fas fa-spinner fa-spin text-xl"></i>
+            </div>
+            <p class="mt-4 text-sm text-slate-400">Cargando productos...</p>
         </div>
 
         <div x-show="!loading" class="overflow-x-auto">
-            <table class="w-full min-w-[980px]">
-                <thead class="border-b border-slate-700 bg-slate-950/70">
+            <table class="w-full min-w-[980px] border-separate border-spacing-0">
+                <thead class="sticky top-0 z-10 border-b border-white/8 bg-slate-950/95 backdrop-blur">
                     <tr>
-                        <th class="px-4 py-4 text-left text-xs font-semibold uppercase tracking-[0.18em] text-slate-400"></th>
-                        <th @click="setSort('cve_producto')" class="cursor-pointer px-4 py-4 text-left text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Codigo</th>
-                        <th @click="setSort('desproducto')" class="cursor-pointer px-4 py-4 text-left text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Producto</th>
-                        <th class="px-4 py-4 text-left text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Marca</th>
-                        <th class="px-4 py-4 text-left text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Grupo</th>
-                        <th @click="setSort('precio_venta')" class="cursor-pointer px-4 py-4 text-right text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Venta</th>
-                        <th @click="setSort('saldo')" class="cursor-pointer px-4 py-4 text-right text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Stock</th>
-                        <th class="px-4 py-4 text-center text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Estado</th>
-                        <th class="px-4 py-4 text-center text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Editar</th>
+                        <th class="px-4 py-4 text-left text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500"></th>
+                        <th @click="setSort('cve_producto')" class="cursor-pointer px-4 py-4 text-left text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500 transition hover:text-cyan-200">Codigo</th>
+                        <th @click="setSort('desproducto')" class="cursor-pointer px-4 py-4 text-left text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500 transition hover:text-cyan-200">Producto</th>
+                        <th class="px-4 py-4 text-left text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Marca</th>
+                        <th class="px-4 py-4 text-left text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Grupo</th>
+                        <th @click="setSort('precio_venta')" class="cursor-pointer px-4 py-4 text-right text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500 transition hover:text-cyan-200">Venta</th>
+                        <th @click="setSort('saldo')" class="cursor-pointer px-4 py-4 text-right text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500 transition hover:text-cyan-200">Stock</th>
+                        <th class="px-4 py-4 text-center text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Estado</th>
+                        <th class="px-4 py-4 text-center text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Editar</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-800">
+                <tbody class="divide-y divide-white/5">
                     <template x-for="(p, idx) in visibleProductos" :key="'prod-' + p.idproducto">
-                        <tr class="table-row">
-                            <td class="px-4 py-3">
-                                <div class="flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl bg-slate-800">
-                                    <img x-show="p.foto_url" :src="p.foto_url" class="h-10 w-10 object-cover" @error="$el.style.display='none'">
-                                    <i class="fas fa-box text-slate-500"></i>
+                        <tr class="cursor-pointer transition hover:bg-white/[0.03]" @click="openProductModal('edit', p.idproducto)" @keydown.enter.prevent="openProductModal('edit', p.idproducto)" @keydown.space.prevent="openProductModal('edit', p.idproducto)" role="button" tabindex="0">
+                            <td class="px-4 py-4">
+                                <div class="relative flex h-11 w-11 items-center justify-center overflow-hidden rounded-2xl border border-white/8 bg-slate-950/70 text-slate-500">
+                                    <img x-show="p.foto_url" :src="p.foto_url" class="h-11 w-11 object-cover" @error="$el.style.display='none'">
+                                    <i class="fas fa-box absolute"></i>
                                 </div>
                             </td>
-                            <td class="px-4 py-3 whitespace-nowrap">
+                            <td class="px-4 py-4 whitespace-nowrap">
                                 <div class="font-mono text-sm font-semibold text-white" x-text="p.cve_producto || '-'"></div>
                                 <div class="text-[11px] text-slate-500" x-text="p.codigo_barra ? ('CB: ' + p.codigo_barra) : ''"></div>
                             </td>
-                            <td class="px-4 py-3">
-                                <div class="text-sm font-medium text-white" x-text="p.desproducto"></div>
-                                <div x-show="idx === visibleProductos.length - 1"
-                                     x-init="observeFooter($el)"
-                                     class="h-px w-full opacity-0"></div>
+                            <td class="px-4 py-4">
+                                <div class="text-sm font-medium text-slate-100" x-text="p.desproducto"></div>
+                                <div x-show="idx === visibleProductos.length - 1" x-init="observeFooter($el)" class="h-px w-full opacity-0"></div>
                             </td>
-                            <td class="px-4 py-3 text-sm text-slate-300" x-text="p.marca_nombre || '-'"></td>
-                            <td class="px-4 py-3 text-sm text-slate-300" x-text="p.grupo_nombre || '-'"></td>
-                            <td class="px-4 py-3 text-right text-sm font-semibold text-white" x-text="'Gs. ' + formatMoney(p.precio_venta || 0)"></td>
-                            <td class="px-4 py-3 text-right text-sm font-semibold" :class="Number(p.saldo || 0) > 0 ? 'text-emerald-300' : 'text-rose-300'" x-text="formatNumber(p.saldo || 0)"></td>
-                            <td class="px-4 py-3 text-center">
-                                <span x-show="Number(p.descontinuado || 0) === 1" class="inline-flex rounded-full bg-amber-500/15 px-2.5 py-1 text-xs font-semibold text-amber-300">Descontinuado</span>
-                                <span x-show="Number(p.Estado || 0) === 1 && Number(p.descontinuado || 0) !== 1" class="inline-flex rounded-full bg-emerald-500/15 px-2.5 py-1 text-xs font-semibold text-emerald-300">Activo</span>
-                                <span x-show="Number(p.Estado || 0) === 0 && Number(p.descontinuado || 0) !== 1" class="inline-flex rounded-full bg-rose-500/15 px-2.5 py-1 text-xs font-semibold text-rose-300">Inactivo</span>
+                            <td class="px-4 py-4 text-sm text-slate-300" x-text="p.marca_nombre || '-'"></td>
+                            <td class="px-4 py-4 text-sm text-slate-300" x-text="p.grupo_nombre || '-'"></td>
+                            <td class="px-4 py-4 text-right text-sm font-semibold text-white" x-text="'Gs. ' + formatMoney(p.precio_venta || 0)"></td>
+                            <td class="px-4 py-4 text-right text-sm font-semibold" :class="Number(p.saldo || 0) > 0 ? 'text-emerald-300' : 'text-rose-300'" x-text="formatNumber(p.saldo || 0)"></td>
+                            <td class="px-4 py-4 text-center">
+                                <span x-show="Number(p.descontinuado || 0) === 1" class="inline-flex rounded-full border border-amber-400/20 bg-amber-400/10 px-2.5 py-1 text-xs font-medium text-amber-200">Descontinuado</span>
+                                <span x-show="Number(p.Estado || 0) === 1 && Number(p.descontinuado || 0) !== 1" class="inline-flex rounded-full border border-emerald-400/20 bg-emerald-400/10 px-2.5 py-1 text-xs font-medium text-emerald-200">Activo</span>
+                                <span x-show="Number(p.Estado || 0) === 0 && Number(p.descontinuado || 0) !== 1" class="inline-flex rounded-full border border-rose-400/20 bg-rose-400/10 px-2.5 py-1 text-xs font-medium text-rose-200">Inactivo</span>
                             </td>
-                            <td class="px-4 py-3 text-center">
-                                <button type="button"
-                                        @click="openLegacyEdit(p.idproducto)"
-                                        class="inline-flex items-center gap-2 rounded-xl bg-cyan-500 px-3 py-2 text-xs font-semibold text-slate-950 hover:bg-cyan-400">
+                            <td class="px-4 py-4 text-center">
+                                <button type="button" @click.stop="openProductModal('edit', p.idproducto)" class="inline-flex items-center gap-2 rounded-2xl border border-cyan-400/20 bg-cyan-400/10 px-3 py-2 text-xs font-semibold text-cyan-100 transition hover:bg-cyan-400/15 hover:text-white">
                                     <i class="fas fa-pen text-[10px]"></i>
                                     Editar
                                 </button>
@@ -211,18 +240,38 @@ $empresa = $stmtEmpresa->fetch(PDO::FETCH_ASSOC) ?: [];
             </table>
         </div>
 
-        <div x-show="!loading && visibleProductos.length === 0" class="p-12 text-center">
-            <i class="fas fa-box-open text-4xl text-slate-600"></i>
-            <p class="mt-3 text-lg text-slate-300">No se encontraron productos</p>
+        <div x-show="!loading && visibleProductos.length === 0" class="p-16 text-center">
+            <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl border border-white/8 bg-white/5 text-slate-400">
+                <i class="fas fa-box-open text-xl"></i>
+            </div>
+            <p class="mt-4 text-lg font-medium text-slate-200">No se encontraron productos</p>
+            <p class="mt-1 text-sm text-slate-500">Probá limpiar filtros o cambiar el orden.</p>
         </div>
 
-        <div class="border-t border-slate-800 px-5 py-4 text-sm text-slate-400">
-            <div class="flex items-center justify-between gap-4">
+        <div class="border-t border-white/8 px-5 py-4 text-sm text-slate-400">
+            <div class="flex flex-wrap items-center justify-between gap-3">
                 <span>Total visible: <strong class="text-slate-200" x-text="formatNumber(visibleProductos.length)"></strong></span>
-                <span x-show="!loadingMore && !hasMoreServer && bufferProductos.length === 0 && visibleProductos.length > 0">Fin de la lista</span>
+                <span x-show="!loadingMore && !hasMoreServer && bufferProductos.length === 0 && visibleProductos.length > 0" class="text-slate-500">Fin de la lista</span>
             </div>
         </div>
     </section>
+</div>
+
+<div x-show="productModal.open" x-cloak @click.self="closeProductModal()" class="fixed inset-0 z-[70] flex items-center justify-center bg-slate-950/70 px-3 py-4 backdrop-blur-sm" @keydown.escape.window="closeProductModal()">
+    <div class="flex h-[80vh] w-[80vw] flex-col overflow-hidden rounded-3xl border border-white/10 bg-slate-950 shadow-[0_30px_100px_rgba(0,0,0,.55)] max-w-none max-h-none sm:w-[80vw] sm:h-[80vh]">
+        <div class="flex items-center justify-between gap-3 border-b border-white/10 bg-slate-900 px-4 py-3">
+            <div>
+                <div class="text-sm font-semibold text-white" x-text="productModal.title"></div>
+                <div class="text-xs text-slate-400" x-text="productModal.subtitle"></div>
+            </div>
+            <button type="button" @click="closeProductModal()" class="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-slate-300 transition hover:bg-white/10 hover:text-white">
+                <i class="fas fa-xmark"></i>
+            </button>
+        </div>
+        <div class="min-h-0 flex-1 bg-slate-950">
+            <iframe x-ref="productFrame" :src="productModal.src" class="h-full w-full border-0 bg-slate-950"></iframe>
+        </div>
+    </div>
 </div>
 
 <div x-show="toast.show" x-cloak class="fixed bottom-5 right-5 z-[60]">
@@ -259,6 +308,14 @@ function productosGridApp() {
         catModelos: [],
         catReferencias: [],
         footerObserver: null,
+        productModal: {
+            open: false,
+            mode: 'create',
+            id: null,
+            title: 'Nuevo producto',
+            subtitle: 'Crear producto sin salir de la lista',
+            src: '',
+        },
         toast: { show: false, message: '', type: 'success' },
         async init() {
             await this.loadCatalogos();
@@ -374,11 +431,23 @@ function productosGridApp() {
             this.sortDir = 'ASC';
             this.resetAndLoad();
         },
-        openLegacyCreate() {
-            window.location.href = `/public/productos/legacy_index.php?desktop=1&no_redirect=1`;
+        openProductModal(mode, id = null) {
+            const isEdit = mode === 'edit' && id !== null && id !== undefined && String(id).trim() !== '';
+            const url = isEdit
+                ? `/public/productos/legacy_index.php?desktop=1&no_redirect=1&edit_id=${encodeURIComponent(id)}`
+                : `/public/productos/legacy_index.php?desktop=1&no_redirect=1`;
+            this.productModal = {
+                open: true,
+                mode: isEdit ? 'edit' : 'create',
+                id: isEdit ? id : null,
+                title: isEdit ? 'Editar producto' : 'Nuevo producto',
+                subtitle: isEdit ? 'Modificá el producto dentro del modal' : 'Creá un producto sin abandonar el listado',
+                src: url,
+            };
         },
-        openLegacyEdit(id) {
-            window.location.href = `/public/productos/legacy_index.php?desktop=1&no_redirect=1&edit_id=${encodeURIComponent(id)}`;
+        closeProductModal() {
+            this.productModal.open = false;
+            this.productModal.src = '';
         },
         showToast(message, type = 'success') {
             this.toast = { show: true, message, type };

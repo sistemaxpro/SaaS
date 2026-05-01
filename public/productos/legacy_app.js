@@ -18,6 +18,7 @@
             
             // Data
             productos: [],
+            selectedProductIds: [],
             stats: { total: 0, activos: 0, stockBajo: 0, sinStock: 0 },
             
             // Catálogos cacheados
@@ -47,10 +48,14 @@
             sortBy: 'desproducto',
             sortDir: 'ASC',
             quickFilterText: '',
+            searchTimer: null,
+            searchLoading: false,
+            searchHints: [],
+            showSearchHints: false,
             
             // Paginación
             currentPage: 1,
-            perPage: 25,
+            perPage: 10,
             perPageOptions: [10, 25, 50, 100, 200],
             totalRecords: 0,
             totalPages: 1,
@@ -60,6 +65,9 @@
             saving: false,
             showForm: false,
             showStock: false,
+            showAjusteInventarioModal: false,
+            showTransferenciaModal: false,
+            stockTab: 'ajustes',
             showCatalogos: false,
             showImport: false,
             imgDriveConfigured: false,
@@ -70,6 +78,9 @@
             showProductCameraModal: false,
             productCameraError: '',
             productCameraStream: null,
+            gridApi: null,
+            gridColumnApi: null,
+            agGridReady: false,
             
             // Form
             formTab: 'general',
@@ -91,6 +102,7 @@
             stockDetalle: [],
             stockMovimientos: [],
             ajuste: { id_sucursal: '', cantidad: 0, motivo: '' },
+            transferencia: { id_sucursal_origen: '', id_sucursal_destino: '', cantidad: 0, obs: '' },
             
             // Catálogos modal
             catTab: 'grupos',
@@ -199,16 +211,427 @@
                 if (!this.form.precio_compra || this.form.precio_compra <= 0) return 0;
                 return ((this.form.precio_venta - this.form.precio_compra) / this.form.precio_compra) * 100;
             },
+
+            get visibleProductos() {
+                const limit = Math.max(1, Number(this.perPage) || 25);
+                return Array.isArray(this.productos) ? this.productos.slice(0, limit) : [];
+            },
+
+            get allVisibleSelected() {
+                const items = this.visibleProductos;
+                return items.length > 0 && items.every((p) => this.selectedProductIds.includes(p.idproducto));
+            },
+
+            get selectedCount() {
+                return this.selectedProductIds.length;
+            },
+
+            getCatalogLabel(tabla, id) {
+                const value = String(id ?? '').trim();
+                if (!value || value === '0') return '';
+                const item = (this.getCatalogoArray(tabla) || []).find((it) => String(it?.id ?? '') === value);
+                return String(item?.nombre || item?.[this.getCatalogoField(tabla)] || '').trim();
+            },
+
+            normalizeShelfText(value) {
+                return String(value ?? '')
+                    .trim()
+                    .toLowerCase()
+                    .normalize('NFD')
+                    .replace(/[\u0300-\u036f]/g, '')
+                    .replace(/[^a-z0-9]+/g, ' ')
+                    .replace(/\s+/g, ' ');
+            },
+
+            hashShelfSeed(seed) {
+                let hash = 0;
+                const text = String(seed ?? '');
+                for (let i = 0; i < text.length; i++) {
+                    hash = ((hash << 5) - hash + text.charCodeAt(i)) >>> 0;
+                }
+                return hash >>> 0;
+            },
+
+            inferShelfZone(seedText) {
+                const text = this.normalizeShelfText(seedText);
+                const rules = [
+                    { re: /(fren|brake|pastill|disco|tambo)/, label: 'Frenos', code: 'FRE', base: 1 },
+                    { re: /(amortig|suspens|rotul|bielet|terminal|maza|ruleman)/, label: 'Suspension', code: 'SUS', base: 5 },
+                    { re: /(embrag|clutch|caja|transmision|cambio|semi eje|homocinet)/, label: 'Transmision', code: 'TRN', base: 9 },
+                    { re: /(filtro|air filter|aceite|oil|lubric|engras)/, label: 'Lubricantes', code: 'LUB', base: 13 },
+                    { re: /(bater|electr|sensor|alternador|arranc|bobin|fusibl|lampar|faro)/, label: 'Electricidad', code: 'ELE', base: 17 },
+                    { re: /(motor|piston|biela|arbol|correa|cadena|culata|valvul)/, label: 'Motor', code: 'MOT', base: 21 },
+                    { re: /(carrocer|paragolpe|guardabarro|puerta|capot|espejo|luna|faro)/, label: 'Carroceria', code: 'CAR', base: 25 },
+                    { re: /(llanta|neumatic|cubierta|neumático|rueda)/, label: 'Ruedas', code: 'RUE', base: 29 },
+                    { re: /(radiador|ventil|manguer|refriger|agua|termost)/, label: 'Refrigeracion', code: 'REF', base: 33 },
+                ];
+                for (const rule of rules) {
+                    if (rule.re.test(text)) return rule;
+                }
+                return { label: 'General', code: 'GEN', base: 37 };
+            },
+
+            pickShelfFamilyLocation() {
+                const groupId = String(this.form.grupo || '');
+                const brandId = String(this.form.marca || '');
+                const modelId = String(this.form.modelo || '');
+                const candidates = (Array.isArray(this.productos) ? this.productos : [])
+                    .filter((p) => String(p?.ubicacion || p?.gondola || p?.fila || p?.celda || '').trim() !== '');
+                const scoreOf = (p) => {
+                    let score = 0;
+                    if (groupId && String(p?.grupo_id ?? p?.grupo ?? '') === groupId) score += 3;
+                    if (brandId && String(p?.marca_id ?? p?.marca ?? '') === brandId) score += 2;
+                    if (modelId && String(p?.modelo_id ?? p?.modelo ?? '') === modelId) score += 1;
+                    return score;
+                };
+                candidates.sort((a, b) => scoreOf(b) - scoreOf(a));
+                const best = candidates[0];
+                if (!best || scoreOf(best) <= 0) return null;
+                return {
+                    ubicacion: String(best.ubicacion || '').trim(),
+                    gondola: String(best.gondola || '').trim(),
+                    fila: String(best.fila || '').trim(),
+                    celda: String(best.celda || '').trim(),
+                };
+            },
+
+            buildShelfSuggestion() {
+                const grupoNombre = this.getCatalogLabel('grupos', this.form.grupo);
+                const marcaNombre = this.getCatalogLabel('marcas', this.form.marca);
+                const modeloNombre = this.getCatalogLabel('modelos', this.form.modelo);
+                const seed = [
+                    this.form.cve_producto,
+                    this.form.desproducto,
+                    grupoNombre,
+                    marcaNombre,
+                    modeloNombre,
+                    this.form.referencia,
+                ].join(' | ');
+
+                const family = this.pickShelfFamilyLocation();
+                if (family) return family;
+
+                const zone = this.inferShelfZone(seed);
+                const hash = this.hashShelfSeed(seed);
+                const gondola = String(zone.base + (hash % 8));
+                const filas = ['A', 'B', 'C', 'D', 'E', 'F'];
+                const fila = filas[hash % filas.length];
+                const celda = String((hash % 12) + 1).padStart(2, '0');
+                return {
+                    ubicacion: zone.label,
+                    gondola,
+                    fila,
+                    celda,
+                };
+            },
+
+            sugerirUbicacion() {
+                const suggestion = this.buildShelfSuggestion();
+                this.form.ubicacion = suggestion.ubicacion || this.form.ubicacion || '';
+                this.form.gondola = suggestion.gondola || this.form.gondola || '';
+                this.form.fila = suggestion.fila || this.form.fila || '';
+                this.form.celda = suggestion.celda || this.form.celda || '';
+                this.showToast('Ubicación sugerida', 'success');
+            },
+
+            autofillUbicacion() {
+                const suggestion = this.buildShelfSuggestion();
+                if (!String(this.form.ubicacion || '').trim()) this.form.ubicacion = suggestion.ubicacion || '';
+                if (!String(this.form.gondola || '').trim()) this.form.gondola = suggestion.gondola || '';
+                if (!String(this.form.fila || '').trim()) this.form.fila = suggestion.fila || '';
+                if (!String(this.form.celda || '').trim()) this.form.celda = suggestion.celda || '';
+            },
+
+            get searchHasValue() {
+                return String(this.searchQuery || '').trim().length > 0;
+            },
             
             init() {
                 this.resetForm();
                 this.isDark = document.documentElement.classList.contains('dark');
                 this.themeMode = this.isDark ? 'dark' : 'light';
+                void this.initAgGrid();
                 setTimeout(() => this.loadCatalogos(), 1200);
                 setTimeout(() => this.checkDriveConfig(), 1500);
 
                 setTimeout(() => { if (window.__ensureFontAwesome) window.__ensureFontAwesome(); }, 1200);
                 void this.loadProductos();
+            },
+
+            getAgGridLocaleText() {
+                return window.SmxAgGridLocale?.getLocaleText?.() || {};
+            },
+
+            async initAgGrid() {
+                if (this.agGridReady) return;
+                await window.__agGridReady;
+                if (!this.$refs.productosGrid || this.gridApi) return;
+
+                const self = this;
+                const showSidebar = window.matchMedia('(min-width: 1024px)').matches;
+                const gridOptions = {
+                    context: { componentParent: self },
+                    defaultColDef: {
+                        sortable: true,
+                        resizable: true,
+                        filter: false,
+                        enableRowGroup: true,
+                        enableValue: true,
+                        minWidth: 100,
+                    },
+                    columnDefs: this.getGridColumnDefs(),
+                    rowData: [],
+                    rowHeight: 42,
+                    headerHeight: 44,
+                    animateRows: true,
+                    suppressCellFocus: true,
+                    suppressRowClickSelection: false,
+            rowSelection: 'multiple',
+                    rowMultiSelectWithClick: true,
+                    suppressScrollOnNewData: true,
+                    groupDefaultExpanded: 0,
+                    suppressAggFuncInHeader: true,
+                    animateRows: true,
+                    localeText: this.getAgGridLocaleText(),
+                    sideBar: showSidebar ? {
+                        position: 'right',
+                        width: 280,
+                        defaultToolPanel: 'columns',
+                        toolPanels: [
+                            {
+                                id: 'filters',
+                                labelDefault: 'Filtros',
+                                labelKey: 'filters',
+                                iconKey: 'filter',
+                                toolPanel: 'agFiltersToolPanel',
+                            },
+                            {
+                                id: 'columns',
+                                labelDefault: 'Columnas',
+                                labelKey: 'columns',
+                                iconKey: 'columns',
+                                toolPanel: 'agColumnsToolPanel',
+                                toolPanelParams: {
+                                    suppressRowGroups: false,
+                                    suppressValues: false,
+                                    suppressPivots: true,
+                                    suppressPivotMode: true,
+                                }
+                            }
+                        ]
+                    } : false,
+                    autoGroupColumnDef: {
+                        headerName: 'Grupo',
+                        minWidth: 260,
+                        cellRendererParams: {
+                            suppressCount: true,
+                        },
+                    },
+                    overlayNoRowsTemplate: '<span class="text-slate-500">No se encontraron productos</span>',
+                    onGridReady(params) {
+                        self.gridApi = params.api;
+                        self.gridColumnApi = params.columnApi || null;
+                        self.agGridReady = true;
+                        params.api.setGridOption('rowData', self.productos || []);
+                        requestAnimationFrame(() => params.api.sizeColumnsToFit());
+                    },
+                    onFirstDataRendered(params) {
+                        params.api.refreshClientSideRowModel('group');
+                        params.api.refreshClientSideRowModel('aggregate');
+                    },
+                    onSelectionChanged() {
+                        if (!self.gridApi) return;
+                        self.selectedProductIds = self.gridApi.getSelectedNodes().map((node) => Number(node.data?.idproducto || 0)).filter(Boolean);
+                    },
+                    onSortChanged() {
+                        if (!self.gridApi) return;
+                        const cols = self.gridApi.getColumnState().filter((c) => c.sort);
+                        const primary = cols[0] || null;
+                        const nextSortBy = primary?.colId || 'desproducto';
+                        const nextSortDir = String(primary?.sort || 'asc').toUpperCase();
+                        if (self.sortBy !== nextSortBy || self.sortDir !== nextSortDir) {
+                            self.sortBy = nextSortBy;
+                            self.sortDir = nextSortDir;
+                            self.currentPage = 1;
+                            self.loadProductos();
+                        }
+                    },
+                    onRowClicked(params) {
+                        const target = params.event?.target;
+                        if (target && target.closest && target.closest('.ag-selection-checkbox')) return;
+                        if (params.data?.idproducto) self.editarProducto(params.data.idproducto);
+                    },
+                    onCellClicked(params) {
+                        if (params.column?.getColId?.() !== 'action') return;
+                        if (params.data?.idproducto) self.editarProducto(params.data.idproducto);
+                    }
+                };
+
+                this.gridApi = agGrid.createGrid(this.$refs.productosGrid, gridOptions);
+            },
+
+            getGridColumnDefs() {
+                const self = this;
+                return [
+                    {
+                        headerName: '',
+                        colId: '__select__',
+                        width: 54,
+                        pinned: 'left',
+                        suppressMenu: true,
+                        sortable: false,
+                        resizable: false,
+                        lockPosition: true,
+                        checkboxSelection: true,
+                        headerCheckboxSelection: true,
+                        headerCheckboxSelectionFilteredOnly: false,
+                    },
+                    {
+                        headerName: 'Código',
+                        field: 'cve_producto',
+                        minWidth: 140,
+                        width: 150,
+                        cellRenderer(params) {
+                            const data = params.data || {};
+                            const code = self.capitalizeText(data.cve_producto);
+                            const cb = Array.isArray(data.codigos_barra) ? data.codigos_barra[0] : (data.codigo_barra || '');
+                            return `<div class="prod-stack"><span class="main font-mono">${self.escapeHtml(code)}</span>${cb ? `<span class="meta font-mono">CB: ${self.escapeHtml(self.capitalizeText(cb))}</span>` : ''}</div>`;
+                        }
+                    },
+                    {
+                        headerName: 'Producto',
+                        field: 'desproducto',
+                        minWidth: 320,
+                        flex: 1,
+                        sort: 'asc',
+                        cellRenderer(params) {
+                            const data = params.data || {};
+                            const title = self.capitalizeText(data.desproducto);
+                            return `<div class="prod-stack"><span class="main">${self.escapeHtml(title)}</span></div>`;
+                        }
+                    },
+                    {
+                        headerName: 'Grupo',
+                        field: 'grupo_nombre',
+                        minWidth: 160,
+                        hide: true,
+                        enableRowGroup: true,
+                        cellRenderer(params) {
+                            return self.escapeHtml(params.value || '');
+                        }
+                    },
+                    {
+                        headerName: 'Marca',
+                        field: 'marca_nombre',
+                        minWidth: 160,
+                        hide: true,
+                        cellRenderer(params) {
+                            return self.escapeHtml(params.value || '');
+                        }
+                    },
+                    {
+                        headerName: 'Modelo',
+                        field: 'modelo_nombre',
+                        minWidth: 160,
+                        hide: true,
+                        cellRenderer(params) {
+                            return self.escapeHtml(params.value || '');
+                        }
+                    },
+                    {
+                        headerName: 'Color',
+                        field: 'color_nombre',
+                        minWidth: 140,
+                        hide: true,
+                        cellRenderer(params) {
+                            return self.escapeHtml(params.value || '');
+                        }
+                    },
+                    {
+                        headerName: 'Referencia',
+                        field: 'referencia_nombre',
+                        minWidth: 150,
+                        hide: true,
+                        cellRenderer(params) {
+                            return self.escapeHtml(params.value || '');
+                        }
+                    },
+                    {
+                        headerName: 'IVA',
+                        field: 'iva',
+                        width: 90,
+                        hide: true,
+                        valueFormatter(params) {
+                            const v = Number(params.value || 0);
+                            return v === 1 ? '10%' : (v === 2 ? '5%' : 'Exenta');
+                        }
+                    },
+                    {
+                        headerName: 'Compra',
+                        field: 'precio_compra',
+                        width: 130,
+                        hide: true,
+                        type: 'numericColumn',
+                        cellClass: 'text-right',
+                        aggFunc: 'sum',
+                        valueFormatter(params) { return self.formatMoney(params.value); }
+                    },
+                    {
+                        headerName: 'P. Venta',
+                        field: 'precio_venta',
+                        width: 130,
+                        type: 'numericColumn',
+                        cellClass: 'text-right',
+                        aggFunc: 'sum',
+                        valueFormatter(params) { return self.formatMoney(params.value); }
+                    },
+                    {
+                        headerName: 'Stock',
+                        field: 'saldo',
+                        width: 110,
+                        type: 'numericColumn',
+                        cellClass(params) {
+                            const value = Number(params.value || 0);
+                            return value < 0 ? 'text-right stock-negative' : (value < 5 ? 'text-right stock-low' : 'text-right stock-ok');
+                        },
+                        aggFunc: 'sum',
+                        valueFormatter(params) { return self.formatNumber(params.value); }
+                    },
+                    {
+                        headerName: 'Control Stock',
+                        field: 'controla_stock',
+                        width: 120,
+                        hide: true,
+                        valueFormatter(params) { return Number(params.value || 0) === 1 ? 'Si' : 'No'; }
+                    },
+                    {
+                        headerName: 'Código Barra',
+                        field: 'codigo_barra',
+                        minWidth: 160,
+                        hide: true,
+                        cellRenderer(params) {
+                            return self.escapeHtml(params.value || '');
+                        }
+                    },
+                    {
+                        headerName: 'Descontinuado',
+                        field: 'descontinuado',
+                        width: 120,
+                        hide: true,
+                        valueFormatter(params) { return Number(params.value || 0) === 1 ? 'Si' : 'No'; }
+                    },
+                ];
+            },
+
+            refreshGrid() {
+                if (!this.gridApi) return;
+                this.gridApi.setGridOption('rowData', this.productos || []);
+                const selected = new Set(this.selectedProductIds.map(Number));
+                this.gridApi.forEachNode((node) => {
+                    const id = Number(node.data?.idproducto || 0);
+                    node.setSelected(id > 0 && selected.has(id), false, true);
+                });
+                requestAnimationFrame(() => this.gridApi.sizeColumnsToFit());
             },
 
             async checkDriveConfig() {
@@ -329,14 +752,82 @@
                     
                     if (data.success) {
                         this.productos = data.data || [];
+                        this.selectedProductIds = [];
                         this.totalRecords = data.pagination?.total || 0;
                         this.totalPages = data.pagination?.total_pages || 1;
                         this.stats = data.stats || this.stats;
+                        this.refreshGrid();
+                    } else if (data?.error) {
+                        this.showToast(data.error, 'error');
                     }
                 } catch (error) {
                     console.error('Error cargando productos:', error);
+                    this.showToast('No se pudo cargar el listado de productos', 'error');
                 }
                 this.loading = false;
+            },
+
+            scheduleSearch() {
+                this.currentPage = 1;
+                this.showSearchHints = true;
+                if (this.searchTimer) clearTimeout(this.searchTimer);
+                this.searchLoading = true;
+                this.searchTimer = setTimeout(() => {
+                    void this.runSearch();
+                }, 280);
+            },
+
+            async runSearch() {
+                try {
+                    await this.loadProductos();
+                    await this.loadSearchHints();
+                } finally {
+                    this.searchLoading = false;
+                }
+            },
+
+            async loadSearchHints() {
+                const q = String(this.searchQuery || '').trim();
+                if (!q) {
+                    this.searchHints = [];
+                    this.showSearchHints = false;
+                    return;
+                }
+                try {
+                    const params = new URLSearchParams({
+                        id_empresa: this.idEmpresa,
+                        page: 1,
+                        per_page: 8,
+                        fast: '1',
+                        with_stats: '0',
+                        defer_hydration: '1',
+                        search: q,
+                        grupo: this.filtroGrupo,
+                        marca: this.filtroMarca,
+                        estado: this.filtroEstado,
+                        sort_by: this.sortBy,
+                        sort_dir: this.sortDir,
+                    });
+                    const res = await fetch(`${this.API}/list.php?${params}`);
+                    const data = await res.json();
+                    const rows = Array.isArray(data?.data) ? data.data : [];
+                    this.searchHints = rows.slice(0, 8).map((p) => ({
+                        idproducto: p.idproducto,
+                        label: `${this.capitalizeText(p.cve_producto)} · ${this.capitalizeText(p.desproducto)}`,
+                        meta: [p.grupo_nombre, p.marca_nombre, p.modelo_nombre, p.color_nombre].filter(Boolean).join(' · '),
+                        value: p.desproducto || p.cve_producto || String(p.idproducto || ''),
+                    }));
+                } catch (_) {
+                    this.searchHints = [];
+                }
+                this.showSearchHints = this.searchHints.length > 0;
+            },
+
+            applySearchHint(hint) {
+                this.searchQuery = hint?.value || hint?.label || '';
+                this.showSearchHints = false;
+                this.searchHints = [];
+                void this.runSearch();
             },
             
             // ========== SORT ==========
@@ -388,6 +879,10 @@
                     ancho: 0,
                     alto: 0,
                     largo: 0,
+                    ubicacion: '',
+                    gondola: '',
+                    fila: '',
+                    celda: '',
                     foto_url: '',
                     catalogo_url: '',
                     obs: '',
@@ -478,6 +973,10 @@
                             ancho: parseFloat(p.ancho) || 0,
                             alto: parseFloat(p.alto) || 0,
                             largo: parseFloat(p.largo) || 0,
+                            ubicacion: p.ubicacion || '',
+                            gondola: p.gondola || '',
+                            fila: p.fila || '',
+                            celda: p.celda || '',
                             foto_url: p.foto_url || '',
                             catalogo_url: '',
                             obs: p.obs || '',
@@ -520,6 +1019,8 @@
                     this.formTab = 'general';
                     return;
                 }
+
+                this.autofillUbicacion();
                 
                 this.saving = true;
                 try {
@@ -1505,6 +2006,10 @@
                 this.form.grupo = p.grupo || 0;
                 this.form.marca = p.marca || 0;
                 this.form.iva = String(p.iva || 1);
+                this.form.ubicacion = '';
+                this.form.gondola = '';
+                this.form.fila = '';
+                this.form.celda = '';
                 this.showForm = true;
             },
             
@@ -1524,6 +2029,70 @@
                     const data = await res.json();
                     if (data.success) {
                         this.showToast('Producto descontinuado', 'success');
+                        this.loadProductos();
+                    } else {
+                        this.showToast(data.error || 'Error', 'error');
+                    }
+                } catch (e) {
+                    this.showToast('Error de conexión', 'error');
+                }
+            },
+
+            async anularProductoForm() {
+                if (!this.form?.idproducto) return;
+                if (!confirm(`¿Anular "${this.form.desproducto}"?`)) return;
+                try {
+                    const res = await fetch(`${this.API}/eliminar.php`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ action: 'anular', idproducto: this.form.idproducto, id_empresa: this.idEmpresa })
+                    });
+                    const data = await res.json();
+                    if (data.success) {
+                        this.showToast(data.message || 'Producto anulado', 'success');
+                        this.closeForm();
+                        this.loadProductos();
+                    } else {
+                        this.showToast(data.error || 'Error', 'error');
+                    }
+                } catch (e) {
+                    this.showToast('Error de conexión', 'error');
+                }
+            },
+
+            async abrirAjustarInventarioForm() {
+                if (!this.form?.idproducto) return;
+                const id = this.form.idproducto;
+                const nombre = this.form.desproducto || '';
+                this.showForm = false;
+                this.showStock = false;
+                this.showTransferenciaModal = false;
+                await this.abrirAjusteInventarioModal({ idproducto: id, desproducto: nombre });
+            },
+
+            async abrirTransferenciaInventarioForm() {
+                if (!this.form?.idproducto) return;
+                const id = this.form.idproducto;
+                const nombre = this.form.desproducto || '';
+                this.showForm = false;
+                this.showStock = false;
+                this.showAjusteInventarioModal = false;
+                await this.abrirTransferenciaModal({ idproducto: id, desproducto: nombre });
+            },
+
+            async descontinuarProductoForm() {
+                if (!this.form?.idproducto) return;
+                if (!confirm(`¿Descontinuar "${this.form.desproducto}"?`)) return;
+                try {
+                    const res = await fetch(`${this.API}/eliminar.php`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ action: 'soft_delete', idproducto: this.form.idproducto, id_empresa: this.idEmpresa })
+                    });
+                    const data = await res.json();
+                    if (data.success) {
+                        this.showToast(data.message || 'Producto descontinuado', 'success');
+                        this.closeForm();
                         this.loadProductos();
                     } else {
                         this.showToast(data.error || 'Error', 'error');
@@ -1554,13 +2123,22 @@
             
             // ========== STOCK ==========
             async verStock(p) {
+                await this.loadStockData(p);
+                this.showStock = true;
+            },
+
+            async loadStockData(p) {
                 this.stockProductoId = p.idproducto;
                 this.stockProductoNombre = p.desproducto;
                 this.stockDetalle = [];
                 this.stockMovimientos = [];
                 this.ajuste = { id_sucursal: '', cantidad: 0, motivo: '' };
-                this.showStock = true;
-                
+                this.transferencia = {
+                    id_sucursal_origen: String(window.__PRODUCTOS_CONFIG__.idSucursal || ''),
+                    id_sucursal_destino: '',
+                    cantidad: 0,
+                    obs: ''
+                };
                 try {
                     const [stockRes, movRes] = await Promise.all([
                         fetch(`${this.API}/stock.php?action=stock&id=${p.idproducto}&id_empresa=${this.idEmpresa}`).then(r => r.json()),
@@ -1571,6 +2149,22 @@
                 } catch (error) {
                     console.error('Error cargando stock:', error);
                 }
+            },
+
+            async abrirAjusteInventarioModal(p) {
+                this.showForm = false;
+                this.showStock = false;
+                this.showTransferenciaModal = false;
+                await this.loadStockData({ idproducto: p.idproducto, desproducto: p.desproducto });
+                this.showAjusteInventarioModal = true;
+            },
+
+            async abrirTransferenciaModal(p) {
+                this.showForm = false;
+                this.showStock = false;
+                this.showAjusteInventarioModal = false;
+                await this.loadStockData({ idproducto: p.idproducto, desproducto: p.desproducto });
+                this.showTransferenciaModal = true;
             },
             
             async guardarAjuste() {
@@ -1593,11 +2187,52 @@
                     if (data.success) {
                         this.showToast('Ajuste aplicado correctamente', 'success');
                         this.ajuste = { id_sucursal: '', cantidad: 0, motivo: '' };
-                        // Recargar stock
-                        await this.verStock({ idproducto: this.stockProductoId, desproducto: this.stockProductoNombre });
+                        this.showAjusteInventarioModal = false;
+                        await this.loadStockData({ idproducto: this.stockProductoId, desproducto: this.stockProductoNombre });
                         this.loadProductos();
                     } else {
                         this.showToast(data.error || 'Error al aplicar ajuste', 'error');
+                    }
+                } catch (e) {
+                    this.showToast('Error de conexión', 'error');
+                }
+            },
+
+            async guardarTraslado() {
+                if (!this.transferencia.id_sucursal_origen || !this.transferencia.id_sucursal_destino || !this.transferencia.cantidad) return;
+                if (String(this.transferencia.id_sucursal_origen) === String(this.transferencia.id_sucursal_destino)) {
+                    this.showToast('Origen y destino deben ser distintos', 'error');
+                    return;
+                }
+
+                try {
+                    const res = await fetch(`${this.API}/stock.php`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            action: 'traslado',
+                            id_producto: this.stockProductoId,
+                            id_empresa: this.idEmpresa,
+                            id_sucursal_origen: this.transferencia.id_sucursal_origen,
+                            id_sucursal_destino: this.transferencia.id_sucursal_destino,
+                            cantidad: this.transferencia.cantidad,
+                            obs: this.transferencia.obs || 'Traslado entre sucursales'
+                        })
+                    });
+                    const data = await res.json();
+                    if (data.success) {
+                        this.showToast('Traslado registrado correctamente', 'success');
+                        this.transferencia = {
+                            id_sucursal_origen: String(window.__PRODUCTOS_CONFIG__.idSucursal || ''),
+                            id_sucursal_destino: '',
+                            cantidad: 0,
+                            obs: ''
+                        };
+                        this.showTransferenciaModal = false;
+                        await this.loadStockData({ idproducto: this.stockProductoId, desproducto: this.stockProductoNombre });
+                        this.loadProductos();
+                    } else {
+                        this.showToast(data.error || 'Error al registrar traslado', 'error');
                     }
                 } catch (e) {
                     this.showToast('Error de conexión', 'error');
@@ -1805,7 +2440,31 @@
                 this.filtroMarca = '';
                 this.filtroEstado = '1';
                 this.currentPage = 1;
+                this.selectedProductIds = [];
+                this.showSearchHints = false;
+                this.searchHints = [];
+                if (this.gridApi) this.gridApi.deselectAll();
                 this.loadProductos();
+            },
+
+            toggleProductSelection(id, checked) {
+                const pid = Number(id);
+                if (!pid) return;
+                const next = new Set(this.selectedProductIds.map(Number));
+                if (checked) next.add(pid);
+                else next.delete(pid);
+                this.selectedProductIds = Array.from(next);
+            },
+
+            toggleVisibleSelection(checked) {
+                const next = new Set(this.selectedProductIds.map(Number));
+                for (const p of this.visibleProductos) {
+                    const pid = Number(p?.idproducto || 0);
+                    if (!pid) continue;
+                    if (checked) next.add(pid);
+                    else next.delete(pid);
+                }
+                this.selectedProductIds = Array.from(next);
             },
             
             prevPage() { if (this.currentPage > 1) { this.currentPage--; this.loadProductos(); } },
@@ -1952,7 +2611,7 @@
             },
             
             stockClass(p) {
-                const s = parseFloat(p.saldo) || 0;
+                const s = parseFloat(this.stockSesion(p)) || 0;
                 const min = parseFloat(p.stock_minimo) || 0;
                 if (s <= 0) return 'text-red-600 dark:text-red-400';
                 if (min > 0 && s <= min) return 'text-amber-600 dark:text-amber-400';

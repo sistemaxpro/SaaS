@@ -30,6 +30,9 @@ else echo -e "${RED}✗ Gradle no encontrado${NC}"; exit 1; fi
 VERSION="0.2.0"
 [ -f app/build.gradle.kts ] && V=$(grep 'versionName' app/build.gradle.kts | head -1 | sed 's/.*"\(.*\)".*/\1/') && [ -n "$V" ] && VERSION="$V"
 echo -e "${CYAN}→ Versión: $VERSION | Build: $BUILD_TYPE${NC}"
+if [ -n "${SISTEMAX_ANDROID_START_URL:-}" ]; then
+    echo -e "${CYAN}→ START_URL: ${SISTEMAX_ANDROID_START_URL}${NC}"
+fi
 
 echo -e "${YELLOW}→ Limpiando...${NC}"
 $GRADLE_CMD clean

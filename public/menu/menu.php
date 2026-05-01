@@ -5005,6 +5005,36 @@ if ($menuAction === 'load_home_apps_order' || $menuAction === 'save_home_apps_or
             }
         }
 
+        @media (max-width: 768px) {
+            .modal-overlay {
+                padding: 0;
+                align-items: stretch;
+            }
+
+            .modal-content {
+                max-width: none;
+                width: 100%;
+                height: 100dvh;
+                max-height: 100dvh;
+                border-radius: 0;
+                display: flex;
+                align-items: center;
+            }
+
+            .modal-content > .p-6 {
+                width: 100%;
+                padding: 1.25rem;
+            }
+
+            .modal-content .flex.gap-3 {
+                flex-direction: column;
+            }
+
+            .modal-content button {
+                min-height: 48px;
+            }
+        }
+
         /* ==========================================
            iOS Pure Glass Theme (Global Menu Override)
            ========================================== */

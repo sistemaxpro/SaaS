@@ -54,9 +54,30 @@ $empresaNombre = $stmtE->fetchColumn() ?: 'Empresa';
     </script>
     <style>
         [x-cloak] { display: none !important; }
+        body.inventario-desktop {
+            font-size: 12px;
+            font-weight: 300;
+            line-height: 1.35;
+            letter-spacing: 0.01em;
+        }
+        body.inventario-desktop .text-xs,
+        body.inventario-desktop .text-sm,
+        body.inventario-desktop .text-base,
+        body.inventario-desktop .text-lg {
+            font-size: 12px !important;
+        }
+        body.inventario-desktop .font-medium,
+        body.inventario-desktop .font-semibold,
+        body.inventario-desktop .font-bold {
+            font-weight: 400 !important;
+        }
+        .inv-panel { box-shadow: 0 16px 40px rgba(15, 23, 42, .06); }
+        .dark .inv-panel { box-shadow: 0 16px 40px rgba(2, 6, 23, .35); }
+        .inv-card:hover { border-color: rgba(251, 191, 36, .35); }
+        .dark .inv-card:hover { border-color: rgba(245, 158, 11, .28); }
     </style>
 </head>
-<body class="min-h-screen bg-[radial-gradient(circle_at_top_left,_#f7efe3,_#eef2f7_40%,_#dbe4ef)] dark:bg-[radial-gradient(circle_at_top_left,_#1e293b,_#0f172a_42%,_#020617)] text-slate-900 dark:text-slate-100 font-sans antialiased">
+<body class="inventario-desktop min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-sans antialiased">
 <script>
 window.__INV__ = {
     idEmpresa: <?= (int)$idEmpresa ?>,
@@ -70,38 +91,38 @@ window.__INV__ = {
 </script>
 
 <div class="min-h-screen">
-    <header class="sticky top-0 z-30 border-b border-white/40 dark:border-slate-800 bg-white/75 dark:bg-slate-950/70 backdrop-blur-xl">
-        <div class="max-w-[1600px] mx-auto px-6 h-20 flex items-center justify-between gap-6">
+    <header class="sticky top-0 z-30 border-b border-slate-200 dark:border-slate-800 bg-white/85 dark:bg-slate-950/80 backdrop-blur-xl">
+        <div class="max-w-[1600px] mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
             <div class="flex items-center gap-4 min-w-0">
                 <button onclick="try{if(typeof parent.cerrarApp==='function'){parent.cerrarApp();return;}}catch(e){} window.location.href='/public/menu/menu.php';"
-                        class="w-11 h-11 rounded-2xl bg-red-50 border border-red-200 text-red-600 flex items-center justify-center shadow-sm">
+                        class="w-10 h-10 rounded-xl bg-red-50 border border-red-200 text-red-600 flex items-center justify-center shadow-sm">
                     <i class="fas fa-arrow-left"></i>
                 </button>
                 <div class="min-w-0">
-                    <p class="text-[11px] uppercase tracking-[0.28em] text-amber-700 dark:text-amber-300 font-black">Inventario</p>
-                    <h1 class="text-2xl font-black truncate">Control desktop multi sucursal</h1>
+                    <p class="text-[10px] uppercase tracking-[0.28em] text-amber-700 dark:text-amber-300 font-black">Inventario</p>
+                    <h1 class="text-xl sm:text-2xl font-black truncate">Control desktop multi sucursal</h1>
                     <p class="text-xs text-slate-500 dark:text-slate-400 truncate"><?= htmlspecialchars($empresaNombre) ?></p>
                 </div>
             </div>
             <div class="flex items-center gap-3">
-                <a href="/public/inventario/mobile.php" class="px-4 py-2.5 rounded-2xl bg-white/80 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-700 text-sm font-bold">
+                <a href="/public/inventario/mobile.php" class="px-3 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm font-semibold shadow-sm">
                     <i class="fas fa-mobile-screen mr-2"></i>Modo móvil
                 </a>
-                <button @click="toggleTheme()" class="w-11 h-11 rounded-2xl bg-slate-900 text-white dark:bg-white dark:text-slate-900 flex items-center justify-center shadow-lg">
+                <button @click="toggleTheme()" class="w-10 h-10 rounded-xl bg-slate-900 text-white dark:bg-white dark:text-slate-900 flex items-center justify-center shadow-lg">
                     <i class="fas" :class="isDark ? 'fa-sun' : 'fa-moon'"></i>
                 </button>
             </div>
         </div>
     </header>
 
-    <main class="max-w-[1600px] mx-auto px-6 py-6 space-y-6">
+    <main class="max-w-[1600px] mx-auto px-4 sm:px-6 py-6 space-y-5">
         <section class="grid grid-cols-12 gap-4">
-            <div class="col-span-12 xl:col-span-8 rounded-[2rem] bg-white/90 dark:bg-slate-950/80 border border-white/70 dark:border-slate-800 p-5 shadow-sm">
+            <div class="col-span-12 xl:col-span-8 inv-panel rounded-[1.6rem] bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 p-4 sm:p-5">
                 <div class="grid grid-cols-12 gap-3 items-end">
                     <div class="col-span-12 lg:col-span-3">
                         <label class="block text-[10px] uppercase tracking-[0.18em] text-slate-400 mb-1.5">Sucursal</label>
                         <select x-model.number="idSucursal" @change="handleSucursalChange()"
-                                class="w-full rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-3 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-amber-500/40">
+                                class="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2.5 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-amber-500/40">
                             <template x-for="sucursal in sucursales" :key="sucursal.id_sucursal">
                                 <option :value="sucursal.id_sucursal" x-text="sucursal.sucursal"></option>
                             </template>
@@ -113,7 +134,7 @@ window.__INV__ = {
                             <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
                             <input x-model="searchQuery" @input.debounce.300ms="buscarProductos()" type="text"
                                    placeholder="Buscar codigo, barra, referencia o descripcion..."
-                                   class="w-full rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 pl-11 pr-24 py-3.5 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-amber-500/40">
+                                   class="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 pl-11 pr-24 py-2.5 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-amber-500/40">
                             <button type="button" @click="toggleSearchVoice()" :disabled="!speechSupported"
                                     class="absolute right-12 top-1/2 -translate-y-1/2 w-9 h-9 rounded-xl flex items-center justify-center transition-all disabled:opacity-40 disabled:cursor-not-allowed"
                                     :class="speechListening ? 'bg-rose-600 text-white shadow-lg shadow-rose-600/20' : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-300'">
@@ -128,14 +149,14 @@ window.__INV__ = {
                     <div class="col-span-12 lg:col-span-2">
                         <label class="block text-[10px] uppercase tracking-[0.18em] text-slate-400 mb-1.5">Acción</label>
                         <button @click="syncAll(true)"
-                                class="w-full rounded-2xl bg-amber-600 text-white py-3.5 text-sm font-black shadow-lg shadow-amber-600/20">
+                                class="w-full rounded-xl bg-amber-600 text-white py-2.5 text-sm font-black shadow-lg shadow-amber-600/20">
                             <i class="fas fa-rotate mr-2"></i>Actualizar
                         </button>
                     </div>
                 </div>
             </div>
 
-            <div class="col-span-12 xl:col-span-4 rounded-[2rem] bg-gradient-to-br from-emerald-600 to-teal-700 text-white p-5 shadow-lg shadow-emerald-900/20">
+            <div class="col-span-12 xl:col-span-4 inv-panel rounded-[1.6rem] bg-gradient-to-br from-emerald-600 to-teal-700 text-white p-4 sm:p-5 shadow-lg shadow-emerald-900/20">
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-[11px] uppercase tracking-[0.2em] text-white/70 font-black">En vivo</p>
@@ -145,7 +166,7 @@ window.__INV__ = {
                         <span class="w-2.5 h-2.5 rounded-full bg-white animate-pulse"></span><span x-text="syncInProgress ? 'sincronizando' : 'activo'"></span>
                     </span>
                 </div>
-                <p class="mt-5 text-4xl font-black" x-text="syncInProgress ? (syncProgress + '%') : lastSyncLabel"></p>
+                <p class="mt-5 text-3xl font-black" x-text="syncInProgress ? (syncProgress + '%') : lastSyncLabel"></p>
                 <div class="mt-4 h-2.5 rounded-full bg-white/20 overflow-hidden">
                     <div class="h-full rounded-full bg-white transition-all duration-300" :style="`width:${syncProgress}%`"></div>
                 </div>
@@ -154,30 +175,30 @@ window.__INV__ = {
         </section>
 
         <section class="grid grid-cols-12 gap-4">
-            <div class="col-span-12 md:col-span-3 rounded-[2rem] bg-white/90 dark:bg-slate-950/80 border border-white/70 dark:border-slate-800 p-5 shadow-sm">
+            <div class="col-span-12 md:col-span-3 inv-panel rounded-[1.4rem] bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 p-4 sm:p-5">
                 <p class="text-[11px] uppercase tracking-[0.18em] text-slate-400">Productos</p>
-                <p class="mt-3 text-4xl font-black" x-text="stats.total_productos"></p>
+                <p class="mt-3 text-3xl font-black" x-text="stats.total_productos"></p>
                 <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">catálogo total</p>
             </div>
-            <div class="col-span-12 md:col-span-3 rounded-[2rem] bg-white/90 dark:bg-slate-950/80 border border-white/70 dark:border-slate-800 p-5 shadow-sm">
+            <div class="col-span-12 md:col-span-3 inv-panel rounded-[1.4rem] bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 p-4 sm:p-5">
                 <p class="text-[11px] uppercase tracking-[0.18em] text-slate-400">Activos</p>
-                <p class="mt-3 text-4xl font-black text-sky-600 dark:text-sky-400" x-text="stats.activos"></p>
+                <p class="mt-3 text-3xl font-black text-sky-600 dark:text-sky-400" x-text="stats.activos"></p>
                 <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">productos disponibles</p>
             </div>
-            <div class="col-span-12 md:col-span-3 rounded-[2rem] bg-white/90 dark:bg-slate-950/80 border border-white/70 dark:border-slate-800 p-5 shadow-sm">
+            <div class="col-span-12 md:col-span-3 inv-panel rounded-[1.4rem] bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 p-4 sm:p-5">
                 <p class="text-[11px] uppercase tracking-[0.18em] text-slate-400">Sin stock</p>
-                <p class="mt-3 text-4xl font-black text-rose-600 dark:text-rose-400" x-text="stats.sin_stock"></p>
+                <p class="mt-3 text-3xl font-black text-rose-600 dark:text-rose-400" x-text="stats.sin_stock"></p>
                 <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">en sucursal actual</p>
             </div>
-            <div class="col-span-12 md:col-span-3 rounded-[2rem] bg-white/90 dark:bg-slate-950/80 border border-white/70 dark:border-slate-800 p-5 shadow-sm">
+            <div class="col-span-12 md:col-span-3 inv-panel rounded-[1.4rem] bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 p-4 sm:p-5">
                 <p class="text-[11px] uppercase tracking-[0.18em] text-slate-400">Stock bajo</p>
-                <p class="mt-3 text-4xl font-black text-amber-600 dark:text-amber-300" x-text="stats.stock_bajo"></p>
+                <p class="mt-3 text-3xl font-black text-amber-600 dark:text-amber-300" x-text="stats.stock_bajo"></p>
                 <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">reponer pronto</p>
             </div>
         </section>
 
         <section class="grid grid-cols-12 gap-6">
-            <div class="col-span-12 xl:col-span-7 rounded-[2rem] bg-white/90 dark:bg-slate-950/80 border border-white/70 dark:border-slate-800 p-5 shadow-sm">
+            <div class="col-span-12 xl:col-span-7 inv-panel rounded-[1.6rem] bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 p-4 sm:p-5">
                 <div class="flex items-center justify-between mb-4">
                     <div>
                         <p class="text-[11px] uppercase tracking-[0.18em] text-slate-400 font-black">Productos</p>
@@ -185,48 +206,48 @@ window.__INV__ = {
                     </div>
                     <span class="text-sm text-slate-400" x-text="loadingSearch ? 'Buscando...' : (productos.length + ' resultados')"></span>
                 </div>
-                <div x-show="loadingSearch" class="rounded-2xl border border-dashed border-slate-300 dark:border-slate-700 p-8 text-center text-slate-500">Cargando productos...</div>
+                <div x-show="loadingSearch" class="rounded-xl border border-dashed border-slate-300 dark:border-slate-700 p-8 text-center text-slate-500">Cargando productos...</div>
                 <div class="space-y-3 max-h-[760px] overflow-y-auto pr-1">
                     <template x-for="producto in productos" :key="producto.idproducto">
                         <button @click="abrirProducto(producto.idproducto)"
-                                class="w-full text-left rounded-[1.5rem] bg-slate-50/80 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 hover:border-amber-300 dark:hover:border-amber-700 transition-colors">
+                                class="inv-card w-full text-left rounded-[1.3rem] bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 transition-colors">
                             <div class="flex items-start gap-4">
-                                <div class="w-16 h-16 rounded-2xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 overflow-hidden flex items-center justify-center flex-shrink-0">
+                                <div class="w-14 h-14 rounded-2xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 overflow-hidden flex items-center justify-center flex-shrink-0">
                                     <img x-show="producto.foto_url" :src="producto.foto_url" class="w-full h-full object-cover" @error="$el.style.display='none'">
                                     <i x-show="!producto.foto_url" class="fas fa-box-open text-slate-400"></i>
                                 </div>
                                 <div class="flex-1 min-w-0">
                                     <div class="flex items-center justify-between gap-3">
-                                        <p class="text-base font-black truncate" x-text="producto.desproducto"></p>
-                                        <span class="text-[10px] font-black px-2 py-1 rounded-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-500" x-text="producto.cve_producto"></span>
+                                        <p class="text-sm font-semibold truncate" x-text="producto.desproducto"></p>
+                                        <span class="text-[10px] font-semibold px-2 py-1 rounded-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-500" x-text="producto.cve_producto"></span>
                                     </div>
-                                    <div class="mt-1 text-sm text-slate-500 dark:text-slate-400" x-text="producto.referencia || 'Sin referencia'"></div>
+                                    <div class="mt-1 text-xs text-slate-500 dark:text-slate-400" x-text="producto.referencia || 'Sin referencia'"></div>
                                     <div class="mt-4 grid grid-cols-3 gap-3">
                                         <div>
                                             <p class="text-[10px] uppercase tracking-[0.16em] text-slate-400">Sucursal</p>
-                                            <p class="text-lg font-black" :class="Number(producto.stock_actual_sucursal) > 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'" x-text="formatNumber(producto.stock_actual_sucursal)"></p>
+                                            <p class="text-base font-semibold" :class="Number(producto.stock_actual_sucursal) > 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'" x-text="formatNumber(producto.stock_actual_sucursal)"></p>
                                         </div>
                                         <div>
                                             <p class="text-[10px] uppercase tracking-[0.16em] text-slate-400">Global</p>
-                                            <p class="text-lg font-black" x-text="formatNumber(producto.stock_global)"></p>
+                                            <p class="text-base font-semibold" x-text="formatNumber(producto.stock_global)"></p>
                                         </div>
                                         <div class="text-right">
                                             <p class="text-[10px] uppercase tracking-[0.16em] text-slate-400">Precio</p>
-                                            <p class="text-lg font-black text-sky-600 dark:text-sky-400" x-text="formatNumber(producto.precio_venta)"></p>
+                                            <p class="text-base font-semibold text-sky-600 dark:text-sky-400" x-text="formatNumber(producto.precio_venta)"></p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </button>
                     </template>
-                    <div x-show="!loadingSearch && productos.length === 0" class="rounded-2xl border border-dashed border-slate-300 dark:border-slate-700 p-10 text-center">
+                    <div x-show="!loadingSearch && productos.length === 0" class="rounded-xl border border-dashed border-slate-300 dark:border-slate-700 p-10 text-center">
                         <i class="fas fa-boxes-stacked text-4xl text-slate-300 dark:text-slate-700"></i>
                         <p class="mt-3 text-slate-500">No hay productos para esa búsqueda.</p>
                     </div>
                 </div>
             </div>
 
-            <div class="col-span-12 xl:col-span-5 rounded-[2rem] bg-white/90 dark:bg-slate-950/80 border border-white/70 dark:border-slate-800 p-5 shadow-sm">
+            <div class="col-span-12 xl:col-span-5 inv-panel rounded-[1.6rem] bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 p-4 sm:p-5">
                 <div class="space-y-6">
             <section id="inventarioTrasladosSection">
                         <div class="flex items-center justify-between mb-4">

@@ -388,6 +388,10 @@ try {
     $hasGarantiaMeses = in_array('garantia_meses', $availableCols);
     $hasProveedorPrincipal = in_array('proveedor_principal', $availableCols);
     $hasUbicacionFisica = in_array('ubicacion_fisica', $availableCols);
+    $hasUbicacion = in_array('ubicacion', $availableCols);
+    $hasGondola = in_array('gondola', $availableCols);
+    $hasFila = in_array('fila', $availableCols);
+    $hasCelda = in_array('celda', $availableCols);
     $hasCondicionProducto = in_array('condicion_producto', $availableCols);
     $hasCapacidad = in_array('capacidad', $availableCols);
     $hasRam = in_array('ram', $availableCols);
@@ -465,6 +469,10 @@ try {
         [$hasGarantiaMeses, 'garantia_meses',    ':garantia', max(0, (int)($prod['garantia_meses'] ?? 0))],
         [$hasProveedorPrincipal, 'proveedor_principal', ':provp', trim((string)($prod['proveedor_principal'] ?? ''))],
         [$hasUbicacionFisica, 'ubicacion_fisica', ':ubicf', trim((string)($prod['ubicacion_fisica'] ?? ''))],
+        [$hasUbicacion, 'ubicacion', ':ubicacion', trim((string)($prod['ubicacion'] ?? ''))],
+        [$hasGondola, 'gondola', ':gondola', trim((string)($prod['gondola'] ?? ''))],
+        [$hasFila, 'fila', ':fila', trim((string)($prod['fila'] ?? ''))],
+        [$hasCelda, 'celda', ':celda', trim((string)($prod['celda'] ?? ''))],
         [$hasCondicionProducto, 'condicion_producto', ':condp', trim((string)($prod['condicion_producto'] ?? ''))],
         [$hasCapacidad,    'capacidad',          ':cap',    trim((string)($prod['capacidad'] ?? ''))],
         [$hasRam,          'ram',                ':ram',    trim((string)($prod['ram'] ?? ''))],

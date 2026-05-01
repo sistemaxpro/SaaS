@@ -44,28 +44,75 @@ $empresa = $stmtEmpresa->fetch(PDO::FETCH_ASSOC);
     <style>
         [x-cloak] { display: none !important; }
         body { -webkit-tap-highlight-color: transparent; overscroll-behavior: contain; }
+        body.productos-mobile {
+            font-size: 12px;
+            font-weight: 300;
+            line-height: 1.35;
+            letter-spacing: 0.01em;
+        }
+        body.productos-mobile .text-xs,
+        body.productos-mobile .text-sm,
+        body.productos-mobile .text-base,
+        body.productos-mobile .text-lg {
+            font-size: 12px !important;
+        }
+        body.productos-mobile .font-medium,
+        body.productos-mobile .font-semibold,
+        body.productos-mobile .font-bold {
+            font-weight: 400 !important;
+        }
+        .products-panel { box-shadow: 0 16px 40px rgba(15, 23, 42, .06); }
+        .dark .products-panel { box-shadow: 0 16px 40px rgba(2, 6, 23, .35); }
+        .products-card:hover { border-color: rgba(6, 182, 212, .28); }
         .bottom-sheet { transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1); }
         .card-press:active { transform: scale(0.97); }
         .safe-bottom { padding-bottom: env(safe-area-inset-bottom, 20px); }
+        @media (max-width: 768px) {
+            .mobile-modal-shell {
+                inset: 0 !important;
+                top: 0 !important;
+                bottom: 0 !important;
+                left: 0 !important;
+                right: 0 !important;
+                width: 100vw !important;
+                height: 100dvh !important;
+                max-height: 100dvh !important;
+                border-radius: 0 !important;
+            }
+            .mobile-modal-content {
+                max-height: 100dvh !important;
+                border-radius: 0 !important;
+            }
+            .mobile-modal-header {
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
+            }
+            .mobile-modal-body {
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
+                padding-bottom: calc(env(safe-area-inset-bottom, 20px) + 1rem) !important;
+            }
+        }
     </style>
 </head>
 
-<body class="bg-gray-50 dark:bg-slate-900 min-h-screen font-sans safe-bottom">
+<body class="productos-mobile min-h-screen bg-slate-50 dark:bg-slate-900 font-sans safe-bottom">
 <script>window.__PERMISOS__ = <?= json_encode($permisos) ?>;</script>
     
     <!-- Header fijo -->
-    <header class="bg-cyan-600 dark:bg-cyan-800 sticky top-0 z-40 safe-top">
+    <header class="sticky top-0 z-40 border-b border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-950/85 backdrop-blur-xl safe-top">
         <div class="flex items-center justify-between px-4 h-14">
             <div class="flex items-center gap-3">
                 <div>
-                    <h1 class="text-lg font-bold text-white">Productos</h1>
+                    <p class="text-[10px] uppercase tracking-[0.24em] text-cyan-600 dark:text-cyan-400 font-black">Productos</p>
+                    <h1 class="text-lg font-black text-slate-900 dark:text-white leading-tight">Gestión rápida</h1>
                 </div>
             </div>
             <div class="flex items-center gap-2">
-                <button @click="clearAppCache()" class="w-9 h-9 rounded-lg bg-white/20 flex items-center justify-center text-white active:scale-95" title="Limpiar caché">
+                <button @click="clearAppCache()" class="w-9 h-9 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 active:scale-95 shadow-sm" title="Limpiar caché">
                     <i class="fas fa-broom"></i>
                 </button>
-                <button @click="showFilters = !showFilters" class="w-9 h-9 rounded-lg bg-white/20 flex items-center justify-center text-white active:scale-95">
+                <button @click="showFilters = !showFilters" class="w-9 h-9 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 active:scale-95 shadow-sm">
                     <i class="fas fa-filter"></i>
                 </button>
             </div>
@@ -74,11 +121,11 @@ $empresa = $stmtEmpresa->fetch(PDO::FETCH_ASSOC);
         <!-- Search bar -->
         <div class="px-4 pb-3">
             <div class="relative">
-                <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-cyan-300"></i>
+                <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
                 <input type="text" x-model="searchQuery"
                        @input.debounce.400ms="currentPage=1; loadProductos()"
                        placeholder="Buscar producto, código o código de barra..."
-                       class="w-full pl-10 pr-4 py-2.5 bg-white/20 text-white placeholder-cyan-200 rounded-xl border-0 focus:ring-2 focus:ring-white/50 focus:bg-white/30 text-sm">
+                        class="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-slate-950 text-slate-900 dark:text-white placeholder-slate-400 rounded-xl border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-cyan-500/30 text-sm shadow-sm">
             </div>
         </div>
         
@@ -86,17 +133,17 @@ $empresa = $stmtEmpresa->fetch(PDO::FETCH_ASSOC);
         <div x-show="showFilters" x-collapse class="px-4 pb-3 space-y-2">
             <div class="flex gap-2">
                 <select x-model="filtroGrupo" @change="currentPage=1; loadProductos()"
-                        class="flex-1 px-3 py-2 bg-white/20 text-white rounded-lg border-0 text-sm focus:ring-2 focus:ring-white/50">
-                    <option value="" class="text-gray-900">Todos los grupos</option>
+                        class="flex-1 px-3 py-2 bg-white dark:bg-slate-950 text-slate-900 dark:text-white rounded-lg border border-slate-200 dark:border-slate-700 text-sm focus:ring-2 focus:ring-cyan-500/30">
+                    <option value="">Todos los grupos</option>
                     <template x-for="g in catGrupos" :key="g.id">
-                        <option :value="g.id" x-text="g.grupo" class="text-gray-900"></option>
+                        <option :value="g.id" x-text="g.grupo"></option>
                     </template>
                 </select>
                 <select x-model="filtroEstado" @change="currentPage=1; loadProductos()"
-                        class="w-28 px-3 py-2 bg-white/20 text-white rounded-lg border-0 text-sm focus:ring-2 focus:ring-white/50">
-                    <option value="1" class="text-gray-900">Activos</option>
-                    <option value="0" class="text-gray-900">Descontinuados</option>
-                    <option value="" class="text-gray-900">Todos</option>
+                        class="w-28 px-3 py-2 bg-white dark:bg-slate-950 text-slate-900 dark:text-white rounded-lg border border-slate-200 dark:border-slate-700 text-sm focus:ring-2 focus:ring-cyan-500/30">
+                    <option value="1">Activos</option>
+                    <option value="0">Descontinuados</option>
+                    <option value="">Todos</option>
                 </select>
             </div>
         </div>
@@ -105,15 +152,15 @@ $empresa = $stmtEmpresa->fetch(PDO::FETCH_ASSOC);
     <!-- Stats mini -->
     <div class="px-4 py-3">
         <div class="grid grid-cols-3 gap-2">
-            <div class="bg-white dark:bg-slate-800 rounded-xl p-3 text-center border border-gray-200 dark:border-slate-700">
+            <div class="products-panel bg-white dark:bg-slate-950 rounded-xl p-3 text-center border border-slate-200 dark:border-slate-800">
                 <p class="text-lg font-bold text-gray-900 dark:text-white" x-text="stats.total"></p>
                 <p class="text-[10px] text-gray-500 dark:text-gray-400 uppercase">Total</p>
             </div>
-            <div class="bg-white dark:bg-slate-800 rounded-xl p-3 text-center border border-gray-200 dark:border-slate-700">
+            <div class="products-panel bg-white dark:bg-slate-950 rounded-xl p-3 text-center border border-slate-200 dark:border-slate-800">
                 <p class="text-lg font-bold text-amber-600 dark:text-amber-400" x-text="stats.stockBajo"></p>
                 <p class="text-[10px] text-gray-500 dark:text-gray-400 uppercase">Stock Bajo</p>
             </div>
-            <div class="bg-white dark:bg-slate-800 rounded-xl p-3 text-center border border-gray-200 dark:border-slate-700">
+            <div class="products-panel bg-white dark:bg-slate-950 rounded-xl p-3 text-center border border-slate-200 dark:border-slate-800">
                 <p class="text-lg font-bold text-red-600 dark:text-red-400" x-text="stats.sinStock"></p>
                 <p class="text-[10px] text-gray-500 dark:text-gray-400 uppercase">Sin Stock</p>
             </div>
@@ -131,9 +178,9 @@ $empresa = $stmtEmpresa->fetch(PDO::FETCH_ASSOC);
         <!-- Cards -->
         <template x-for="p in productos" :key="p.idproducto">
             <div @click="onCardClick(p)" 
-                 class="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-3 flex items-center gap-3 card-press transition-transform cursor-pointer active:bg-gray-50 dark:active:bg-slate-750">
+                 class="products-card bg-white dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800 p-3 flex items-center gap-3 card-press transition-transform cursor-pointer">
                 <!-- Imagen/icono -->
-                <div class="w-12 h-12 rounded-xl bg-gray-100 dark:bg-slate-700 flex items-center justify-center flex-shrink-0 overflow-hidden"
+                <div class="w-12 h-12 rounded-xl bg-gray-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center flex-shrink-0 overflow-hidden"
                      @touchstart.stop="startImageLongPress(p, $event)"
                      @touchend.stop="endImageLongPress()"
                      @touchmove.stop="cancelImageLongPress()"
@@ -146,41 +193,41 @@ $empresa = $stmtEmpresa->fetch(PDO::FETCH_ASSOC);
                 </div>
                 <!-- Info -->
                 <div class="flex-1 min-w-0">
-                    <p class="text-sm font-semibold text-gray-900 dark:text-white truncate" x-text="p.desproducto"></p>
+                    <p class="text-sm font-medium text-gray-900 dark:text-white truncate" x-text="p.desproducto"></p>
                     <div class="flex items-center gap-2 mt-0.5">
                         <span class="text-xs text-gray-500 dark:text-gray-400 font-mono" x-text="p.cve_producto"></span>
                         <select x-show="p.codigos_barra?.length > 0" @click.stop
-                                class="text-[10px] font-mono text-gray-500 dark:text-gray-400 bg-transparent border border-gray-200 dark:border-slate-600 rounded py-0 pr-4 cursor-pointer max-w-[100px] focus:ring-1 focus:ring-cyan-500">
+                                class="text-[10px] font-mono text-gray-500 dark:text-gray-400 bg-transparent border border-gray-200 dark:border-slate-700 rounded py-0 pr-4 cursor-pointer max-w-[100px] focus:ring-1 focus:ring-cyan-500">
                             <template x-for="(cb, i) in (p.codigos_barra || [])" :key="i">
                                 <option x-text="cb"></option>
                             </template>
                         </select>
-                        <span x-show="p.grupo_nombre" class="text-[10px] px-1.5 py-0.5 rounded-full bg-cyan-50 dark:bg-cyan-900/30 text-cyan-700 dark:text-cyan-300" x-text="p.grupo_nombre"></span>
+                        <span x-show="p.grupo_nombre" class="text-[10px] px-1.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300" x-text="p.grupo_nombre"></span>
                     </div>
                 </div>
                 <!-- Precio y Stock -->
                 <div class="text-right flex-shrink-0">
                     <select x-show="p.precios?.length > 0" @click.stop
-                            class="text-xs font-bold text-gray-900 dark:text-white bg-transparent border border-gray-200 dark:border-slate-600 rounded-lg py-0 pr-5 text-right cursor-pointer max-w-[140px] focus:ring-1 focus:ring-cyan-500">
+                            class="text-xs font-semibold text-gray-900 dark:text-white bg-transparent border border-gray-200 dark:border-slate-700 rounded-lg py-0 pr-5 text-right cursor-pointer max-w-[140px] focus:ring-1 focus:ring-cyan-500">
                         <template x-for="pr in (p.precios || [])" :key="pr.tipo">
                             <option x-text="pr.tipo_nombre + ': ₲' + formatMoney(pr.precio)"></option>
                         </template>
                     </select>
-                    <p x-show="!p.precios?.length" class="text-sm font-bold text-gray-900 dark:text-white" x-text="formatMoney(p.precio_venta)"></p>
+                    <p x-show="!p.precios?.length" class="text-sm font-semibold text-gray-900 dark:text-white" x-text="formatMoney(p.precio_venta)"></p>
                     <template x-if="p.controla_stock == 1">
                         <span>
                             <select x-show="p.stock_sucursales?.length > 1" @click.stop
-                                    class="text-[10px] font-bold bg-transparent border border-gray-200 dark:border-slate-600 rounded-lg py-0 pr-5 text-right cursor-pointer max-w-[140px] focus:ring-1 focus:ring-cyan-500 mt-0.5"
+                                    class="text-[10px] font-semibold bg-transparent border border-gray-200 dark:border-slate-700 rounded-lg py-0 pr-5 text-right cursor-pointer max-w-[140px] focus:ring-1 focus:ring-cyan-500 mt-0.5"
                                     :class="stockClass(p)">
                                 <option x-text="'Total: ' + formatNumber(p.saldo)"></option>
                                 <template x-for="ss in (p.stock_sucursales || [])" :key="ss.id_sucursal">
                                     <option x-text="ss.sucursal + ': ' + formatNumber(ss.stock)"></option>
                                 </template>
                             </select>
-                            <p x-show="!p.stock_sucursales?.length || p.stock_sucursales?.length <= 1" class="text-xs font-semibold" :class="stockClass(p)" x-text="'Stock: ' + formatNumber(p.saldo)"></p>
+                            <p x-show="!p.stock_sucursales?.length || p.stock_sucursales?.length <= 1" class="text-xs font-medium" :class="stockClass(p)" x-text="'Stock: ' + formatNumber(p.saldo)"></p>
                         </span>
                     </template>
-                    <p x-show="p.controla_stock != 1" class="text-[10px] text-gray-400 dark:text-gray-500 mt-0.5">N/controla stock</p>
+                    <p x-show="p.controla_stock != 1" class="text-[10px] text-gray-400 dark:text-gray-500 mt-0.5">Sin control</p>
                 </div>
                 <!-- Chevron -->
                 <button x-show="permisos.priv_delete === 'Y' && canPermanentDelete(p)"
@@ -217,24 +264,24 @@ $empresa = $stmtEmpresa->fetch(PDO::FETCH_ASSOC);
     <!-- ============ BOTTOM SHEET: DETALLE ============ -->
     <div x-show="showDetalle" x-cloak class="fixed inset-0 z-50">
         <div class="fixed inset-0 bg-black/50" @click="showDetalle = false" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"></div>
-        <div class="fixed inset-x-0 bottom-0 bottom-sheet bg-white dark:bg-slate-800 rounded-t-3xl shadow-xl max-h-[85vh] overflow-y-auto"
-             x-transition:enter="transition ease-out duration-300" x-transition:enter-start="translate-y-full" x-transition:enter-end="translate-y-0"
-             x-transition:leave="transition ease-in duration-200" x-transition:leave-start="translate-y-0" x-transition:leave-end="translate-y-full">
+        <div class="mobile-modal-shell fixed inset-x-0 bottom-0 bottom-sheet bg-white dark:bg-slate-950 rounded-t-3xl shadow-xl border-t border-slate-200 dark:border-slate-800 max-h-[85vh] overflow-y-auto"
+              x-transition:enter="transition ease-out duration-300" x-transition:enter-start="translate-y-full" x-transition:enter-end="translate-y-0"
+              x-transition:leave="transition ease-in duration-200" x-transition:leave-start="translate-y-0" x-transition:leave-end="translate-y-full">
             <!-- Handle -->
-            <div class="sticky top-0 bg-white dark:bg-slate-800 pt-3 pb-2 px-6 z-10 rounded-t-3xl">
-                <div class="w-10 h-1 bg-gray-300 dark:bg-slate-600 rounded-full mx-auto mb-3"></div>
+            <div class="mobile-modal-header sticky top-0 bg-white dark:bg-slate-950 pt-3 pb-2 px-6 z-10 rounded-t-3xl border-b border-slate-200 dark:border-slate-800">
+                <div class="w-10 h-1 bg-slate-300 dark:bg-slate-700 rounded-full mx-auto mb-3"></div>
                 <div class="flex items-center justify-between">
-                    <h3 class="text-lg font-bold text-gray-900 dark:text-white truncate pr-4" x-text="detalleProducto?.desproducto"></h3>
-                    <button @click="showDetalle = false" class="w-8 h-8 rounded-lg bg-gray-100 dark:bg-slate-700 flex items-center justify-center text-gray-500">
+                    <h3 class="text-lg font-medium text-gray-900 dark:text-white truncate pr-4" x-text="detalleProducto?.desproducto"></h3>
+                    <button @click="showDetalle = false" class="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-gray-500 dark:text-gray-300">
                         <i class="fas fa-times text-sm"></i>
                     </button>
                 </div>
             </div>
             
-            <div class="px-6 pb-8 space-y-4">
+            <div class="mobile-modal-body px-6 pb-8 space-y-4">
                 <!-- Info principal -->
                 <div class="grid grid-cols-2 gap-3">
-                    <div class="bg-gray-50 dark:bg-slate-700/50 rounded-xl p-3">
+                    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3">
                         <p class="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-medium">Código</p>
                         <p class="text-sm font-mono font-bold text-gray-900 dark:text-white" x-text="detalleProducto?.cve_producto"></p>
                         <template x-if="detalleProducto?.codigos_barra?.length > 0">
@@ -248,17 +295,17 @@ $empresa = $stmtEmpresa->fetch(PDO::FETCH_ASSOC);
                             </div>
                         </template>
                     </div>
-                    <div class="bg-gray-50 dark:bg-slate-700/50 rounded-xl p-3">
+                    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3">
                         <p class="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-medium">Estado</p>
                         <span :class="(detalleProducto?.descontinuado || 0) == 1 ? 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400' : (detalleProducto?.Estado == 1 ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400')"
                               class="inline-flex px-2 py-0.5 rounded-full text-xs font-medium mt-1"
                               x-text="(detalleProducto?.descontinuado || 0) == 1 ? 'Descontinuado' : (detalleProducto?.Estado == 1 ? 'Activo' : 'Inactivo')"></span>
                     </div>
-                    <div class="bg-gray-50 dark:bg-slate-700/50 rounded-xl p-3">
+                    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3">
                         <p class="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-medium">Precio Compra</p>
                         <p class="text-sm font-bold text-gray-900 dark:text-white" x-text="'₲ ' + formatMoney(detalleProducto?.precio_compra)"></p>
                     </div>
-                    <div class="bg-cyan-50 dark:bg-cyan-900/20 rounded-xl p-3">
+                    <div class="bg-cyan-50/80 dark:bg-cyan-900/20 border border-cyan-100 dark:border-cyan-900/40 rounded-xl p-3">
                         <p class="text-[10px] text-cyan-600 dark:text-cyan-400 uppercase font-medium">Precio Venta</p>
                         <p class="text-sm font-bold text-cyan-700 dark:text-cyan-300" x-text="'₲ ' + formatMoney(detalleProducto?.precio_venta)"></p>
                         <template x-if="detalleProducto?.precios?.length > 0">
@@ -275,7 +322,7 @@ $empresa = $stmtEmpresa->fetch(PDO::FETCH_ASSOC);
                 </div>
                 
                 <!-- Stock -->
-                <div class="bg-gray-50 dark:bg-slate-700/50 rounded-xl p-3">
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3">
                     <p class="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-medium mb-1">Stock</p>
                     <template x-if="detalleProducto?.controla_stock == 1">
                         <div>
@@ -292,8 +339,8 @@ $empresa = $stmtEmpresa->fetch(PDO::FETCH_ASSOC);
                             </template>
                         </div>
                     </template>
-                    <span x-show="detalleProducto?.controla_stock != 1"
-                          class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-500 dark:bg-slate-600 dark:text-gray-400 mt-1">
+                        <span x-show="detalleProducto?.controla_stock != 1"
+                          class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400 mt-1">
                         N/controla stock
                     </span>
                 </div>
@@ -380,23 +427,23 @@ $empresa = $stmtEmpresa->fetch(PDO::FETCH_ASSOC);
     <!-- ============ BOTTOM SHEET: CREAR/EDITAR ============ -->
     <div x-show="showForm" x-cloak class="fixed inset-0 z-50">
         <div class="fixed inset-0 bg-black/50" @click="closeFormModal()"></div>
-        <div class="fixed inset-x-0 bottom-0 bottom-sheet bg-white dark:bg-slate-800 rounded-t-3xl shadow-xl max-h-[92vh] overflow-y-auto"
+        <div class="mobile-modal-shell fixed inset-x-0 bottom-0 bottom-sheet bg-white dark:bg-slate-950 rounded-t-3xl shadow-xl border-t border-slate-200 dark:border-slate-800 max-h-[92vh] overflow-y-auto"
              x-transition:enter="transition ease-out duration-300" x-transition:enter-start="translate-y-full" x-transition:enter-end="translate-y-0"
              x-transition:leave="transition ease-in duration-200" x-transition:leave-start="translate-y-0" x-transition:leave-end="translate-y-full">
             <!-- Handle -->
-            <div class="sticky top-0 bg-white dark:bg-slate-800 pt-2 pb-1.5 px-4 z-10 rounded-t-3xl border-b border-gray-200 dark:border-slate-700">
-                <div class="w-10 h-1 bg-gray-300 dark:bg-slate-600 rounded-full mx-auto mb-2"></div>
+            <div class="mobile-modal-header sticky top-0 bg-white dark:bg-slate-950 pt-2 pb-1.5 px-4 z-10 rounded-t-3xl border-b border-slate-200 dark:border-slate-800">
+                <div class="w-10 h-1 bg-slate-300 dark:bg-slate-700 rounded-full mx-auto mb-2"></div>
                 <div class="flex items-center justify-between">
-                    <h3 class="text-base font-bold text-gray-900 dark:text-white" x-text="form.idproducto ? 'Editar Producto' : 'Nuevo Producto'"></h3>
-                    <button @click="closeFormModal()" class="w-7 h-7 rounded-lg bg-gray-100 dark:bg-slate-700 flex items-center justify-center text-gray-500">
+                    <h3 class="text-base font-medium text-gray-900 dark:text-white" x-text="form.idproducto ? 'Editar Producto' : 'Nuevo Producto'"></h3>
+                    <button @click="closeFormModal()" class="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-gray-500 dark:text-gray-300">
                         <i class="fas fa-times text-xs"></i>
                     </button>
                 </div>
             </div>
             
-            <div class="px-4 py-3 space-y-2.5">
+            <div class="mobile-modal-body px-4 py-3 space-y-2.5">
                 <!-- Foto del producto (inicio: nuevo + editar) -->
-                <div class="border border-gray-200 dark:border-slate-700 rounded-xl p-2.5 space-y-2">
+                <div class="border border-slate-200 dark:border-slate-800 rounded-xl p-2.5 space-y-2 bg-slate-50 dark:bg-slate-900/40">
                     <div class="flex items-center justify-between">
                         <label class="text-[11px] font-semibold text-gray-600 dark:text-gray-300 flex items-center gap-1">
                             <i class="fas fa-camera text-cyan-600 text-[10px]"></i> Foto del producto
@@ -406,7 +453,7 @@ $empresa = $stmtEmpresa->fetch(PDO::FETCH_ASSOC);
                         </span>
                     </div>
                     <div class="flex items-center gap-3">
-                        <div class="w-16 h-16 rounded-lg overflow-hidden border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700 flex items-center justify-center"
+                        <div class="w-16 h-16 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 flex items-center justify-center"
                              @touchstart.stop="startImageLongPress({ idproducto: Number(form?.idproducto || 0), desproducto: String(form?.desproducto || 'producto') }, $event)"
                              @touchend.stop="endImageLongPress()"
                              @touchmove.stop="cancelImageLongPress()"

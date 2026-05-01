@@ -20,7 +20,7 @@ android {
         targetSdk = 34
         versionCode = 18
         versionName = "0.3.6"
-        buildConfigField("String", "START_URL", "\"https://sistemax.pro/public/login.php\"")
+        buildConfigField("String", "START_URL", "\"${stringBuildValue("SISTEMAX_ANDROID_START_URL", "https://sistemax.pro/public/login.php")}\"")
         buildConfigField("String", "SX_FIREBASE_APP_ID", "\"${stringBuildValue("SISTEMAX_FIREBASE_APP_ID")}\"")
         buildConfigField("String", "SX_FIREBASE_API_KEY", "\"${stringBuildValue("SISTEMAX_FIREBASE_API_KEY")}\"")
         buildConfigField("String", "SX_FIREBASE_PROJECT_ID", "\"${stringBuildValue("SISTEMAX_FIREBASE_PROJECT_ID")}\"")

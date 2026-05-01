@@ -1,4 +1,14 @@
 <?php
+// En móvil, derivar al flujo de acceso. Android browser terminará en el instalador;
+// iPhone/iPad continúa al login PWA.
+$landingUa = $_SERVER['HTTP_USER_AGENT'] ?? '';
+$landingIsNativeAndroidApp = stripos($landingUa, 'SistemaxProAndroid/') !== false;
+$landingIsMobile = (bool)preg_match('/Android|iPhone|iPad|iPod|Mobile|tablet/i', $landingUa);
+if ($landingIsMobile && !$landingIsNativeAndroidApp) {
+    header('Location: /public/login.php');
+    exit;
+}
+
 function l_esc(string $value): string
 {
     return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');

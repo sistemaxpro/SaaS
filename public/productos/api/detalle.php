@@ -211,6 +211,7 @@ try {
         'moneda' => 1, 'tipo_producto_sifen' => 1, 'descontinuado' => 0,
         'color' => 0, 'equivalencia' => '', 'garantia_meses' => 0,
         'proveedor_principal' => '', 'ubicacion_fisica' => '', 'condicion_producto' => '',
+        'ubicacion' => '', 'gondola' => '', 'fila' => '', 'celda' => '',
         'capacidad' => '', 'ram' => '', 'compatibilidad' => '', 'incluye' => ''
     ];
     foreach ($defaults as $col => $defVal) {

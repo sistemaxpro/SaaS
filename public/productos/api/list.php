@@ -275,6 +275,10 @@ try {
     $hasMoneda       = in_array('moneda', $availableCols);
     $hasDescontinuado = in_array('descontinuado', $availableCols);
     $hasColor        = in_array('color', $availableCols);
+    $hasUbicacion    = in_array('ubicacion', $availableCols);
+    $hasGondola      = in_array('gondola', $availableCols);
+    $hasFila         = in_array('fila', $availableCols);
+    $hasCelda        = in_array('celda', $availableCols);
     $estadoCol       = in_array('estado', $availableCols, true) ? 'estado' : (in_array('Estado', $availableCols, true) ? 'Estado' : '');
 
     // Asegurar índices de performance solo bajo demanda (evitar latencia en primer render).
@@ -561,6 +565,10 @@ try {
                 p.grupo AS grupo_id,
                 p.marca AS marca_id,
                 p.modelo AS modelo_id,
+                " . ($hasUbicacion ? "p.ubicacion" : "'' AS ubicacion") . ",
+                " . ($hasGondola ? "p.gondola" : "'' AS gondola") . ",
+                " . ($hasFila ? "p.fila" : "'' AS fila") . ",
+                " . ($hasCelda ? "p.celda" : "'' AS celda") . ",
                 " . ($hasMoneda ? "p.moneda" : "'PYG' AS moneda") . ",
                 " . ($hasCodBarra ? "p.codigo_barra" : "'' AS codigo_barra") . ",
                 " . ($hasUnidadMedida ? "p.unidad_medida" : "'' AS unidad_medida") . ",
@@ -704,6 +712,13 @@ try {
                 }
             } else {
                 $prod['stock_sesion'] = (float)($prod['stock_sesion'] ?? $prod['saldo'] ?? 0);
+                if ($idSucursalSesion > 0) {
+                    $prod['stock_sucursales'] = [[
+                        'id_sucursal' => (int)$idSucursalSesion,
+                        'sucursal' => $sucursalesCatalog[$idSucursalSesion] ?? 'Sesion',
+                        'stock' => $prod['stock_sesion'],
+                    ]];
+                }
             }
         }
         unset($prod);
@@ -919,17 +934,41 @@ try {
             if ($ftQuery !== '') {
                 $sqlIds = "SELECT p.idproducto
                            FROM {$db}.tblproductos p
+                           LEFT JOIN {$db}.mercaderia_grupo g ON g.id = p.grupo
+                           LEFT JOIN {$db}.mercaderia_marca m ON m.id = p.marca
+                           LEFT JOIN {$db}.mercaderia_modelo mo ON mo.id = p.modelo
+                           " . ($hasColor ? "LEFT JOIN {$db}.mercaderia_color c ON c.id = p.color" : "") . "
+                           " . (sx_table_exists($pdo, $db, 'mercaderia_referencia') ? "LEFT JOIN {$db}.mercaderia_referencia ref ON ref.id = p.referencia" : "") . "
                            WHERE p.{$estadoCol} = :estado
                              AND (
                                 MATCH(p.desproducto, p.cve_producto, p.referencia) AGAINST(:ft IN BOOLEAN MODE)
                                 OR CAST(p.idproducto AS CHAR) = :q_exact_id
                                 OR CAST(p.idproducto AS CHAR) LIKE :q_prefix_id
-                             )";
+                                OR p.desproducto LIKE :q_like
+                                OR p.cve_producto LIKE :q_like
+                                OR p.referencia LIKE :q_like
+                                OR p.codigo_barra LIKE :q_like
+                                OR CAST(p.precio_venta AS CHAR) LIKE :q_like
+                                OR CAST(p.precio_compra AS CHAR) LIKE :q_like
+                                OR CAST(p.saldo AS CHAR) LIKE :q_like
+                                OR g.grupo LIKE :q_like
+                                OR m.marca LIKE :q_like
+                                OR mo.modelo LIKE :q_like
+                                " . ($hasColor ? "OR c.color LIKE :q_like" : "") . "
+                                " . (sx_table_exists($pdo, $db, 'mercaderia_referencia') ? "OR ref.referencia LIKE :q_like" : "") . "
+                                OR (:q_word_active = 1 AND p.{$estadoCol} = 1)
+                                OR (:q_word_inactive = 1 AND p.{$estadoCol} = 0)
+                                OR (:q_word_descontinuado = 1 AND " . ($hasDescontinuado ? "p.descontinuado = 1" : "1=0") . ")
+                              )";
                 $paramsIds = [
                     ':estado' => (int)$estado,
                     ':ft' => $ftQuery,
                     ':q_exact_id' => $search,
                     ':q_prefix_id' => $search . '%',
+                    ':q_like' => '%' . $search . '%',
+                    ':q_word_active' => in_array(sx_norm_text($search), ['activo', 'activa'], true) ? 1 : 0,
+                    ':q_word_inactive' => in_array(sx_norm_text($search), ['inactivo', 'inactiva'], true) ? 1 : 0,
+                    ':q_word_descontinuado' => in_array(sx_norm_text($search), ['descontinuado', 'descontinuada', 'descontinuados'], true) ? 1 : 0,
                 ];
                 $addFastFilters($sqlIds, $paramsIds, true);
                 $sqlIds .= " ORDER BY
@@ -986,6 +1025,11 @@ try {
             if (empty($candidateIds)) {
                 $sqlFallback = "SELECT p.idproducto
                                 FROM {$db}.tblproductos p
+                                LEFT JOIN {$db}.mercaderia_grupo g ON g.id = p.grupo
+                                LEFT JOIN {$db}.mercaderia_marca m ON m.id = p.marca
+                                LEFT JOIN {$db}.mercaderia_modelo mo ON mo.id = p.modelo
+                                " . ($hasColor ? "LEFT JOIN {$db}.mercaderia_color c ON c.id = p.color" : "") . "
+                                " . (sx_table_exists($pdo, $db, 'mercaderia_referencia') ? "LEFT JOIN {$db}.mercaderia_referencia ref ON ref.id = p.referencia" : "") . "
                                 WHERE p.{$estadoCol} = ?";
                 $paramsFallback = [(int)$estado];
                 foreach ($tokens as $token) {
@@ -995,11 +1039,32 @@ try {
                         p.cve_producto LIKE ?
                         OR p.referencia LIKE ?
                         OR p.desproducto LIKE ?
+                        OR p.codigo_barra LIKE ?
+                        OR CAST(p.precio_venta AS CHAR) LIKE ?
+                        OR CAST(p.precio_compra AS CHAR) LIKE ?
+                        OR CAST(p.saldo AS CHAR) LIKE ?
+                        OR g.grupo LIKE ?
+                        OR m.marca LIKE ?
+                        OR mo.modelo LIKE ?
+                        " . ($hasColor ? "OR c.color LIKE ?" : "") . "
+                        " . (sx_table_exists($pdo, $db, 'mercaderia_referencia') ? "OR ref.referencia LIKE ?" : "") . "
                     )";
                     $paramsFallback[] = $token . '%';
                     $paramsFallback[] = $token . '%';
                     $paramsFallback[] = $token . '%';
                     $paramsFallback[] = '%' . $token . '%';
+                    $paramsFallback[] = '%' . $token . '%';
+                    $paramsFallback[] = '%' . $token . '%';
+                    $paramsFallback[] = '%' . $token . '%';
+                    $paramsFallback[] = '%' . $token . '%';
+                    $paramsFallback[] = '%' . $token . '%';
+                    $paramsFallback[] = '%' . $token . '%';
+                    if ($hasColor) {
+                        $paramsFallback[] = '%' . $token . '%';
+                    }
+                    if (sx_table_exists($pdo, $db, 'mercaderia_referencia')) {
+                        $paramsFallback[] = '%' . $token . '%';
+                    }
                 }
                 $addFastFilters($sqlFallback, $paramsFallback, false);
                 $sqlFallback .= " ORDER BY
@@ -1226,16 +1291,29 @@ try {
         $tokenGroups = [];
         foreach ($tokens as $idx => $token) {
             $paramBase = ':s' . $idx;
+            $tokenNorm = sx_norm_text($token);
             $tokenConds = [
                 "CAST(p.idproducto AS CHAR) LIKE {$paramBase}_id",
                 "p.desproducto LIKE {$paramBase}_d",
                 "p.cve_producto LIKE {$paramBase}_c",
                 "p.referencia LIKE {$paramBase}_r",
+                "p.precio_venta LIKE {$paramBase}_pv",
+                "p.precio_compra LIKE {$paramBase}_pc",
+                "p.saldo LIKE {$paramBase}_s",
+                "g.grupo LIKE {$paramBase}_g",
+                "m.marca LIKE {$paramBase}_m",
+                "mo.modelo LIKE {$paramBase}_mo",
             ];
             $params["{$paramBase}_id"] = "%{$token}%";
             $params["{$paramBase}_d"] = "%{$token}%";
             $params["{$paramBase}_c"] = "%{$token}%";
             $params["{$paramBase}_r"] = "%{$token}%";
+            $params["{$paramBase}_pv"] = "%{$token}%";
+            $params["{$paramBase}_pc"] = "%{$token}%";
+            $params["{$paramBase}_s"] = "%{$token}%";
+            $params["{$paramBase}_g"] = "%{$token}%";
+            $params["{$paramBase}_m"] = "%{$token}%";
+            $params["{$paramBase}_mo"] = "%{$token}%";
             if ($hasCodBarra) {
                 $tokenConds[] = "p.codigo_barra LIKE {$paramBase}_b";
                 $params["{$paramBase}_b"] = "%{$token}%";
@@ -1248,6 +1326,23 @@ try {
                       AND cbx.codigo_barra LIKE {$paramBase}_cb
                 )";
                 $params["{$paramBase}_cb"] = "%{$token}%";
+            }
+            if ($hasColor) {
+                $tokenConds[] = "c.color LIKE {$paramBase}_col";
+                $params["{$paramBase}_col"] = "%{$token}%";
+            }
+            if (sx_table_exists($pdo, $db, 'mercaderia_referencia')) {
+                $tokenConds[] = "ref.referencia LIKE {$paramBase}_refn";
+                $params["{$paramBase}_refn"] = "%{$token}%";
+            }
+            if (in_array($tokenNorm, ['activo', 'activa'], true)) {
+                $tokenConds[] = "p.{$estadoCol} = 1";
+            }
+            if (in_array($tokenNorm, ['inactivo', 'inactiva'], true)) {
+                $tokenConds[] = "p.{$estadoCol} = 0";
+            }
+            if ($hasDescontinuado && in_array($tokenNorm, ['descontinuado', 'descontinuada', 'descontinuados'], true)) {
+                $tokenConds[] = "p.descontinuado = 1";
             }
             $tokenGroups[] = '(' . implode(' OR ', $tokenConds) . ')';
         }
@@ -1276,6 +1371,11 @@ try {
     // Count total (sin JOIN/GROUP para mejor rendimiento)
     $countSQL = "SELECT COUNT(*) as total
                  FROM {$db}.tblproductos p
+                 LEFT JOIN {$db}.mercaderia_grupo g ON g.id = p.grupo
+                 LEFT JOIN {$db}.mercaderia_marca m ON m.id = p.marca
+                 LEFT JOIN {$db}.mercaderia_modelo mo ON mo.id = p.modelo
+                 " . ($hasColor ? "LEFT JOIN {$db}.mercaderia_color c ON c.id = p.color" : "") . "
+                 " . (sx_table_exists($pdo, $db, 'mercaderia_referencia') ? "LEFT JOIN {$db}.mercaderia_referencia ref ON ref.id = p.referencia" : "") . "
                  {$whereSQL}";
     $stmtCount = $pdo->prepare($countSQL);
     $stmtCount->execute($params);
@@ -1298,7 +1398,6 @@ try {
     if ($hasWeb)          $selectCols[] = "p.web";
     if ($hasPublicarWeb)  $selectCols[] = "p.publicar_web";
     if ($hasDescontinuado) $selectCols[] = "p.descontinuado";
-
     $selectCols[] = "g.grupo AS grupo_nombre";
     $selectCols[] = "m.marca AS marca_nombre";
     $selectCols[] = "mo.modelo AS modelo_nombre";
