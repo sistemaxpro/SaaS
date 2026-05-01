@@ -1,5 +1,5 @@
 // Service Worker para SistemaX PWA
-const CACHE_NAME = "sistemax-v5";
+const CACHE_NAME = "sistemax-v6";
 const OFFLINE_URL = "/public/offline.html";
 
 // En localhost/dev no forzar cache agresivo; en producción sí.
