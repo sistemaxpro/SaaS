@@ -229,6 +229,7 @@ function resolveMenuItemCode(string $codigoApp, string $labelApp, string $appRou
         'public/alquileres/gastos.php' => 'alquileres_gastos',
         'public/menu/centro_notificaciones.php' => 'centro_notificaciones',
         'public/db_migrador/index.php' => 'db_migrador',
+        'public/db_manager/index.php' => 'db_manager',
         'public/helpwire/index.php' => 'helpwire',
         'public/i18n_admin/index.php' => 'i18n_admin',
         'public/setup/google_drive_setup.php' => 'google_drive',
@@ -1056,6 +1057,59 @@ function ensurePushDiagnosticCatalogApp(): void
 }
 ensurePushDiagnosticCatalogApp();
 
+if (!function_exists('ensureDbManagerCatalogApp')) {
+function ensureDbManagerCatalogApp(): void
+{
+    static $done = false;
+    if ($done) {
+        return;
+    }
+    $done = true;
+    try {
+        $db = Database::getMasterConnection();
+        $stmt = $db->prepare("SELECT id_app FROM saas_apps_catalogo WHERE codigo = ? LIMIT 1");
+        $stmt->execute(['db_manager']);
+        $idApp = (int)($stmt->fetchColumn() ?: 0);
+        if ($idApp > 0) {
+            $upd = $db->prepare("UPDATE saas_apps_catalogo
+                SET nombre = ?, descripcion = ?, ruta_app = ?, icono = ?, icono_source = 'custom', color = ?, precio_mensual = 0, obligatoria = 0, activo = 1, en_desarrollo = 0, modulo = ?, negocio = ?, permiso_base = ?, orden = ?
+                WHERE id_app = ?");
+            $upd->execute([
+                'DB Manager',
+                'Administrador visual de bases MySQL/MariaDB con explorador, estructura, datos y editor SQL',
+                'public/db_manager/index.php',
+                'database',
+                'slate',
+                'General',
+                'General',
+                'app_grid_db_manager',
+                22,
+                $idApp,
+            ]);
+            return;
+        }
+        $ins = $db->prepare("INSERT INTO saas_apps_catalogo
+            (codigo, nombre, descripcion, ruta_app, icono, icono_source, color, precio_mensual, obligatoria, requiere_modulo, permiso_base, orden, activo, en_desarrollo, modulo, negocio)
+            VALUES (?, ?, ?, ?, ?, 'custom', ?, 0, 0, NULL, ?, ?, 1, 0, ?, ?)");
+        $ins->execute([
+            'db_manager',
+            'DB Manager',
+            'Administrador visual de bases MySQL/MariaDB con explorador, estructura, datos y editor SQL',
+            'public/db_manager/index.php',
+            'database',
+            'slate',
+            'app_grid_db_manager',
+            22,
+            'General',
+            'General',
+        ]);
+    } catch (Throwable $e) {
+        error_log('[menu/menu] ensureDbManagerCatalogApp: ' . $e->getMessage());
+    }
+}
+}
+ensureDbManagerCatalogApp();
+
 $itemsMenu = [];
 $appsMenuData = [];
 $appsMenuCodigosCargados = [];
@@ -1136,13 +1190,17 @@ if ($id_empresa > 0) {
                 $esEmpresaDesarrollo &&
                 (
                     $codigoApp === 'db_migrador' ||
+                    $codigoApp === 'db_manager' ||
                     strpos($codigoApp, 'migrador') !== false ||
-                    strpos((string)$rutaApp, 'db_migrador') !== false
+                    strpos((string)$rutaApp, 'db_migrador') !== false ||
+                    strpos((string)$rutaApp, 'db_manager') !== false
                 )
             ) {
                 $visible = true;
-                if ($rutaApp === '') {
+                if ($rutaApp === '' && $codigoApp === 'db_migrador') {
                     $rutaApp = 'public/db_migrador/index.php';
+                } elseif ($rutaApp === '' && $codigoApp === 'db_manager') {
+                    $rutaApp = 'public/db_manager/index.php';
                 }
             }
             
