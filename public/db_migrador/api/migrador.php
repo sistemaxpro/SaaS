@@ -101,9 +101,16 @@ function mConnect(array $cfg, ?string $dbName = null): PDO
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
             PDO::ATTR_EMULATE_PREPARES => false,
-            PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8mb4",
+            mMysqlInitCommandAttribute() => "SET NAMES utf8mb4",
         ]
     );
+}
+
+function mMysqlInitCommandAttribute(): int
+{
+    return defined('Pdo\\Mysql::ATTR_INIT_COMMAND')
+        ? constant('Pdo\\Mysql::ATTR_INIT_COMMAND')
+        : PDO::MYSQL_ATTR_INIT_COMMAND;
 }
 
 function mRowValue(array $row, string $key, $default = null, ?int $numericIndex = null)
@@ -129,8 +136,8 @@ function mEnsureServersTable(PDO $pdo): void
             nombre VARCHAR(120) NOT NULL,
             host VARCHAR(190) NOT NULL,
             port INT NOT NULL DEFAULT 3306,
-            user VARCHAR(120) NOT NULL,
-            password VARCHAR(255) NOT NULL,
+            `user` VARCHAR(120) NOT NULL,
+            `password` VARCHAR(255) NOT NULL,
             database_default VARCHAR(120) NULL,
             observacion VARCHAR(255) NULL,
             activo TINYINT(1) NOT NULL DEFAULT 1,
@@ -148,7 +155,7 @@ try {
         $db = Database::getMasterConnection();
         mEnsureServersTable($db);
         $stmt = $db->query("
-            SELECT id_server, nombre, host, port, user, password, database_default, observacion, activo
+            SELECT id_server, nombre, host, port, `user`, `password`, database_default, observacion, activo
             FROM saas_db_migrador_servers
             ORDER BY activo DESC, nombre ASC, id_server DESC
         ");
@@ -183,8 +190,8 @@ try {
                 SET nombre = :nombre,
                     host = :host,
                     port = :port,
-                    user = :user,
-                    password = :password,
+                    `user` = :user,
+                    `password` = :password,
                     database_default = :database_default,
                     observacion = :observacion,
                     activo = :activo
@@ -206,7 +213,7 @@ try {
 
         $stmt = $db->prepare("
             INSERT INTO saas_db_migrador_servers
-                (nombre, host, port, user, password, database_default, observacion, activo, created_by)
+                (nombre, host, port, `user`, `password`, database_default, observacion, activo, created_by)
             VALUES
                 (:nombre, :host, :port, :user, :password, :database_default, :observacion, :activo, :created_by)
         ");
@@ -649,6 +656,7 @@ try {
     }
 
     mOut(['ok' => false, 'error' => 'Acción no válida'], 400);
-} catch (Exception $e) {
-    mOut(['ok' => false, 'error' => $e->getMessage()], 500);
+} catch (Throwable $e) {
+    error_log('[db_migrador] ' . $action . ': ' . $e->getMessage());
+    mOut(['ok' => false, 'error' => $e->getMessage()], 200);
 }
