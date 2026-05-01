@@ -272,6 +272,7 @@ $csrfToken = Security::generateCSRFToken();
             backdrop-filter: blur(64px) saturate(230%) brightness(0.9);
             -webkit-backdrop-filter: blur(64px) saturate(230%) brightness(0.9);
             border: 1px solid rgba(148, 163, 184, 0.22);
+            color: #e2e8f0;
             box-shadow: 
                 0 35px 80px -26px rgba(0, 0, 0, 0.7),
                 0 10px 22px -10px rgba(0, 0, 0, 0.45),
@@ -620,7 +621,7 @@ $csrfToken = Security::generateCSRFToken();
         }
     </style>
 
-    <link rel="stylesheet" href="assets/tailwind.css">
+    <link rel="stylesheet" href="assets/tailwind.css?v=<?php echo @filemtime(__DIR__ . '/assets/tailwind.css') ?: time(); ?>">
     <script>
         tailwind.config = {
             darkMode: 'class',
