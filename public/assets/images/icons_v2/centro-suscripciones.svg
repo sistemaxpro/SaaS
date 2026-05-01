@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="csu-bg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#7c3aed"/><stop offset="100%" stop-color="#3b0764"/></linearGradient>
+    <linearGradient id="csu-ring" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#e9d5ff"/><stop offset="100%" stop-color="#c4b5fd"/></linearGradient>
+    <linearGradient id="csu-card1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#f43f5e"/><stop offset="100%" stop-color="#be123c"/></linearGradient>
+    <linearGradient id="csu-card2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#06b6d4"/><stop offset="100%" stop-color="#0e7490"/></linearGradient>
+    <linearGradient id="csu-card3" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#b45309"/></linearGradient>
+    <linearGradient id="csu-crown" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#fef9c3"/><stop offset="100%" stop-color="#fde68a"/></linearGradient>
+    <linearGradient id="csu-gl" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="white" stop-opacity="0.25"/><stop offset="100%" stop-color="white" stop-opacity="0"/></linearGradient>
+    <filter id="csu-sh"><feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#0007"/></filter>
+    <filter id="csu-sm"><feDropShadow dx="0" dy="1.5" stdDeviation="2" flood-color="#0005"/></filter>
+    <filter id="csu-glow"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="url(#csu-bg)"/>
+  <rect width="64" height="32" rx="14" fill="url(#csu-gl)"/>
+  <rect y="18" width="64" height="14" fill="url(#csu-gl)"/>
+
+  <!-- Orbit ring -->
+  <circle cx="32" cy="32" r="21" fill="none" stroke="url(#csu-ring)" stroke-width="1.2" stroke-opacity="0.4" stroke-dasharray="3 3"/>
+
+  <!-- Satellite subscription cards (3 orbiting) -->
+  <!-- Card top -->
+  <rect x="26" y="7" width="12" height="8" rx="2" fill="url(#csu-card1)" filter="url(#csu-sm)"/>
+  <rect x="27" y="8.5" width="5" height="1.5" rx="0.75" fill="white" fill-opacity="0.7"/>
+  <rect x="27" y="11" width="8" height="1" rx="0.5" fill="white" fill-opacity="0.4"/>
+
+  <!-- Card bottom-left -->
+  <rect x="8" y="47" width="12" height="8" rx="2" fill="url(#csu-card2)" filter="url(#csu-sm)"/>
+  <rect x="9" y="48.5" width="5" height="1.5" rx="0.75" fill="white" fill-opacity="0.7"/>
+  <rect x="9" y="51" width="8" height="1" rx="0.5" fill="white" fill-opacity="0.4"/>
+
+  <!-- Card bottom-right -->
+  <rect x="44" y="47" width="12" height="8" rx="2" fill="url(#csu-card3)" filter="url(#csu-sm)"/>
+  <rect x="45" y="48.5" width="5" height="1.5" rx="0.75" fill="white" fill-opacity="0.7"/>
+  <rect x="45" y="51" width="8" height="1" rx="0.5" fill="white" fill-opacity="0.4"/>
+
+  <!-- Connection lines from center to cards -->
+  <line x1="32" y1="20" x2="32" y2="15" stroke="#c4b5fd" stroke-width="1" stroke-opacity="0.5"/>
+  <line x1="22" y1="42" x2="17" y2="48" stroke="#c4b5fd" stroke-width="1" stroke-opacity="0.5"/>
+  <line x1="42" y1="42" x2="47" y2="48" stroke="#c4b5fd" stroke-width="1" stroke-opacity="0.5"/>
+
+  <!-- Central hub circle -->
+  <circle cx="32" cy="32" r="13" fill="#4c1d95" fill-opacity="0.7" filter="url(#csu-sh)"/>
+  <circle cx="32" cy="32" r="13" fill="url(#csu-ring)" fill-opacity="0.15"/>
+
+  <!-- Crown in center -->
+  <g filter="url(#csu-glow)">
+    <!-- Crown base -->
+    <rect x="24" y="35" width="16" height="4" rx="1" fill="url(#csu-crown)"/>
+    <!-- Crown points -->
+    <polygon points="24,35 27,28 30,33 32,27 34,33 37,28 40,35" fill="url(#csu-crown)"/>
+    <!-- Crown gems -->
+    <circle cx="27" cy="29.5" r="1.5" fill="#f43f5e"/>
+    <circle cx="32" cy="28" r="1.5" fill="#06b6d4"/>
+    <circle cx="37" cy="29.5" r="1.5" fill="#f43f5e"/>
+    <!-- Crown base line -->
+    <rect x="24" y="35" width="16" height="1" rx="0.5" fill="#fbbf24" fill-opacity="0.5"/>
+  </g>
+</svg>

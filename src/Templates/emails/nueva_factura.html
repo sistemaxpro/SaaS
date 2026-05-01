@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nueva Factura - SistemaX</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #1e3a5f 0%, #0d1b2a 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.95);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .header {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            padding: 30px;
+            text-align: center;
+            color: white;
+        }
+        .header img {
+            width: 120px;
+            margin-bottom: 15px;
+        }
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        .header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+        .content {
+            padding: 30px;
+        }
+        .greeting {
+            font-size: 16px;
+            color: #374151;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        .invoice-box {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid #e2e8f0;
+        }
+        .invoice-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .invoice-number {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1e40af;
+        }
+        .invoice-date {
+            font-size: 14px;
+            color: #64748b;
+        }
+        .invoice-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            font-size: 14px;
+        }
+        .invoice-row .label {
+            color: #64748b;
+        }
+        .invoice-row .value {
+            font-weight: 500;
+            color: #1f2937;
+        }
+        .apps-list {
+            margin: 20px 0;
+        }
+        .apps-list h3 {
+            font-size: 14px;
+            color: #64748b;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .app-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 12px;
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 6px;
+            border: 1px solid #e2e8f0;
+        }
+        .app-name {
+            font-weight: 500;
+            color: #374151;
+        }
+        .app-price {
+            color: #059669;
+            font-weight: 600;
+        }
+        .total-box {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+        .total-label {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        .total-amount {
+            font-size: 28px;
+            font-weight: 700;
+        }
+        .btn-pay {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
+            text-decoration: none;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 12px;
+            margin: 20px 0;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn-pay:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+        }
+        .info-text {
+            font-size: 13px;
+            color: #64748b;
+            line-height: 1.6;
+            margin-top: 20px;
+        }
+        .footer {
+            background: #f1f5f9;
+            padding: 20px 30px;
+            text-align: center;
+            font-size: 12px;
+            color: #64748b;
+        }
+        .footer a {
+            color: #3b82f6;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="{{LOGO_URL}}" alt="SistemaX">
+            <h1>Nueva Factura Generada</h1>
+            <p>Suscripción Mensual SistemaX</p>
+        </div>
+        
+        <div class="content">
+            <p class="greeting">
+                Hola <strong>{{EMPRESA_NOMBRE}}</strong>,<br><br>
+                Se ha generado su factura mensual de suscripción SistemaX correspondiente al período 
+                <strong>{{PERIODO}}</strong>.
+            </p>
+            
+            <div class="invoice-box">
+                <div class="invoice-header">
+                    <span class="invoice-number">{{NRO_FACTURA}}</span>
+                    <span class="invoice-date">Emitido: {{FECHA_EMISION}}</span>
+                </div>
+                
+                <div class="invoice-row">
+                    <span class="label">Empresa:</span>
+                    <span class="value">{{EMPRESA_NOMBRE}}</span>
+                </div>
+                <div class="invoice-row">
+                    <span class="label">RUC:</span>
+                    <span class="value">{{EMPRESA_RUC}}</span>
+                </div>
+                <div class="invoice-row">
+                    <span class="label">Período:</span>
+                    <span class="value">{{PERIODO}}</span>
+                </div>
+                <div class="invoice-row">
+                    <span class="label">Vencimiento:</span>
+                    <span class="value">{{FECHA_VENCIMIENTO}}</span>
+                </div>
+            </div>
+            
+            <div class="apps-list">
+                <h3>Aplicaciones Contratadas</h3>
+                {{APPS_LIST}}
+            </div>
+            
+            <div class="total-box">
+                <span class="total-label">Total a Pagar</span>
+                <span class="total-amount">₲ {{TOTAL}}</span>
+            </div>
+            
+            <a href="{{LINK_PAGO}}" class="btn-pay">
+                💳 Pagar Ahora
+            </a>
+            
+            <p class="info-text">
+                Tiene hasta el <strong>{{FECHA_VENCIMIENTO}}</strong> para realizar el pago. 
+                Después de esta fecha, tendrá {{DIAS_GRACIA}} días de gracia antes de que se 
+                suspenda el acceso a sus aplicaciones.
+            </p>
+        </div>
+        
+        <div class="footer">
+            <p>
+                Este correo fue enviado automáticamente por SistemaX.<br>
+                Si tiene alguna consulta, contáctenos en 
+                <a href="mailto:soporte@sistemax.com.py">soporte@sistemax.com.py</a>
+            </p>
+            <p style="margin-top: 10px;">
+                © {{YEAR}} SistemaX - Todos los derechos reservados
+            </p>
+        </div>
+    </div>
+</body>
+</html>

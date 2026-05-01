@@ -1,0 +1,74 @@
+# === Dependencias ===
+node_modules/
+vendor/
+
+# === Binarios compilados ===
+agent/dist/
+agent/android/
+agent/linux/sistemax-agent
+agent/macos/sistemax-agent
+agent/windows/sistemax-agent.exe
+
+# === APKs ===
+*.apk
+
+# === Videos generados ===
+video_out/
+public/assets/videos/
+video_src/
+
+# === Apps Android build ===
+apps/sistemaxpro-android/.gradle/
+apps/sistemaxpro-android/app/build/
+apps/sistemaxpro-android/build/
+
+# === Logs ===
+logs/*.log
+modelos/*.log
+logs/
+docs/sistemaxpro-2491d-firebase-adminsdk-fbsvc-51828d6140.json
+
+# === Certificados y credenciales ===
+*.p12
+*.pfx
+*.pem
+config/google_drive_credentials.json
+config/firebase_service_account.json
+
+# === Local dev / datos temporales ===
+.deploy-node-modules.stamp
+.claude/
+.env.mock
+.env.mock.*
+settings.local.json
+database.sqlite
+backups/
+tmp/
+modelos/scripts_con_rutas_sospechosas.txt
+public/assets/vendor/
+public/pos/downloads/
+public/soporte/downloads/
+agent/android/
+agent/dist/
+apps/productos-modern/
+apps/sistemaxpro-android/.gradle/
+apps/sistemaxpro-android/app/build/
+public/_lib/php-sifen3*/certificados/
+public/_lib/php-sifen3*/noenviar/
+public/_lib/php-sifen3*/tmp/
+
+# === IDE / Editor ===
+.vscode/
+*.code-workspace
+.idea/
+*.swp
+*.swo
+*~
+
+# === OS ===
+.DS_Store
+Thumbs.db
+
+# === Cache / Temp ===
+*.cache
+/tmp/

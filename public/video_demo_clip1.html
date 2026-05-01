@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Clip 1 SistemaX</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #07111f;
+      --panel: rgba(15, 23, 42, 0.82);
+      --line: rgba(148, 163, 184, 0.22);
+      --text: #e5eefc;
+      --muted: #94a3b8;
+      --accent: #22c55e;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(59, 130, 246, 0.18), transparent 32%),
+        radial-gradient(circle at bottom right, rgba(34, 197, 94, 0.14), transparent 26%),
+        var(--bg);
+      color: var(--text);
+    }
+    .wrap {
+      width: min(1120px, calc(100vw - 32px));
+      margin: 0 auto;
+      padding: 40px 0 56px;
+    }
+    h1 {
+      margin: 0 0 10px;
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1.05;
+    }
+    p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+    .card {
+      margin-top: 28px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: var(--panel);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.28);
+    }
+    video {
+      width: 100%;
+      display: block;
+      border-radius: 18px;
+      background: #000;
+    }
+    .meta {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+    .pill {
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+    .pill strong {
+      color: var(--text);
+      font-weight: 700;
+    }
+    .cta {
+      margin-top: 18px;
+    }
+    .cta a {
+      display: inline-block;
+      padding: 12px 18px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: #fff;
+      text-decoration: none;
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <h1>Demo comercial de prueba</h1>
+    <p>Primer montaje usando tu clip real, con locución ElevenLabs y foco en acceso, centro de apps y POS.</p>
+    <section class="card">
+      <video controls preload="metadata" src="/public/video_assets/clip_demo1/demo_clip1_v3.mp4"></video>
+      <div class="meta">
+        <div class="pill"><strong>Fuente:</strong> clip1.mov</div>
+        <div class="pill"><strong>Duración:</strong> 26.6s</div>
+        <div class="pill"><strong>Locución:</strong> ElevenLabs</div>
+      </div>
+      <div class="cta">
+        <a href="/public/video_assets/clip_demo1/demo_clip1_v3.mp4" target="_blank" rel="noopener">Abrir video</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

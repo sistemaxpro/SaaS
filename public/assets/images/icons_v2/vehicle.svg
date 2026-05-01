@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="vh-bg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#2563eb"/><stop offset="100%" stop-color="#1e3a8a"/></linearGradient>
+    <linearGradient id="vh-body" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#dbeafe"/><stop offset="100%" stop-color="#bfdbfe"/></linearGradient>
+    <linearGradient id="vh-roof" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#eff6ff"/><stop offset="100%" stop-color="#dbeafe"/></linearGradient>
+    <linearGradient id="vh-gl" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="white" stop-opacity="0.3"/><stop offset="100%" stop-color="white" stop-opacity="0"/></linearGradient>
+    <filter id="vh-sh"><feDropShadow dx="0" dy="2.5" stdDeviation="2.5" flood-color="#0005"/></filter>
+    <filter id="vh-sm"><feDropShadow dx="0" dy="1" stdDeviation="1.5" flood-color="#0003"/></filter>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="url(#vh-bg)"/>
+  <rect width="64" height="32" rx="14" fill="url(#vh-gl)"/>
+  <rect y="18" width="64" height="14" fill="url(#vh-gl)"/>
+  <!-- Car body -->
+  <rect x="6" y="35" width="52" height="16" rx="4" fill="url(#vh-body)" filter="url(#vh-sh)"/>
+  <!-- Car roof/cabin -->
+  <path d="M16 35 C18 24 22 20 28 19 L38 19 C44 19 47 24 49 35 Z" fill="url(#vh-roof)" filter="url(#vh-sm)"/>
+  <!-- Windshield -->
+  <path d="M20 35 C21 27 24 22 29 21 L37 21 C42 22 44 27 45 35 Z" fill="#93c5fd" fill-opacity="0.7"/>
+  <path d="M20 35 C21 29 23 25 27 23 L37 23 C40 24 43 29 44 35 Z" fill="white" fill-opacity="0.2"/>
+  <!-- Windows (side) -->
+  <rect x="7" y="36" width="8" height="8" rx="2" fill="#93c5fd" fill-opacity="0.6"/>
+  <rect x="49" y="36" width="8" height="8" rx="2" fill="#93c5fd" fill-opacity="0.6"/>
+  <!-- Door line -->
+  <line x1="32" y1="35" x2="32" y2="51" stroke="#93c5fd" stroke-width="1" stroke-opacity="0.5"/>
+  <!-- Door handle -->
+  <rect x="24" y="42" width="6" height="2" rx="1" fill="#1d4ed8" fill-opacity="0.4"/>
+  <rect x="34" y="42" width="6" height="2" rx="1" fill="#1d4ed8" fill-opacity="0.4"/>
+  <!-- Wheels -->
+  <circle cx="17" cy="51" r="7" fill="#1e3a8a" filter="url(#vh-sh)"/>
+  <circle cx="17" cy="51" r="4.5" fill="#334155"/>
+  <circle cx="17" cy="51" r="2" fill="#93c5fd" fill-opacity="0.5"/>
+  <circle cx="47" cy="51" r="7" fill="#1e3a8a" filter="url(#vh-sh)"/>
+  <circle cx="47" cy="51" r="4.5" fill="#334155"/>
+  <circle cx="47" cy="51" r="2" fill="#93c5fd" fill-opacity="0.5"/>
+  <!-- Headlights -->
+  <rect x="6" y="37" width="5" height="4" rx="1" fill="#fef08a" fill-opacity="0.9"/>
+  <rect x="53" y="37" width="5" height="4" rx="1" fill="#fca5a5" fill-opacity="0.9"/>
+</svg>

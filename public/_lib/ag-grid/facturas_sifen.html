@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Facturas electrónicas - Anulación SIFEN</title>
+  <link rel="stylesheet" href="../_lib/ag-grid/ag-grid-enterprise/package/styles/ag-grid.css">
+  <link rel="stylesheet" href="../_lib/ag-grid/ag-grid-enterprise/package/styles/ag-theme-alpine.css">
+  <script src="../_lib/ag-grid/ag-grid-enterprise/package/dist/ag-grid-enterprise.min.noStyle.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    :root {
+      color-scheme: light dark;
+    }
+    body {
+      font-family: "Segoe UI", "Roboto", sans-serif;
+      margin: 0;
+      padding: 24px;
+      background: #f3f6fb;
+      color: #1f2933;
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: 1.6rem;
+    }
+    p.help-text {
+      margin: 0 0 16px;
+      color: #4b5563;
+    }
+    .toolbar {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
+      gap: 8px;
+    }
+    button {
+      border: none;
+      border-radius: 4px;
+      padding: 8px 16px;
+      font-weight: 600;
+      cursor: pointer;
+      background: #2563eb;
+      color: #fff;
+      transition: opacity .2s ease;
+    }
+    button:hover {
+      opacity: 0.9;
+    }
+    .btn-anular {
+      background: #dc2626;
+      padding: 6px 12px;
+      font-size: 0.85rem;
+    }
+    .btn-anular:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    .ag-theme-alpine {
+      height: 70vh;
+      min-height: 420px;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .estado-pill {
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 12px;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 0.85rem;
+      color: #fff;
+    }
+    .estado-activa {
+      background: #16a34a;
+    }
+    .estado-anulada {
+      background: #6b7280;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Facturas electrónicas (SIFEN)</h1>
+    <p class="help-text">Listado dinámico con AG-Grid que consume los blanks <code>api_facturas_json</code> y <code>anular_factura</code>.</p>
+    <div class="toolbar">
+      <button id="reloadGrid" type="button">Actualizar listado</button>
+    </div>
+    <div id="facturasGrid" class="ag-theme-alpine"></div>
+  </main>
+
+  <script>
+    const API_FACTURAS_URL = '../../api_facturas_json/api_facturas_json.php';
+    const API_ANULAR_URL = '../../anular_factura/anular_factura.php';
+
+    const columnDefs = [
+      { headerName: 'ID', field: 'id_factura', width: 90, sortable: true },
+      { headerName: 'Fecha', field: 'fecha', flex: 1, minWidth: 140, sortable: true },
+      { headerName: 'RUC', field: 'ruc', flex: 1, minWidth: 120, filter: true },
+      { headerName: 'CDC', field: 'cdc', flex: 2, minWidth: 240 },
+      {
+        headerName: 'Total (Gs.)',
+        field: 'total',
+        minWidth: 140,
+        valueFormatter: params => formatGs(params.value),
+        sortable: true,
+        type: 'numericColumn'
+      },
+      {
+        headerName: 'Estado',
+        field: 'estado',
+        minWidth: 120,
+        cellRenderer: params => renderEstado(params.value)
+      },
+      {
+        headerName: 'Acción',
+        field: 'accion',
+        minWidth: 140,
+        cellRenderer: params => renderAccion(params.data)
+      }
+    ];
+
+    const gridOptions = {
+      columnDefs,
+      defaultColDef: {
+        flex: 1,
+        resizable: true,
+        filter: true,
+        enableRowGroup: true,
+        enableValue: true,
+        enablePivot: true
+      },
+      rowGroupPanelShow: 'always',
+      pivotPanelShow: 'always',
+      sideBar: {
+        toolPanels: [
+          {
+            id: 'columns',
+            labelDefault: 'Columnas',
+            labelKey: 'columns',
+            iconKey: 'columns',
+            toolPanel: 'agColumnsToolPanel',
+            toolPanelParams: {
+              suppressRowGroups: false,
+              suppressValues: false,
+              suppressPivots: false,
+              suppressColumnFilter: false,
+              suppressColumnSelectAll: false,
+              suppressColumnExpandAll: false
+            }
+          },
+          {
+            id: 'filters',
+            labelDefault: 'Filtros',
+            labelKey: 'filters',
+            iconKey: 'filter',
+            toolPanel: 'agFiltersToolPanel'
+          }
+        ],
+        defaultToolPanel: 'columns'
+      },
+      rowData: [],
+      animateRows: true,
+      overlayNoRowsTemplate: '<span class="ag-overlay-loading-center">Sin registros disponibles</span>',
+      onCellClicked: event => {
+        if (
+          event.colDef.field === 'accion' &&
+          event.event.target &&
+          event.event.target.classList.contains('btn-anular')
+        ) {
+          confirmarAnulacion(event.data);
+        }
+      }
+    };
+
+    function formatGs(value) {
+      const number = Number(value) || 0;
+      return number.toLocaleString('es-PY', { minimumFractionDigits: 0 });
+    }
+
+    function renderEstado(estado) {
+      const activa = Number(estado) === 1;
+      const label = activa ? 'Activa' : 'Anulada';
+      const className = activa ? 'estado-activa' : 'estado-anulada';
+      return `<span class="estado-pill ${className}">${label}</span>`;
+    }
+
+    function renderAccion(row) {
+      if (!row || Number(row.estado) !== 1) {
+        return '<span style="color:#9ca3af;">Sin acción</span>';
+      }
+      return '<button type="button" class="btn-anular">Anular</button>';
+    }
+
+    async function cargarFacturas() {
+      if (!gridOptions.api) {
+        return;
+      }
+      gridOptions.api.showLoadingOverlay();
+      try {
+        const response = await fetch(API_FACTURAS_URL);
+        if (!response.ok) {
+          throw new Error('No se pudo obtener el listado.');
+        }
+        const payload = await response.json();
+        if (!payload.success) {
+          throw new Error(payload.message || 'Respuesta inválida del servidor.');
+        }
+        gridOptions.api.setRowData(payload.rows || []);
+        if (!payload.rows || payload.rows.length === 0) {
+          gridOptions.api.showNoRowsOverlay();
+        } else {
+          gridOptions.api.hideOverlay();
+        }
+      } catch (err) {
+        if (gridOptions.api) {
+          gridOptions.api.setRowData([]);
+          gridOptions.api.showNoRowsOverlay();
+        }
+        Swal.fire('Error', err.message, 'error');
+      }
+    }
+
+    function confirmarAnulacion(row) {
+      if (!row) return;
+      Swal.fire({
+        title: '¿Anular factura?',
+        text: `CDC: ${row.cdc}`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, anular',
+        cancelButtonText: 'Cancelar',
+        confirmButtonColor: '#dc2626'
+      }).then(result => {
+        if (result.isConfirmed) {
+          anularFactura(row.id_factura);
+        }
+      });
+    }
+
+    async function anularFactura(idFactura) {
+      try {
+        Swal.fire({
+          title: 'Anulando factura...',
+          allowOutsideClick: false,
+          didOpen: () => Swal.showLoading()
+        });
+        const response = await fetch(API_ANULAR_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id_factura: idFactura })
+        });
+        const payload = await response.json();
+        Swal.close();
+        if (!response.ok || !payload.ok) {
+          throw new Error(payload.msg || 'No se pudo anular la factura.');
+        }
+        Swal.fire('Listo', payload.msg, 'success');
+        cargarFacturas();
+      } catch (err) {
+        Swal.fire('Error', err.message, 'error');
+      }
+    }
+
+    function inicializarGrid() {
+      const gridDiv = document.querySelector('#facturasGrid');
+      agGrid.createGrid(gridDiv, gridOptions);
+      document.getElementById('reloadGrid').addEventListener('click', cargarFacturas);
+      cargarFacturas();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', inicializarGrid);
+    } else {
+      inicializarGrid();
+    }
+  </script>
+</body>
+</html>

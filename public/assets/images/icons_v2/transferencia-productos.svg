@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="tp-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0ea5e9"/>
+      <stop offset="48%" stop-color="#6366f1"/>
+      <stop offset="100%" stop-color="#8b5cf6"/>
+    </linearGradient>
+    <linearGradient id="tp-doc" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#dbeafe"/>
+    </linearGradient>
+    <linearGradient id="tp-card" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#ef4444"/>
+    </linearGradient>
+    <linearGradient id="tp-box" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fde68a"/>
+      <stop offset="100%" stop-color="#f59e0b"/>
+    </linearGradient>
+    <linearGradient id="tp-box-side" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#fbbf24"/>
+      <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+    <linearGradient id="tp-arrow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#34d399"/>
+      <stop offset="100%" stop-color="#10b981"/>
+    </linearGradient>
+    <linearGradient id="tp-gl" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.32"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="tp-sh" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#0005"/>
+    </filter>
+    <filter id="tp-sm" x="-35%" y="-35%" width="170%" height="170%">
+      <feDropShadow dx="0" dy="1.2" stdDeviation="1.3" flood-color="#0004"/>
+    </filter>
+  </defs>
+
+  <rect width="64" height="64" rx="14" fill="url(#tp-bg)"/>
+  <rect width="64" height="32" rx="14" fill="url(#tp-gl)"/>
+  <rect y="18" width="64" height="14" fill="url(#tp-gl)"/>
+
+  <!-- Documento / orden -->
+  <g filter="url(#tp-sh)">
+    <rect x="11" y="9" width="29" height="44" rx="6" fill="url(#tp-doc)"/>
+    <path d="M15 9 H36 C38.2 9 40 10.8 40 13 V18 H11 V13 C11 10.8 12.8 9 15 9 Z" fill="url(#tp-card)"/>
+    <circle cx="17.8" cy="14.5" r="1.2" fill="#fff" fill-opacity="0.92"/>
+    <circle cx="21.1" cy="14.5" r="1.2" fill="#fff" fill-opacity="0.72"/>
+    <rect x="14" y="23" width="16" height="2.2" rx="1.1" fill="#60a5fa" fill-opacity="0.75"/>
+    <rect x="14" y="28" width="19" height="2.2" rx="1.1" fill="#93c5fd" fill-opacity="0.85"/>
+    <rect x="14" y="33" width="14" height="2.2" rx="1.1" fill="#60a5fa" fill-opacity="0.7"/>
+    <rect x="14" y="39" width="18" height="5" rx="2.4" fill="#10b981"/>
+    <text x="23" y="42.3" text-anchor="middle" dominant-baseline="middle" font-family="Arial, sans-serif" font-size="4.3" font-weight="700" fill="#fff">TR</text>
+  </g>
+
+  <!-- Caja -->
+  <g filter="url(#tp-sm)">
+    <path d="M38 25 L48 20 L57 25 L47 30 Z" fill="url(#tp-box)"/>
+    <path d="M38 25 L38 37 L47 42 L47 30 Z" fill="#f59e0b"/>
+    <path d="M47 30 L47 42 L57 37 L57 25 Z" fill="url(#tp-box-side)"/>
+    <path d="M41.8 22.2 L53.2 27.5" stroke="#fff8" stroke-width="1.2" stroke-linecap="round"/>
+    <path d="M43.5 29.4 L43.5 41.4" stroke="#b45309" stroke-width="1" stroke-opacity="0.36"/>
+  </g>
+
+  <!-- Flechas de traslado -->
+  <path d="M29 34.5 C33 34.5 35 34.5 38 34.5" stroke="url(#tp-arrow)" stroke-width="4.2" stroke-linecap="round" fill="none"/>
+  <path d="M38 34.5 L35.7 32.2 M38 34.5 L35.7 36.8" stroke="url(#tp-arrow)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <path d="M40 37.8 C36 37.8 34 37.8 31 37.8" stroke="#67e8f9" stroke-width="3.2" stroke-linecap="round" fill="none" opacity="0.9"/>
+  <path d="M31 37.8 L33.1 35.8 M31 37.8 L33.1 39.8" stroke="#67e8f9" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.9"/>
+
+  <!-- Sucursales -->
+  <g filter="url(#tp-sm)">
+    <rect x="46.5" y="44.5" width="9.5" height="9.5" rx="2.5" fill="#22c55e"/>
+    <rect x="48.2" y="46.3" width="6.1" height="3.2" rx="1.2" fill="#dcfce7" fill-opacity="0.95"/>
+    <rect x="48.2" y="50" width="1.8" height="2.8" rx="0.8" fill="#dcfce7" fill-opacity="0.95"/>
+    <rect x="52.5" y="50" width="1.8" height="2.8" rx="0.8" fill="#dcfce7" fill-opacity="0.95"/>
+    <circle cx="44.2" cy="50" r="3.4" fill="#111827" fill-opacity="0.18"/>
+    <circle cx="44.2" cy="49.3" r="3.1" fill="#f43f5e"/>
+    <text x="44.2" y="49.4" text-anchor="middle" dominant-baseline="middle" font-family="Arial, sans-serif" font-size="4" font-weight="700" fill="#fff">S</text>
+  </g>
+
+  <ellipse cx="32" cy="57" rx="24" ry="2.4" fill="#0003"/>
+</svg>

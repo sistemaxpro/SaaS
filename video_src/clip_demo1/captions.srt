@@ -1,0 +1,23 @@
+1
+00:00:00,000 --> 00:00:04,200
+Ingresás rápido a tu negocio
+
+2
+00:00:04,200 --> 00:00:08,800
+Todo en un solo lugar
+
+3
+00:00:08,800 --> 00:00:13,200
+Ventas, productos, inventario y más
+
+4
+00:00:13,200 --> 00:00:17,600
+Asistente integrado para consultas rápidas
+
+5
+00:00:17,600 --> 00:00:23,200
+POS ágil para vender con velocidad
+
+6
+00:00:23,200 --> 00:00:26,600
+Registrate, es gratis

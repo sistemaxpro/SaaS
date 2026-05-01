@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="ct-bg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#3b82f6"/><stop offset="100%" stop-color="#1d4ed8"/></linearGradient>
+    <linearGradient id="ct-paper" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#eff6ff"/><stop offset="100%" stop-color="#dbeafe"/></linearGradient>
+    <linearGradient id="ct-pen" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#fbbf24"/><stop offset="100%" stop-color="#f59e0b"/></linearGradient>
+    <linearGradient id="ct-gl" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="white" stop-opacity="0.3"/><stop offset="100%" stop-color="white" stop-opacity="0"/></linearGradient>
+    <filter id="ct-sh"><feDropShadow dx="0" dy="2.5" stdDeviation="2.5" flood-color="#0005"/></filter>
+    <filter id="ct-sm"><feDropShadow dx="0" dy="1" stdDeviation="1.5" flood-color="#0004"/></filter>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="url(#ct-bg)"/>
+  <rect width="64" height="32" rx="14" fill="url(#ct-gl)"/>
+  <rect y="18" width="64" height="14" fill="url(#ct-gl)"/>
+  <!-- Document -->
+  <rect x="12" y="8" width="34" height="44" rx="3" fill="url(#ct-paper)" filter="url(#ct-sh)"/>
+  <!-- Folded corner -->
+  <path d="M38 8 L46 8 L46 16 Z" fill="#bfdbfe" fill-opacity="0.7"/>
+  <path d="M38 8 L38 16 L46 16" fill="none" stroke="#93c5fd" stroke-width="1"/>
+  <!-- Lines -->
+  <line x1="18" y1="22" x2="38" y2="22" stroke="#3b82f6" stroke-width="1.5" stroke-opacity="0.6" stroke-linecap="round"/>
+  <line x1="18" y1="28" x2="40" y2="28" stroke="#3b82f6" stroke-width="1.5" stroke-opacity="0.6" stroke-linecap="round"/>
+  <line x1="18" y1="34" x2="36" y2="34" stroke="#3b82f6" stroke-width="1.5" stroke-opacity="0.6" stroke-linecap="round"/>
+  <!-- Signature line -->
+  <line x1="18" y1="43" x2="38" y2="43" stroke="#1d4ed8" stroke-width="1" stroke-opacity="0.4" stroke-linecap="round"/>
+  <!-- Signature squiggle -->
+  <path d="M18 41 Q21 38 24 41 Q27 44 30 41 Q33 38 36 41" fill="none" stroke="#1d4ed8" stroke-width="1.5" stroke-linecap="round" stroke-opacity="0.7"/>
+  <!-- Paper shine -->
+  <rect x="12" y="8" width="34" height="9" rx="3" fill="white" fill-opacity="0.3"/>
+  <!-- Pen -->
+  <g transform="rotate(-35, 48, 50)" filter="url(#ct-sm)">
+    <rect x="44" y="38" width="5" height="18" rx="2" fill="url(#ct-pen)"/>
+    <polygon points="44,56 49,56 46.5,62" fill="#92400e"/>
+    <rect x="44" y="38" width="5" height="4" rx="2" fill="#92400e" fill-opacity="0.5"/>
+  </g>
+</svg>

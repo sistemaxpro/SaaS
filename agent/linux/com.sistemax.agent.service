@@ -1,0 +1,15 @@
+[Unit]
+Description=Sistemax Agent (User Service)
+After=network-online.target
+
+[Service]
+Type=simple
+ExecStart=__AGENT_BIN__
+Restart=always
+RestartSec=2
+WorkingDirectory=__AGENT_HOME__
+StandardOutput=append:__LOG_DIR__/agent.out.log
+StandardError=append:__LOG_DIR__/agent.err.log
+
+[Install]
+WantedBy=default.target

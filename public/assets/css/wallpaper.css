@@ -1,0 +1,74 @@
+/**
+ * Estilos para Wallpapers Dinámicos
+ */
+
+/* Background dinámico con transición suave */
+body.wallpaper-enabled {
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  transition: background-image 0.5s ease-in-out;
+}
+
+/* Capa de overlay sutil para mejorar legibilidad */
+body.wallpaper-enabled::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: inherit;
+  filter: blur(0px);
+  z-index: -1;
+}
+
+/* Overlay adicional para mejor contraste (opcional) */
+body.wallpaper-enabled.with-overlay::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 0;
+}
+
+/* Dark theme overlay */
+body.dark.wallpaper-enabled.with-overlay::after {
+  background: rgba(0, 0, 0, 0.4);
+}
+
+/* Light theme overlay */
+body:not(.dark).wallpaper-enabled.with-overlay::after {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Asegurar que el contenido esté por encima del overlay */
+body.wallpaper-enabled > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Animación de fade-in para wallpaper */
+@keyframes wallpaper-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+body.wallpaper-enabled {
+  animation: wallpaper-fade-in 0.8s ease-out;
+}
+
+/* Fallback para navegadores sin soporte de background-attachment */
+@supports not (background-attachment: fixed) {
+  body.wallpaper-enabled {
+    background-attachment: scroll;
+  }
+}

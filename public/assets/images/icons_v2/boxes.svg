@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="bgG" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#b45309"/>
+    </linearGradient>
+    <linearGradient id="box1G" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef3c7"/>
+      <stop offset="100%" stop-color="#fde68a"/>
+    </linearGradient>
+    <linearGradient id="box1sideG" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#fde68a"/>
+      <stop offset="100%" stop-color="#fbbf24"/>
+    </linearGradient>
+    <linearGradient id="box2G" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fed7aa"/>
+      <stop offset="100%" stop-color="#fdba74"/>
+    </linearGradient>
+    <linearGradient id="box2sideG" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#fdba74"/>
+      <stop offset="100%" stop-color="#fb923c"/>
+    </linearGradient>
+    <linearGradient id="glossG" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="white" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="white" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="sh" x="-25%" y="-25%" width="150%" height="150%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#0005"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="64" height="64" rx="14" fill="url(#bgG)"/>
+  <rect width="64" height="32" rx="14" fill="url(#glossG)"/>
+  <rect y="18" width="64" height="14" fill="url(#glossG)"/>
+
+  <!-- Back-left box (small) -->
+  <g filter="url(#sh)" opacity="0.85">
+    <!-- top face -->
+    <polygon points="8,20 20,14 32,20 20,26" fill="url(#box1G)"/>
+    <!-- front face -->
+    <polygon points="8,20 8,36 20,42 20,26" fill="#fde68a"/>
+    <!-- right face -->
+    <polygon points="20,26 20,42 32,36 32,20" fill="url(#box1sideG)"/>
+    <!-- tape strip on top -->
+    <polygon points="14,17 26,17 26,23 14,23" fill="#fbbf24" fill-opacity="0.5"/>
+    <line x1="20" y1="14" x2="20" y2="26" stroke="#f59e0b" stroke-width="0.8" stroke-opacity="0.4"/>
+  </g>
+
+  <!-- Front-right box (large) -->
+  <g filter="url(#sh)">
+    <!-- top face -->
+    <polygon points="26,26 44,18 58,26 40,34" fill="url(#box2G)"/>
+    <!-- front face -->
+    <polygon points="26,26 26,48 40,56 40,34" fill="#fde68a"/>
+    <!-- right face -->
+    <polygon points="40,34 40,56 58,48 58,26" fill="url(#box2sideG)"/>
+    <!-- tape strip on top -->
+    <polygon points="32,22 50,22 50,30 32,30" fill="#fbbf24" fill-opacity="0.5"/>
+    <line x1="42" y1="18" x2="42" y2="34" stroke="#f59e0b" stroke-width="1" stroke-opacity="0.4"/>
+  </g>
+
+  <!-- Ground shadow -->
+  <ellipse cx="38" cy="57" rx="16" ry="2.5" fill="#0004"/>
+</svg>

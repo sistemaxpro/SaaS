@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="sh-bg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#3b82f6"/><stop offset="100%" stop-color="#1e3a8a"/></linearGradient>
+    <linearGradient id="sh-shield" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#dbeafe"/><stop offset="100%" stop-color="#bfdbfe"/></linearGradient>
+    <linearGradient id="sh-gl" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="white" stop-opacity="0.3"/><stop offset="100%" stop-color="white" stop-opacity="0"/></linearGradient>
+    <filter id="sh-sf"><feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#0006"/></filter>
+    <filter id="sh-sm"><feDropShadow dx="0" dy="1" stdDeviation="1.5" flood-color="#0004"/></filter>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="url(#sh-bg)"/>
+  <rect width="64" height="32" rx="14" fill="url(#sh-gl)"/>
+  <rect y="18" width="64" height="14" fill="url(#sh-gl)"/>
+  <!-- Shield shape -->
+  <path d="M32 7 L52 14 L52 32 C52 44 32 57 32 57 C32 57 12 44 12 32 L12 14 Z" fill="url(#sh-shield)" filter="url(#sh-sf)"/>
+  <!-- Inner shield darker band -->
+  <path d="M32 11 L48 17 L48 32 C48 42 32 52 32 52 C32 52 16 42 16 32 L16 17 Z" fill="#1d4ed8" fill-opacity="0.15"/>
+  <!-- Checkmark -->
+  <polyline points="22,31 29,38 42,23" fill="none" stroke="#1d4ed8" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" filter="url(#sh-sm)"/>
+  <!-- Shield top shine -->
+  <path d="M32 11 L48 17 L48 22 L16 22 L16 17 Z" fill="white" fill-opacity="0.2"/>
+</svg>

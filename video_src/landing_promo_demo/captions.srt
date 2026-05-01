@@ -1,0 +1,39 @@
+1
+00:00:00,000 --> 00:00:07,000
+SistemaX: control, orden y menos errores
+
+2
+00:00:07,000 --> 00:00:13,000
+Modulos principales en un solo entorno
+
+3
+00:00:13,000 --> 00:00:20,000
+Punto de venta agil y control de caja
+
+4
+00:00:20,000 --> 00:00:27,000
+Compras y carga de comprobantes
+
+5
+00:00:27,000 --> 00:00:34,000
+Cobros y seguimiento financiero
+
+6
+00:00:34,000 --> 00:00:40,000
+SIFEN y procesos fiscales
+
+7
+00:00:40,000 --> 00:00:46,000
+Usuarios, roles y permisos
+
+8
+00:00:46,000 --> 00:00:53,000
+Panel comercial con metricas clave
+
+9
+00:00:53,000 --> 00:01:00,000
+Suscripcion modular e integracion con balanza
+
+10
+00:01:00,000 --> 00:01:06,000
+Registrate, es gratis

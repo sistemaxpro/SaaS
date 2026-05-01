@@ -1,0 +1,28 @@
+{
+  "name": "SistemaX POS Desktop",
+  "short_name": "POS Desktop",
+  "description": "Punto de venta desktop con soporte offline básico",
+  "start_url": "/public/pos/index_desktop_dropdown.php?desktop=1",
+  "scope": "/public/pos/",
+  "display": "standalone",
+  "orientation": "landscape",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "/public/pos/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/public/pos/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "lang": "es",
+  "dir": "ltr",
+  "categories": ["business", "productivity"]
+}

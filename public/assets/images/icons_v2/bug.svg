@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="bug-bg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#ef4444"/><stop offset="100%" stop-color="#991b1b"/></linearGradient>
+    <linearGradient id="bug-body" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#fecaca"/><stop offset="100%" stop-color="#fca5a5"/></linearGradient>
+    <linearGradient id="bug-gl" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="white" stop-opacity="0.3"/><stop offset="100%" stop-color="white" stop-opacity="0"/></linearGradient>
+    <filter id="bug-sh"><feDropShadow dx="0" dy="2.5" stdDeviation="2.5" flood-color="#0005"/></filter>
+    <filter id="bug-sm"><feDropShadow dx="0" dy="1" stdDeviation="1.5" flood-color="#0004"/></filter>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="url(#bug-bg)"/>
+  <rect width="64" height="32" rx="14" fill="url(#bug-gl)"/>
+  <rect y="18" width="64" height="14" fill="url(#bug-gl)"/>
+  <!-- Bug body (ellipse) -->
+  <ellipse cx="32" cy="38" rx="11" ry="14" fill="url(#bug-body)" filter="url(#bug-sh)"/>
+  <!-- Bug head -->
+  <circle cx="32" cy="22" r="7" fill="url(#bug-body)" filter="url(#bug-sm)"/>
+  <!-- Antennae -->
+  <line x1="28" y1="17" x2="23" y2="10" stroke="#fca5a5" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="23" cy="10" r="2" fill="#fca5a5"/>
+  <line x1="36" y1="17" x2="41" y2="10" stroke="#fca5a5" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="41" cy="10" r="2" fill="#fca5a5"/>
+  <!-- Eyes -->
+  <circle cx="29" cy="21" r="2.5" fill="#991b1b"/>
+  <circle cx="35" cy="21" r="2.5" fill="#991b1b"/>
+  <circle cx="29.8" cy="20.2" r="0.8" fill="white" fill-opacity="0.8"/>
+  <circle cx="35.8" cy="20.2" r="0.8" fill="white" fill-opacity="0.8"/>
+  <!-- Body segments -->
+  <line x1="21" y1="33" x2="43" y2="33" stroke="#ef4444" stroke-width="1" stroke-opacity="0.4"/>
+  <line x1="21" y1="40" x2="43" y2="40" stroke="#ef4444" stroke-width="1" stroke-opacity="0.4"/>
+  <!-- Legs -->
+  <line x1="21" y1="32" x2="12" y2="27" stroke="#fca5a5" stroke-width="2" stroke-linecap="round"/>
+  <line x1="21" y1="38" x2="12" y2="37" stroke="#fca5a5" stroke-width="2" stroke-linecap="round"/>
+  <line x1="21" y1="44" x2="13" y2="49" stroke="#fca5a5" stroke-width="2" stroke-linecap="round"/>
+  <line x1="43" y1="32" x2="52" y2="27" stroke="#fca5a5" stroke-width="2" stroke-linecap="round"/>
+  <line x1="43" y1="38" x2="52" y2="37" stroke="#fca5a5" stroke-width="2" stroke-linecap="round"/>
+  <line x1="43" y1="44" x2="51" y2="49" stroke="#fca5a5" stroke-width="2" stroke-linecap="round"/>
+  <!-- Body shine -->
+  <ellipse cx="29" cy="33" rx="4" ry="6" fill="white" fill-opacity="0.2"/>
+</svg>

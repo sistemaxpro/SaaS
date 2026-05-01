@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="mp-bg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#f43f5e"/><stop offset="100%" stop-color="#9f1239"/></linearGradient>
+    <linearGradient id="mp-pin" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#fda4af"/><stop offset="100%" stop-color="#fb7185"/></linearGradient>
+    <linearGradient id="mp-gl" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="white" stop-opacity="0.3"/><stop offset="100%" stop-color="white" stop-opacity="0"/></linearGradient>
+    <filter id="mp-sh"><feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#0006"/></filter>
+    <filter id="mp-sm"><feDropShadow dx="0" dy="1" stdDeviation="1.5" flood-color="#0004"/></filter>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="url(#mp-bg)"/>
+  <rect width="64" height="32" rx="14" fill="url(#mp-gl)"/>
+  <rect y="18" width="64" height="14" fill="url(#mp-gl)"/>
+  <!-- Shadow ellipse on ground -->
+  <ellipse cx="32" cy="57" rx="9" ry="3" fill="#0005"/>
+  <!-- Pin teardrop shape -->
+  <path d="M32 8 C20 8 13 18 13 26 C13 37 32 55 32 55 C32 55 51 37 51 26 C51 18 44 8 32 8 Z" fill="url(#mp-pin)" filter="url(#mp-sh)"/>
+  <!-- Inner circle -->
+  <circle cx="32" cy="26" r="9" fill="#9f1239" fill-opacity="0.6"/>
+  <circle cx="32" cy="26" r="6" fill="white" fill-opacity="0.85"/>
+  <circle cx="32" cy="26" r="3" fill="#f43f5e"/>
+  <!-- Shine on pin top -->
+  <ellipse cx="26" cy="17" rx="4" ry="3" fill="white" fill-opacity="0.35" transform="rotate(-20 26 17)"/>
+</svg>

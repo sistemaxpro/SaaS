@@ -1,0 +1,72 @@
+[30-Jan-2026 13:22:36 America/Asuncion] === DELETE REQUEST INICIADO ===
+[30-Jan-2026 13:22:36 America/Asuncion] Método: POST
+[30-Jan-2026 13:22:36 America/Asuncion] Content-Type: application/json
+[30-Jan-2026 13:22:36 America/Asuncion] Input recibido: 45 bytes
+[30-Jan-2026 13:22:36 America/Asuncion] Input content: {"id_empresa":1042,"confirmacion":"80102866"}
+[30-Jan-2026 13:22:36 America/Asuncion] JSON decode exitoso
+[30-Jan-2026 13:22:36 America/Asuncion] ID: 1042, Confirmacion: 80102866
+[30-Jan-2026 13:22:36 America/Asuncion] Conectando a BD: 168.231.95.50/serproc1
+[30-Jan-2026 13:22:36 America/Asuncion] Ejecutando mysqldump: empresa_1042
+[30-Jan-2026 13:22:36 America/Asuncion] Throwable: Call to undefined function exec()
+[30-Jan-2026 13:22:36 America/Asuncion] Trace: #0 {main}
+[30-Jan-2026 13:22:36 America/Asuncion] === DELETE REQUEST FINALIZADO ===
+[01-Feb-2026 18:48:39 America/Asuncion] === DELETE REQUEST INICIADO ===
+[01-Feb-2026 18:48:39 America/Asuncion] Método: POST
+[01-Feb-2026 18:48:39 America/Asuncion] Content-Type: application/json
+[01-Feb-2026 18:48:39 America/Asuncion] Input recibido: 45 bytes
+[01-Feb-2026 18:48:39 America/Asuncion] Input content: {"id_empresa":1042,"confirmacion":"80102866"}
+[01-Feb-2026 18:48:39 America/Asuncion] JSON decode exitoso
+[01-Feb-2026 18:48:39 America/Asuncion] ID: 1042, Confirmacion: 80102866
+[01-Feb-2026 18:48:39 America/Asuncion] Conectando a BD: 168.231.95.50/serproc1
+[01-Feb-2026 18:48:39 America/Asuncion] Ejecutando mysqldump: empresa_1042
+[01-Feb-2026 18:48:39 America/Asuncion] mysqldump falló (returnCode: 2), usando backup PHP
+[01-Feb-2026 18:48:39 America/Asuncion] Output mysqldump: 
+[01-Feb-2026 18:48:39 America/Asuncion] Iniciando backup PHP de empresa_1042
+[01-Feb-2026 18:48:39 America/Asuncion] Se encontraron 212 tablas en empresa_1042
+[01-Feb-2026 18:48:39 America/Asuncion] Escribiendo backup en: /home/fabio/web/sistemax.com.py/public_html/_lib/file/backupDB/empresa_1042_20260201_184839.sql
+[01-Feb-2026 18:48:39 America/Asuncion] Backup PHP guardado exitosamente: 84871 bytes
+[01-Feb-2026 18:48:39 America/Asuncion] Eliminando base de datos: empresa_1042
+[01-Feb-2026 18:48:45 America/Asuncion] Base de datos empresa_1042 eliminada exitosamente
+[01-Feb-2026 18:48:45 America/Asuncion] Eliminando registro de empresa id=1042
+[01-Feb-2026 18:48:45 America/Asuncion] Registros eliminados: 1
+[01-Feb-2026 18:48:45 America/Asuncion] === DELETE REQUEST FINALIZADO ===
+[02-Feb-2026 08:32:12 America/Asuncion] === DELETE REQUEST INICIADO ===
+[02-Feb-2026 08:32:12 America/Asuncion] Método: POST
+[02-Feb-2026 08:32:12 America/Asuncion] Content-Type: application/json
+[02-Feb-2026 08:32:12 America/Asuncion] Input recibido: 45 bytes
+[02-Feb-2026 08:32:12 America/Asuncion] Input content: {"id_empresa":1043,"confirmacion":"80062286"}
+[02-Feb-2026 08:32:12 America/Asuncion] JSON decode exitoso
+[02-Feb-2026 08:32:12 America/Asuncion] ID: 1043, Confirmacion: 80062286
+[02-Feb-2026 08:32:12 America/Asuncion] Conectando a BD: 168.231.95.50/serproc1
+[02-Feb-2026 08:32:12 America/Asuncion] Ejecutando mysqldump: empresa_1043
+[02-Feb-2026 08:32:12 America/Asuncion] mysqldump falló (returnCode: 2), usando backup PHP
+[02-Feb-2026 08:32:12 America/Asuncion] Output mysqldump: 
+[02-Feb-2026 08:32:12 America/Asuncion] Iniciando backup PHP de empresa_1043
+[02-Feb-2026 08:32:12 America/Asuncion] Se encontraron 177 tablas en empresa_1043
+[02-Feb-2026 08:32:12 America/Asuncion] Escribiendo backup en: /home/fabio/web/sistemax.com.py/public_html/_lib/file/backupDB/empresa_1043_20260202_083212.sql
+[02-Feb-2026 08:32:12 America/Asuncion] Backup PHP guardado exitosamente: 72060 bytes
+[02-Feb-2026 08:32:12 America/Asuncion] Eliminando base de datos: empresa_1043
+[02-Feb-2026 08:32:18 America/Asuncion] Base de datos empresa_1043 eliminada exitosamente
+[02-Feb-2026 08:32:18 America/Asuncion] Eliminando registro de empresa id=1043
+[02-Feb-2026 08:32:18 America/Asuncion] Registros eliminados: 1
+[02-Feb-2026 08:32:18 America/Asuncion] === DELETE REQUEST FINALIZADO ===
+[02-Feb-2026 08:46:09 America/Asuncion] === DELETE REQUEST INICIADO ===
+[02-Feb-2026 08:46:09 America/Asuncion] Método: POST
+[02-Feb-2026 08:46:09 America/Asuncion] Content-Type: application/json
+[02-Feb-2026 08:46:09 America/Asuncion] Input recibido: 45 bytes
+[02-Feb-2026 08:46:09 America/Asuncion] Input content: {"id_empresa":1044,"confirmacion":"80062286"}
+[02-Feb-2026 08:46:09 America/Asuncion] JSON decode exitoso
+[02-Feb-2026 08:46:09 America/Asuncion] ID: 1044, Confirmacion: 80062286
+[02-Feb-2026 08:46:09 America/Asuncion] Conectando a BD: 168.231.95.50/serproc1
+[02-Feb-2026 08:46:09 America/Asuncion] Ejecutando mysqldump: empresa_1044
+[02-Feb-2026 08:46:09 America/Asuncion] mysqldump falló (returnCode: 2), usando backup PHP
+[02-Feb-2026 08:46:09 America/Asuncion] Output mysqldump: 
+[02-Feb-2026 08:46:09 America/Asuncion] Iniciando backup PHP de empresa_1044
+[02-Feb-2026 08:46:09 America/Asuncion] Se encontraron 177 tablas en empresa_1044
+[02-Feb-2026 08:46:09 America/Asuncion] Escribiendo backup en: /home/fabio/web/sistemax.com.py/public_html/_lib/file/backupDB/empresa_1044_20260202_084609.sql
+[02-Feb-2026 08:46:09 America/Asuncion] Backup PHP guardado exitosamente: 72060 bytes
+[02-Feb-2026 08:46:09 America/Asuncion] Eliminando base de datos: empresa_1044
+[02-Feb-2026 08:46:15 America/Asuncion] Base de datos empresa_1044 eliminada exitosamente
+[02-Feb-2026 08:46:15 America/Asuncion] Eliminando registro de empresa id=1044
+[02-Feb-2026 08:46:15 America/Asuncion] Registros eliminados: 1
+[02-Feb-2026 08:46:15 America/Asuncion] === DELETE REQUEST FINALIZADO ===

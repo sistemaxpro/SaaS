@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="sp-bg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#06b6d4"/><stop offset="100%" stop-color="#0e7490"/></linearGradient>
+    <linearGradient id="sp-head" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#e0f2fe"/><stop offset="100%" stop-color="#bae6fd"/></linearGradient>
+    <linearGradient id="sp-gl" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="white" stop-opacity="0.3"/><stop offset="100%" stop-color="white" stop-opacity="0"/></linearGradient>
+    <filter id="sp-sh"><feDropShadow dx="0" dy="2.5" stdDeviation="2.5" flood-color="#0005"/></filter>
+    <filter id="sp-sm"><feDropShadow dx="0" dy="1" stdDeviation="1.5" flood-color="#0004"/></filter>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="url(#sp-bg)"/>
+  <rect width="64" height="32" rx="14" fill="url(#sp-gl)"/>
+  <rect y="18" width="64" height="14" fill="url(#sp-gl)"/>
+  <!-- Headband arc -->
+  <path d="M14 34 C14 17 50 17 50 34" fill="none" stroke="url(#sp-head)" stroke-width="5" stroke-linecap="round" filter="url(#sp-sh)"/>
+  <!-- Left ear cup -->
+  <rect x="8" y="31" width="10" height="14" rx="4" fill="url(#sp-head)" filter="url(#sp-sm)"/>
+  <rect x="10" y="33" width="6" height="10" rx="3" fill="#0e7490" fill-opacity="0.3"/>
+  <!-- Right ear cup -->
+  <rect x="46" y="31" width="10" height="14" rx="4" fill="url(#sp-head)" filter="url(#sp-sm)"/>
+  <rect x="48" y="33" width="6" height="10" rx="3" fill="#0e7490" fill-opacity="0.3"/>
+  <!-- Mic boom arm -->
+  <path d="M13 42 C10 48 16 54 22 52" fill="none" stroke="url(#sp-head)" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Mic capsule -->
+  <rect x="20" y="49" width="8" height="6" rx="3" fill="url(#sp-head)" filter="url(#sp-sm)"/>
+  <circle cx="24" cy="52" r="1.5" fill="#0e7490" fill-opacity="0.5"/>
+  <!-- Sound waves from mic -->
+  <path d="M30 50 C32 49 32 55 30 54" fill="none" stroke="#a5f3fc" stroke-width="1.2" stroke-linecap="round"/>
+  <path d="M33 48 C37 46 37 58 33 56" fill="none" stroke="#a5f3fc" stroke-width="1.2" stroke-linecap="round"/>
+</svg>

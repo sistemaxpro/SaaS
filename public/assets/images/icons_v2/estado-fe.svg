@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="efe-bg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#0284c7"/><stop offset="100%" stop-color="#0c4a6e"/></linearGradient>
+    <linearGradient id="efe-doc" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#e0f2fe"/><stop offset="100%" stop-color="#bae6fd"/></linearGradient>
+    <linearGradient id="efe-seal" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#22c55e"/><stop offset="100%" stop-color="#15803d"/></linearGradient>
+    <linearGradient id="efe-bolt" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#fef08a"/><stop offset="100%" stop-color="#fbbf24"/></linearGradient>
+    <linearGradient id="efe-gl" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="white" stop-opacity="0.28"/><stop offset="100%" stop-color="white" stop-opacity="0"/></linearGradient>
+    <filter id="efe-sh"><feDropShadow dx="0" dy="2.5" stdDeviation="2.5" flood-color="#0006"/></filter>
+    <filter id="efe-sm"><feDropShadow dx="0" dy="1.5" stdDeviation="2" flood-color="#0004"/></filter>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="url(#efe-bg)"/>
+  <rect width="64" height="32" rx="14" fill="url(#efe-gl)"/>
+  <rect y="18" width="64" height="14" fill="url(#efe-gl)"/>
+
+  <!-- Invoice document -->
+  <rect x="9" y="7" width="33" height="42" rx="3" fill="url(#efe-doc)" filter="url(#efe-sh)"/>
+  <!-- Folded corner -->
+  <path d="M34 7 L42 7 L42 15 Z" fill="#7dd3fc" fill-opacity="0.7"/>
+  <path d="M34 7 L34 15 L42 15" fill="none" stroke="#38bdf8" stroke-width="0.8"/>
+  <!-- Header band -->
+  <rect x="9" y="7" width="33" height="8" rx="3" fill="#0284c7" fill-opacity="0.25"/>
+  <text x="25" y="13" text-anchor="middle" font-family="Arial,sans-serif" font-size="4.5" font-weight="700" fill="#0c4a6e">FACTURA-E</text>
+  <!-- Simulated QR code block -->
+  <rect x="13" y="18" width="11" height="11" rx="1" fill="#0284c7" fill-opacity="0.12"/>
+  <rect x="14" y="19" width="3" height="3" rx="0.5" fill="#0369a1"/>
+  <rect x="19" y="19" width="3" height="3" rx="0.5" fill="#0369a1"/>
+  <rect x="14" y="24" width="3" height="3" rx="0.5" fill="#0369a1"/>
+  <rect x="19" y="24" width="3" height="3" rx="0.5" fill="#0369a1"/>
+  <rect x="17" y="21" width="1.5" height="1.5" fill="#0369a1"/>
+  <rect x="15" y="22" width="1.5" height="1.5" fill="#0369a1"/>
+  <rect x="21" y="21" width="1.5" height="1.5" fill="#0369a1"/>
+  <!-- Line items -->
+  <rect x="27" y="19" width="12" height="2" rx="1" fill="#7dd3fc" fill-opacity="0.8"/>
+  <rect x="27" y="23" width="9" height="2" rx="1" fill="#7dd3fc" fill-opacity="0.8"/>
+  <rect x="27" y="27" width="11" height="2" rx="1" fill="#7dd3fc" fill-opacity="0.8"/>
+  <!-- Separator -->
+  <line x1="13" y1="34" x2="38" y2="34" stroke="#0284c7" stroke-width="0.8" stroke-opacity="0.4"/>
+  <text x="13" y="39" font-family="Arial,sans-serif" font-size="4" font-weight="700" fill="#0c4a6e">TOTAL</text>
+  <text x="38" y="39" text-anchor="end" font-family="monospace" font-size="5" font-weight="700" fill="#0c4a6e">$0.00</text>
+  <!-- Document shine -->
+  <rect x="9" y="7" width="33" height="7" rx="3" fill="white" fill-opacity="0.25"/>
+
+  <!-- Estado / seal badge -->
+  <circle cx="47" cy="49" r="13" fill="url(#efe-seal)" filter="url(#efe-sh)"/>
+  <circle cx="47" cy="49" r="10.5" fill="none" stroke="white" stroke-width="1" stroke-opacity="0.35"/>
+  <!-- Lightning bolt (electronic = digital/power) -->
+  <polygon points="50,39 43,49.5 47.5,49.5 44,59 54,47 49,47" fill="url(#efe-bolt)"/>
+  <!-- Seal top gloss -->
+  <ellipse cx="43" cy="43" rx="4" ry="2.5" fill="white" fill-opacity="0.25" transform="rotate(-20 43 43)"/>
+</svg>

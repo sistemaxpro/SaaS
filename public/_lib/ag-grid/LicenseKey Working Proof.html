@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Ag-Grid Basic Example</title>
+    <script src="ag-grid-enterprise\package\dist\ag-grid-enterprise.min.js"></script>
+</head>
+<body>
+    <div id="myGrid" style="height: 900px; width:100%;" class="ag-theme-alpine"></div>
+    <br/><br/>
+    <div style="padding: 50px; text-align: center;  background-color: #424242;">
+      <a href="https://downloaddevtools.com/en" > <img alt="DownloadDevTools.com" src="https://downloaddevtools.com/FileManagerContent/Logos/site-logo-header-white-v2.png"> </a>
+    </div>
+</body>
+<script>
+agGrid.LicenseManager.setLicenseKey("DownloadDevTools_COM_NDEwMjM0NTgwMDAwMA==59158b5225400879a12a96634544f5b6");
+var columnDefs = [
+  {headerName: "Make", field: "make"},
+  {headerName: "Model", field: "model"},
+  {headerName: "Price", field: "price"}
+];
+    
+// specify the data
+var rowData = [
+  {make: "Toyota", model: "Celica", price: 35000},
+  {make: "Ford", model: "Mondeo", price: 32000},
+  {make: "Porsche", model: "Boxter", price: 72000}
+];
+    
+// let the grid know which columns and what data to use
+var gridOptions = {
+  columnDefs: columnDefs,
+  rowData: rowData
+};
+
+// setup the grid after the page has finished loading
+document.addEventListener('DOMContentLoaded', function() {
+    var gridDiv = document.querySelector('#myGrid');
+    agGrid.createGrid(gridDiv, gridOptions);
+});
+</script>
+</html>

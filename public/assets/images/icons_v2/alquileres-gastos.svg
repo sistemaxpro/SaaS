@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="ags-bg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#f43f5e"/><stop offset="100%" stop-color="#9f1239"/></linearGradient>
+    <linearGradient id="ags-paper" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#fff1f2"/><stop offset="100%" stop-color="#ffe4e6"/></linearGradient>
+    <linearGradient id="ags-house" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#fda4af"/><stop offset="100%" stop-color="#fb7185"/></linearGradient>
+    <linearGradient id="ags-gl" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="white" stop-opacity="0.28"/><stop offset="100%" stop-color="white" stop-opacity="0"/></linearGradient>
+    <filter id="ags-sh"><feDropShadow dx="0" dy="2.5" stdDeviation="2.5" flood-color="#0005"/></filter>
+    <filter id="ags-sm"><feDropShadow dx="0" dy="1.5" stdDeviation="2" flood-color="#0003"/></filter>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="url(#ags-bg)"/>
+  <rect width="64" height="32" rx="14" fill="url(#ags-gl)"/>
+  <rect y="18" width="64" height="14" fill="url(#ags-gl)"/>
+
+  <!-- Zigzag bottom of receipt -->
+  <path d="M13 58 L15 54 L17 58 L19 54 L21 58 L23 54 L25 58 L27 54 L29 58 L31 54 L33 58 L35 54 L37 58 L39 54 L41 58 L43 54 L45 58 L47 54 L49 58" fill="none" stroke="url(#ags-paper)" stroke-width="1" stroke-opacity="0.5"/>
+  <!-- Receipt body -->
+  <rect x="13" y="7" width="36" height="49" rx="2" fill="url(#ags-paper)" filter="url(#ags-sh)"/>
+
+  <!-- Header with mini house -->
+  <rect x="13" y="7" width="36" height="14" rx="2" fill="#f43f5e" fill-opacity="0.2"/>
+  <!-- House icon in header -->
+  <polygon points="24,20 31,12 38,20" fill="url(#ags-house)" filter="url(#ags-sm)"/>
+  <rect x="25" y="20" width="12" height="7" rx="1" fill="#fecdd3"/>
+  <rect x="29" y="23" width="4" height="4" rx="1" fill="#f43f5e" fill-opacity="0.5"/>
+  <rect x="26" y="21" width="3" height="2.5" rx="0.5" fill="#fda4af" fill-opacity="0.9"/>
+  <rect x="33" y="21" width="3" height="2.5" rx="0.5" fill="#fda4af" fill-opacity="0.9"/>
+
+  <!-- Expense rows with down arrows -->
+  <line x1="17" y1="26" x2="44" y2="26" stroke="#f43f5e" stroke-width="0.7" stroke-opacity="0.3"/>
+  <rect x="17" y="28" width="14" height="2.5" rx="1" fill="#fecdd3" fill-opacity="0.8"/>
+  <text x="43" y="30.5" text-anchor="end" font-family="monospace" font-size="4.5" fill="#be123c">-180</text>
+  <rect x="17" y="33" width="10" height="2.5" rx="1" fill="#fecdd3" fill-opacity="0.8"/>
+  <text x="43" y="35.5" text-anchor="end" font-family="monospace" font-size="4.5" fill="#be123c">-95</text>
+  <rect x="17" y="38" width="16" height="2.5" rx="1" fill="#fecdd3" fill-opacity="0.8"/>
+  <text x="43" y="40.5" text-anchor="end" font-family="monospace" font-size="4.5" fill="#be123c">-320</text>
+
+  <!-- Total -->
+  <line x1="17" y1="44" x2="44" y2="44" stroke="#f43f5e" stroke-width="1" stroke-opacity="0.5"/>
+  <text x="17" y="49" font-family="Arial,sans-serif" font-size="4.5" font-weight="700" fill="#9f1239">TOTAL</text>
+  <text x="43" y="49" text-anchor="end" font-family="monospace" font-size="5" font-weight="700" fill="#be123c">-595</text>
+
+  <!-- Down arrow badge -->
+  <circle cx="48" cy="52" r="7" fill="#ef4444" filter="url(#ags-sm)"/>
+  <polyline points="45,49.5 48,54.5 51,49.5" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Shine -->
+  <rect x="13" y="7" width="36" height="8" rx="2" fill="white" fill-opacity="0.25"/>
+</svg>

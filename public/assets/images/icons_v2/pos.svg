@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="bgG" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4f8ef7"/>
+      <stop offset="100%" stop-color="#6c3fc9"/>
+    </linearGradient>
+    <linearGradient id="bodyG" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#e8edf5"/>
+      <stop offset="100%" stop-color="#c8d0de"/>
+    </linearGradient>
+    <linearGradient id="screenG" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1a2540"/>
+      <stop offset="100%" stop-color="#0d1626"/>
+    </linearGradient>
+    <linearGradient id="baseG" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#d0d8e8"/>
+      <stop offset="100%" stop-color="#b0bace"/>
+    </linearGradient>
+    <linearGradient id="glossG" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="white" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="white" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#0004"/>
+    </filter>
+    <filter id="shadowSm" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="1" stdDeviation="1" flood-color="#0003"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="64" height="64" rx="14" fill="url(#bgG)"/>
+  <!-- Gloss overlay -->
+  <rect width="64" height="32" rx="14" fill="url(#glossG)"/>
+  <rect y="18" width="64" height="14" fill="url(#glossG)"/>
+
+  <!-- Terminal body -->
+  <rect x="13" y="9" width="38" height="36" rx="4" fill="url(#bodyG)" filter="url(#shadow)"/>
+  <!-- Screen bezel -->
+  <rect x="16" y="12" width="32" height="18" rx="2.5" fill="#1a2540"/>
+  <!-- Screen content (dark gradient) -->
+  <rect x="17" y="13" width="30" height="16" rx="2" fill="url(#screenG)"/>
+  <!-- Dollar amount on screen -->
+  <text x="32" y="23" text-anchor="middle" dominant-baseline="middle"
+        font-family="'Courier New',monospace" font-size="7" font-weight="700" fill="#4ade80">$0.00</text>
+  <!-- Screen gloss -->
+  <rect x="17" y="13" width="30" height="6" rx="2" fill="white" fill-opacity="0.06"/>
+
+  <!-- Keypad area -->
+  <!-- Row 1: 3 buttons -->
+  <rect x="17" y="33" width="8" height="4.5" rx="1.5" fill="white" fill-opacity="0.6" filter="url(#shadowSm)"/>
+  <rect x="28" y="33" width="8" height="4.5" rx="1.5" fill="white" fill-opacity="0.6" filter="url(#shadowSm)"/>
+  <rect x="39" y="33" width="8" height="4.5" rx="1.5" fill="#4ade80" fill-opacity="0.85" filter="url(#shadowSm)"/>
+  <!-- Row 2: 2 buttons + cancel -->
+  <rect x="17" y="39.5" width="8" height="4.5" rx="1.5" fill="white" fill-opacity="0.6" filter="url(#shadowSm)"/>
+  <rect x="28" y="39.5" width="8" height="4.5" rx="1.5" fill="white" fill-opacity="0.6" filter="url(#shadowSm)"/>
+  <rect x="39" y="39.5" width="8" height="4.5" rx="1.5" fill="#f87171" fill-opacity="0.85" filter="url(#shadowSm)"/>
+
+  <!-- Base / stand -->
+  <rect x="22" y="45" width="20" height="4" rx="2" fill="url(#baseG)" filter="url(#shadow)"/>
+  <!-- Foot -->
+  <ellipse cx="32" cy="51" rx="14" ry="2.5" fill="#0006"/>
+  <rect x="18" y="49" width="28" height="3" rx="1.5" fill="url(#baseG)"/>
+  <ellipse cx="32" cy="53" rx="11" ry="1.5" fill="#0003"/>
+</svg>

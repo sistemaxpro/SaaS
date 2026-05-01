@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="aim-bg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#a855f7"/><stop offset="100%" stop-color="#6b21a8"/></linearGradient>
+    <linearGradient id="aim-frame" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#faf5ff"/><stop offset="100%" stop-color="#f3e8ff"/></linearGradient>
+    <linearGradient id="aim-sky" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#bae6fd"/><stop offset="100%" stop-color="#7dd3fc"/></linearGradient>
+    <linearGradient id="aim-house" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#c084fc"/><stop offset="100%" stop-color="#a855f7"/></linearGradient>
+    <linearGradient id="aim-gl" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="white" stop-opacity="0.28"/><stop offset="100%" stop-color="white" stop-opacity="0"/></linearGradient>
+    <filter id="aim-sh"><feDropShadow dx="0" dy="2.5" stdDeviation="2.5" flood-color="#0005"/></filter>
+    <filter id="aim-sm"><feDropShadow dx="0" dy="1.5" stdDeviation="2" flood-color="#0004"/></filter>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="url(#aim-bg)"/>
+  <rect width="64" height="32" rx="14" fill="url(#aim-gl)"/>
+  <rect y="18" width="64" height="14" fill="url(#aim-gl)"/>
+
+  <!-- Back photo frame (stack) -->
+  <rect x="16" y="10" width="38" height="30" rx="3" fill="#e9d5ff" fill-opacity="0.6" transform="rotate(5, 35, 25)" filter="url(#aim-sm)"/>
+  <!-- Middle photo frame -->
+  <rect x="13" y="13" width="38" height="30" rx="3" fill="#ddd6fe" fill-opacity="0.7" transform="rotate(-3, 32, 28)" filter="url(#aim-sm)"/>
+
+  <!-- Main photo frame -->
+  <rect x="9" y="14" width="40" height="30" rx="3" fill="url(#aim-frame)" filter="url(#aim-sh)"/>
+  <!-- Photo content: sky background -->
+  <rect x="11" y="16" width="36" height="22" rx="2" fill="url(#aim-sky)"/>
+  <!-- Ground/grass -->
+  <rect x="11" y="30" width="36" height="8" rx="0" fill="#86efac" fill-opacity="0.7"/>
+  <rect x="11" y="34" width="36" height="4" rx="0" fill="#4ade80" fill-opacity="0.6"/>
+  <!-- House in photo -->
+  <polygon points="24,30 31,21 38,30" fill="url(#aim-house)" filter="url(#aim-sm)"/>
+  <rect x="25" y="30" width="12" height="8" rx="1" fill="#e9d5ff"/>
+  <rect x="29" y="33" width="4" height="5" rx="1" fill="#a855f7" fill-opacity="0.5"/>
+  <rect x="26" y="31" width="3" height="2.5" rx="0.5" fill="#c084fc" fill-opacity="0.9"/>
+  <rect x="33" y="31" width="3" height="2.5" rx="0.5" fill="#c084fc" fill-opacity="0.9"/>
+  <!-- Sun in photo -->
+  <circle cx="43" cy="20" r="3" fill="#fde68a" fill-opacity="0.9"/>
+  <!-- Cloud in photo -->
+  <ellipse cx="18" cy="20" rx="4" ry="2.5" fill="white" fill-opacity="0.8"/>
+  <ellipse cx="21" cy="19" rx="3" ry="2" fill="white" fill-opacity="0.8"/>
+  <!-- Frame white border -->
+  <rect x="9" y="14" width="40" height="4" rx="3" fill="white" fill-opacity="0.3"/>
+
+  <!-- Camera badge -->
+  <circle cx="50" cy="52" r="10" fill="#7e22ce" filter="url(#aim-sm)"/>
+  <!-- Camera body -->
+  <rect x="43" y="49" width="14" height="9" rx="2.5" fill="#ddd6fe"/>
+  <rect x="46" y="47" width="6" height="3.5" rx="2" fill="#ddd6fe"/>
+  <!-- Lens -->
+  <circle cx="50" cy="53.5" r="3.5" fill="#4c1d95"/>
+  <circle cx="50" cy="53.5" r="2" fill="#7c3aed"/>
+  <circle cx="49" cy="52.5" r="0.8" fill="white" fill-opacity="0.5"/>
+  <!-- Flash -->
+  <rect x="55" y="49.5" width="2.5" height="2" rx="1" fill="#fbbf24" fill-opacity="0.9"/>
+</svg>

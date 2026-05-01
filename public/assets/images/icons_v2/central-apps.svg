@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="ca-bg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#6366f1"/><stop offset="100%" stop-color="#4338ca"/></linearGradient>
+    <linearGradient id="ca-gl" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="white" stop-opacity="0.3"/><stop offset="100%" stop-color="white" stop-opacity="0"/></linearGradient>
+    <filter id="ca-sh"><feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#0004"/></filter>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="url(#ca-bg)"/>
+  <rect width="64" height="32" rx="14" fill="url(#ca-gl)"/>
+  <rect y="18" width="64" height="14" fill="url(#ca-gl)"/>
+  <!-- App grid 3x3 -->
+  <!-- Row 1 -->
+  <rect x="10" y="10" width="13" height="13" rx="3" fill="#f43f5e" filter="url(#ca-sh)"/>
+  <rect x="25.5" y="10" width="13" height="13" rx="3" fill="#f97316" filter="url(#ca-sh)"/>
+  <rect x="41" y="10" width="13" height="13" rx="3" fill="#eab308" filter="url(#ca-sh)"/>
+  <!-- Row 2 -->
+  <rect x="10" y="25.5" width="13" height="13" rx="3" fill="#22c55e" filter="url(#ca-sh)"/>
+  <rect x="25.5" y="25.5" width="13" height="13" rx="3" fill="#06b6d4" filter="url(#ca-sh)"/>
+  <rect x="41" y="25.5" width="13" height="13" rx="3" fill="#3b82f6" filter="url(#ca-sh)"/>
+  <!-- Row 3 -->
+  <rect x="10" y="41" width="13" height="13" rx="3" fill="#8b5cf6" filter="url(#ca-sh)"/>
+  <rect x="25.5" y="41" width="13" height="13" rx="3" fill="#ec4899" filter="url(#ca-sh)"/>
+  <!-- Plus icon replacing bottom-right app -->
+  <rect x="41" y="41" width="13" height="13" rx="3" fill="white" fill-opacity="0.2" filter="url(#ca-sh)"/>
+  <line x1="44" y1="47.5" x2="51" y2="47.5" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="47.5" y1="44" x2="47.5" y2="51" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+</svg>

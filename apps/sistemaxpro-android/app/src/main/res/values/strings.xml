@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">SistemaX Pro</string>
+    <string name="assist_accessibility_description">Permite control asistido remoto para SistemaX Assist.</string>
+    <string name="assist_accessibility_summary">Habilita acciones remotas basicas como tocar, deslizar y navegar.</string>
+    <string name="tracking_notification_channel">SistemaX Tracking</string>
+    <string name="tracking_notification_text">Geolocalizacion activa en segundo plano</string>
+</resources>

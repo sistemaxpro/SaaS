@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo SistemaX | Modulos y Operacion</title>
+    <style>
+        :root {
+            color-scheme: dark;
+            --bg: #07111f;
+            --bg-2: #0b1730;
+            --text: #e5eefc;
+            --muted: #99a9c5;
+            --brand: #2ea7ff;
+            --brand-2: #1d4ed8;
+            --line: rgba(148, 163, 184, 0.20);
+            --card: rgba(8, 18, 34, 0.76);
+            --shadow: 0 30px 90px rgba(2, 8, 23, 0.45);
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: Poppins, Arial, sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(circle at top right, rgba(46, 167, 255, 0.18), transparent 28%),
+                radial-gradient(circle at top left, rgba(29, 78, 216, 0.16), transparent 24%),
+                linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
+            min-height: 100vh;
+        }
+        .wrap {
+            width: min(1220px, calc(100% - 32px));
+            margin: 0 auto;
+            padding: 36px 0 56px;
+        }
+        .hero {
+            display: grid;
+            grid-template-columns: minmax(320px, 430px) minmax(320px, 1fr);
+            gap: 30px;
+            align-items: center;
+            min-height: calc(100vh - 92px);
+        }
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 14px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.10);
+            color: var(--muted);
+            font-size: 12px;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            margin-bottom: 18px;
+        }
+        h1 {
+            margin: 0 0 14px;
+            font-size: clamp(34px, 6vw, 60px);
+            line-height: 0.96;
+            letter-spacing: -.04em;
+        }
+        .lead {
+            margin: 0 0 24px;
+            max-width: 44ch;
+            font-size: clamp(16px, 1.9vw, 19px);
+            line-height: 1.6;
+            color: var(--muted);
+        }
+        .points {
+            display: grid;
+            gap: 12px;
+            margin: 0 0 28px;
+            padding: 0;
+            list-style: none;
+        }
+        .points li {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+        .num {
+            width: 26px;
+            height: 26px;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(46, 167, 255, 0.14);
+            color: #7dd3fc;
+            font-weight: 700;
+            flex: 0 0 26px;
+        }
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .btn {
+            min-height: 46px;
+            padding: 0 18px;
+            border-radius: 999px;
+            border: 1px solid transparent;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: #fff;
+            font-weight: 600;
+            transition: transform .2s ease;
+        }
+        .btn:hover { transform: translateY(-1px); }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--brand), var(--brand-2));
+            box-shadow: 0 18px 34px rgba(37, 99, 235, 0.26);
+        }
+        .btn-secondary {
+            background: rgba(255,255,255,0.02);
+            border-color: rgba(255,255,255,0.14);
+            color: var(--text);
+        }
+        .stage {
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 28px;
+            padding: 18px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(12px);
+        }
+        video {
+            width: 100%;
+            display: block;
+            border-radius: 18px;
+            background: #000;
+            aspect-ratio: 16 / 9;
+        }
+        .caption {
+            margin-top: 14px;
+            text-align: center;
+            color: var(--muted);
+            font-size: 14px;
+        }
+        @media (max-width: 920px) {
+            .hero {
+                grid-template-columns: 1fr;
+                min-height: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="wrap">
+        <section class="hero">
+            <div>
+                <div class="eyebrow">SistemaX Demo Comercial</div>
+                <h1>Conocé cómo funciona SistemaX.</h1>
+                <p class="lead">
+                    En esta demo vas a ver capturas reales del sistema: módulos, punto de venta,
+                    compras, cobros, SIFEN, usuarios, panel comercial y suscripción modular.
+                </p>
+                <ul class="points">
+                    <li><span class="num">1</span><span>Mostrá una operación más ordenada y profesional.</span></li>
+                    <li><span class="num">2</span><span>Explicá para qué sirve cada módulo con pantallas reales.</span></li>
+                    <li><span class="num">3</span><span>Presentá una propuesta más seria para el cliente.</span></li>
+                </ul>
+                <div class="actions">
+                    <a class="btn btn-primary" href="/public/suscribete.php?registro=1&v=20260327183227">Registrese, es gratis</a>
+                    <a class="btn btn-secondary" href="/public/video_assets/landing_promo_demo/video.mp4" target="_blank" rel="noopener">Abrir video completo</a>
+                </div>
+            </div>
+
+            <div class="stage">
+                <video controls playsinline preload="metadata" poster="/public/assets/img/landing/menu-modulos.png">
+                    <source src="/public/video_assets/landing_promo_demo/video.mp4" type="video/mp4">
+                </video>
+                <div class="caption">Demo promocional con capturas reales del sistema y locución natural.</div>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

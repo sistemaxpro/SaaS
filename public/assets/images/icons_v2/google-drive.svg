@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="gd-bg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#f1f5f9"/></linearGradient>
+    <linearGradient id="gd-gl" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="white" stop-opacity="0.5"/><stop offset="100%" stop-color="white" stop-opacity="0"/></linearGradient>
+    <filter id="gd-sh"><feDropShadow dx="0" dy="2.5" stdDeviation="2.5" flood-color="#0003"/></filter>
+    <filter id="gd-sm"><feDropShadow dx="0" dy="1" stdDeviation="2" flood-color="#0002"/></filter>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="url(#gd-bg)"/>
+  <rect width="64" height="32" rx="14" fill="url(#gd-gl)"/>
+  <!-- Google Drive tricolor triangle logo -->
+  <!-- Blue segment (left) -->
+  <path d="M10 52 L22 32 L32 50 Z" fill="#4285F4" filter="url(#gd-sh)"/>
+  <!-- Red segment (top/middle) -->
+  <path d="M22 12 L42 12 L32 30 Z" fill="#EA4335" filter="url(#gd-sh)"/>
+  <!-- Yellow/green segment (right) -->
+  <path d="M42 12 L54 32 L44 50 Z" fill="#FBBC05" filter="url(#gd-sh)"/>
+  <!-- Center overlap fill (where three meet) -->
+  <path d="M22 32 L32 50 L44 50 L54 32 L42 12 L32 30 Z" fill="none"/>
+  <!-- Bottom bar connecting all three -->
+  <rect x="10" y="50" width="44" height="6" rx="3" fill="#34A853" filter="url(#gd-sm)"/>
+  <!-- Inner shine on triangles -->
+  <path d="M22 12 L32 12 L27 21 Z" fill="white" fill-opacity="0.2"/>
+  <path d="M10 52 L14 47 L20 52 Z" fill="white" fill-opacity="0.15"/>
+  <path d="M54 32 L50 28 L54 38 Z" fill="white" fill-opacity="0.15"/>
+</svg>

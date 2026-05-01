@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="db-bg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#0ea5e9"/><stop offset="100%" stop-color="#0369a1"/></linearGradient>
+    <linearGradient id="db-cyl" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#7dd3fc"/><stop offset="100%" stop-color="#38bdf8"/></linearGradient>
+    <linearGradient id="db-top" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#e0f2fe"/><stop offset="100%" stop-color="#bae6fd"/></linearGradient>
+    <linearGradient id="db-gl" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="white" stop-opacity="0.3"/><stop offset="100%" stop-color="white" stop-opacity="0"/></linearGradient>
+    <filter id="db-sh"><feDropShadow dx="0" dy="2.5" stdDeviation="2.5" flood-color="#0005"/></filter>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="url(#db-bg)"/>
+  <rect width="64" height="32" rx="14" fill="url(#db-gl)"/>
+  <rect y="18" width="64" height="14" fill="url(#db-gl)"/>
+  <!-- Database stack cylinders (3 tiers) -->
+  <!-- Bottom cylinder -->
+  <rect x="12" y="44" width="40" height="12" rx="2" fill="url(#db-cyl)" filter="url(#db-sh)"/>
+  <ellipse cx="32" cy="44" rx="20" ry="5" fill="#38bdf8"/>
+  <ellipse cx="32" cy="56" rx="20" ry="5" fill="#0284c7" fill-opacity="0.5"/>
+  <!-- Middle cylinder -->
+  <rect x="12" y="30" width="40" height="12" rx="2" fill="url(#db-cyl)" filter="url(#db-sh)"/>
+  <ellipse cx="32" cy="30" rx="20" ry="5" fill="#7dd3fc"/>
+  <ellipse cx="32" cy="42" rx="20" ry="5" fill="#0284c7" fill-opacity="0.4"/>
+  <!-- Top cylinder -->
+  <rect x="12" y="16" width="40" height="12" rx="2" fill="url(#db-cyl)" filter="url(#db-sh)"/>
+  <ellipse cx="32" cy="16" rx="20" ry="5" fill="url(#db-top)"/>
+  <ellipse cx="32" cy="28" rx="20" ry="5" fill="#0284c7" fill-opacity="0.3"/>
+  <!-- Highlights on top ellipse -->
+  <ellipse cx="26" cy="15" rx="7" ry="2" fill="white" fill-opacity="0.4"/>
+  <!-- Data lines on middle tier -->
+  <line x1="18" y1="35" x2="30" y2="35" stroke="#0369a1" stroke-width="1.5" stroke-opacity="0.5" stroke-linecap="round"/>
+  <line x1="18" y1="38" x2="25" y2="38" stroke="#0369a1" stroke-width="1.5" stroke-opacity="0.5" stroke-linecap="round"/>
+</svg>

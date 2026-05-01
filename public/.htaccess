@@ -1,0 +1,16 @@
+# Asegura que los archivos JS se sirvan con el MIME correcto
+AddType application/javascript .js
+
+# Permite acceso directo a sw.js y otros archivos estáticos
+<FilesMatch "^(sw\.js|manifest\.json|offline\.html)$">
+  Header set Content-Type application/javascript
+  Require all granted
+</FilesMatch>
+
+
+# Evita redirecciones o reescrituras para archivos estáticos (js, css, imágenes, sw.js, etc.)
+RewriteEngine On
+RewriteCond %{REQUEST_URI} \.(js|css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot|json|html)$ [NC]
+RewriteRule ^ - [L]
+RewriteCond %{REQUEST_URI} ^/sw\.js$
+RewriteRule ^ - [L]

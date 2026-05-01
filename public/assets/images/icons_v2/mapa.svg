@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="map-bg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#14b8a6"/><stop offset="100%" stop-color="#0f766e"/></linearGradient>
+    <linearGradient id="map-paper" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#f0fdfa"/><stop offset="100%" stop-color="#ccfbf1"/></linearGradient>
+    <linearGradient id="map-gl" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="white" stop-opacity="0.3"/><stop offset="100%" stop-color="white" stop-opacity="0"/></linearGradient>
+    <filter id="map-sh"><feDropShadow dx="0" dy="2.5" stdDeviation="2.5" flood-color="#0005"/></filter>
+    <filter id="map-sm"><feDropShadow dx="0" dy="1" stdDeviation="1.5" flood-color="#0003"/></filter>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="url(#map-bg)"/>
+  <rect width="64" height="32" rx="14" fill="url(#map-gl)"/>
+  <rect y="18" width="64" height="14" fill="url(#map-gl)"/>
+  <!-- Map paper -->
+  <rect x="7" y="9" width="50" height="46" rx="3" fill="url(#map-paper)" filter="url(#map-sh)"/>
+  <!-- Map fold lines (sections) -->
+  <line x1="24" y1="9" x2="24" y2="55" stroke="#99f6e4" stroke-width="1.5" stroke-opacity="0.8"/>
+  <line x1="40" y1="9" x2="40" y2="55" stroke="#99f6e4" stroke-width="1.5" stroke-opacity="0.8"/>
+  <!-- Road lines -->
+  <path d="M7 28 C15 26 22 32 32 30 C42 28 50 34 57 32" fill="none" stroke="#5eead4" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M7 42 C18 38 25 46 36 44 C44 42 50 46 57 43" fill="none" stroke="#5eead4" stroke-width="2" stroke-linecap="round"/>
+  <!-- Terrain blobs -->
+  <ellipse cx="15" cy="20" rx="6" ry="4" fill="#a7f3d0" fill-opacity="0.6"/>
+  <ellipse cx="48" cy="18" rx="5" ry="4" fill="#a7f3d0" fill-opacity="0.6"/>
+  <ellipse cx="44" cy="47" rx="7" ry="4" fill="#6ee7b7" fill-opacity="0.5"/>
+  <!-- Location pin -->
+  <path d="M32 10 C27 10 22 15 22 21 C22 30 32 40 32 40 C32 40 42 30 42 21 C42 15 37 10 32 10 Z" fill="#f43f5e" filter="url(#map-sm)"/>
+  <circle cx="32" cy="21" r="5" fill="white" fill-opacity="0.85"/>
+  <circle cx="32" cy="21" r="2.5" fill="#f43f5e"/>
+  <!-- Paper shine -->
+  <rect x="7" y="9" width="50" height="9" rx="3" fill="white" fill-opacity="0.3"/>
+</svg>

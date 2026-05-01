@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="sig-bg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#10b981"/><stop offset="100%" stop-color="#065f46"/></linearGradient>
+    <linearGradient id="sig-gl" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="white" stop-opacity="0.3"/><stop offset="100%" stop-color="white" stop-opacity="0"/></linearGradient>
+    <filter id="sig-sh"><feDropShadow dx="0" dy="2.5" stdDeviation="2.5" flood-color="#0005"/></filter>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="url(#sig-bg)"/>
+  <rect width="64" height="32" rx="14" fill="url(#sig-gl)"/>
+  <rect y="18" width="64" height="14" fill="url(#sig-gl)"/>
+  <!-- Wifi-style arcs (signal) -->
+  <!-- Outermost arc -->
+  <path d="M10 36 C10 18 54 18 54 36" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-opacity="0.9" filter="url(#sig-sh)"/>
+  <!-- Middle arc -->
+  <path d="M17 38 C17 25 47 25 47 38" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-opacity="0.75"/>
+  <!-- Inner arc -->
+  <path d="M24 40 C24 32 40 32 40 40" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-opacity="0.6"/>
+  <!-- Center dot -->
+  <circle cx="32" cy="43" r="4.5" fill="white" filter="url(#sig-sh)"/>
+  <circle cx="32" cy="43" r="2.5" fill="#065f46"/>
+  <!-- Status bars at bottom -->
+  <rect x="9" y="51" width="6" height="6" rx="1.5" fill="white" fill-opacity="0.4"/>
+  <rect x="17" y="48" width="6" height="9" rx="1.5" fill="white" fill-opacity="0.55"/>
+  <rect x="25" y="45" width="6" height="12" rx="1.5" fill="white" fill-opacity="0.7"/>
+  <rect x="33" y="42" width="6" height="15" rx="1.5" fill="white" fill-opacity="0.85"/>
+  <rect x="41" y="51" width="6" height="6" rx="1.5" fill="white" fill-opacity="0.35"/>
+  <rect x="49" y="48" width="6" height="9" rx="1.5" fill="white" fill-opacity="0.5"/>
+</svg>

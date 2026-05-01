@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="g-bg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#f97316"/><stop offset="100%" stop-color="#c2410c"/></linearGradient>
+    <linearGradient id="g-paper" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#fff7ed"/><stop offset="100%" stop-color="#ffedd5"/></linearGradient>
+    <linearGradient id="g-coin" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#fbbf24"/><stop offset="100%" stop-color="#d97706"/></linearGradient>
+    <linearGradient id="g-gl" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="white" stop-opacity="0.3"/><stop offset="100%" stop-color="white" stop-opacity="0"/></linearGradient>
+    <filter id="g-sh"><feDropShadow dx="0" dy="2.5" stdDeviation="2.5" flood-color="#0005"/></filter>
+    <filter id="g-sm"><feDropShadow dx="0" dy="1" stdDeviation="1.5" flood-color="#0003"/></filter>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="url(#g-bg)"/>
+  <rect width="64" height="32" rx="14" fill="url(#g-gl)"/>
+  <rect y="18" width="64" height="14" fill="url(#g-gl)"/>
+  <!-- Receipt zigzag at bottom -->
+  <path d="M12 58 L14 54 L16 58 L18 54 L20 58 L22 54 L24 58 L26 54 L28 58 L30 54 L32 58 L34 54 L36 58 L38 54 L40 58 L42 54 L44 58 L46 54 L48 58 L50 54 L52 58" fill="none" stroke="url(#g-paper)" stroke-width="1" stroke-opacity="0.5"/>
+  <!-- Receipt body -->
+  <rect x="14" y="8" width="32" height="48" rx="2" fill="url(#g-paper)" filter="url(#g-sh)"/>
+  <!-- Receipt top -->
+  <rect x="14" y="8" width="32" height="8" rx="2" fill="#f97316" fill-opacity="0.2"/>
+  <text x="30" y="14" text-anchor="middle" dominant-baseline="middle" font-family="Arial,sans-serif" font-size="5" font-weight="700" fill="#9a3412">GASTOS</text>
+  <!-- Expense rows with down arrows (spending) -->
+  <line x1="19" y1="21" x2="41" y2="21" stroke="#f97316" stroke-width="0.8" stroke-opacity="0.3"/>
+  <rect x="19" y="23" width="14" height="2.5" rx="1" fill="#fed7aa" fill-opacity="0.8"/>
+  <text x="40" y="25" text-anchor="end" font-family="monospace" font-size="4.5" fill="#c2410c">-250</text>
+  <rect x="19" y="28" width="11" height="2.5" rx="1" fill="#fed7aa" fill-opacity="0.8"/>
+  <text x="40" y="30" text-anchor="end" font-family="monospace" font-size="4.5" fill="#c2410c">-180</text>
+  <rect x="19" y="33" width="16" height="2.5" rx="1" fill="#fed7aa" fill-opacity="0.8"/>
+  <text x="40" y="35" text-anchor="end" font-family="monospace" font-size="4.5" fill="#c2410c">-420</text>
+  <!-- Total -->
+  <line x1="19" y1="39" x2="42" y2="39" stroke="#f97316" stroke-width="1" stroke-opacity="0.5"/>
+  <text x="19" y="44" font-family="Arial,sans-serif" font-size="4.5" font-weight="700" fill="#9a3412">TOTAL</text>
+  <text x="41" y="44" text-anchor="end" font-family="monospace" font-size="5" font-weight="700" fill="#c2410c">-850</text>
+  <!-- Down arrow badge -->
+  <circle cx="46" cy="52" r="7" fill="#ef4444" filter="url(#g-sm)"/>
+  <polyline points="43,49.5 46,54.5 49,49.5" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Shine -->
+  <rect x="14" y="8" width="32" height="9" rx="2" fill="white" fill-opacity="0.25"/>
+</svg>

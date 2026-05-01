@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="bgG" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0ea5e9"/>
+      <stop offset="100%" stop-color="#0369a1"/>
+    </linearGradient>
+    <linearGradient id="dropG" x1="20%" y1="0%" x2="80%" y2="100%">
+      <stop offset="0%" stop-color="#bae6fd"/>
+      <stop offset="50%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#0284c7"/>
+    </linearGradient>
+    <linearGradient id="innerG" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7dd3fc"/>
+      <stop offset="100%" stop-color="#0ea5e9"/>
+    </linearGradient>
+    <linearGradient id="glossG" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="white" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="white" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="sh" x="-25%" y="-15%" width="150%" height="140%">
+      <feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#0005"/>
+    </filter>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="64" height="64" rx="14" fill="url(#bgG)"/>
+  <rect width="64" height="32" rx="14" fill="url(#glossG)"/>
+  <rect y="18" width="64" height="14" fill="url(#glossG)"/>
+
+  <!-- Drop shadow (ripple at base) -->
+  <ellipse cx="32" cy="55" rx="13" ry="3.5" fill="#0284c7" fill-opacity="0.4"/>
+  <ellipse cx="32" cy="55" rx="9" ry="2" fill="#0284c7" fill-opacity="0.3"/>
+
+  <!-- Main water drop -->
+  <path d="M32 8 C32 8 50 32 50 43 A18 18 0 0 1 14 43 C14 32 32 8 32 8 Z"
+        fill="url(#dropG)" filter="url(#sh)"/>
+
+  <!-- Inner highlight / reflection -->
+  <ellipse cx="27" cy="36" rx="5" ry="9" fill="white" fill-opacity="0.22" transform="rotate(-15 27 36)"/>
+  <!-- Top gloss specular -->
+  <ellipse cx="27" cy="23" rx="3" ry="5" fill="white" fill-opacity="0.4" transform="rotate(-10 27 23)"/>
+
+  <!-- Bubbles inside -->
+  <circle cx="38" cy="40" r="3" fill="url(#innerG)" fill-opacity="0.5"/>
+  <circle cx="38" cy="40" r="1.2" fill="white" fill-opacity="0.4"/>
+  <circle cx="36" cy="46" r="2" fill="url(#innerG)" fill-opacity="0.4"/>
+  <circle cx="26" cy="44" r="2.5" fill="url(#innerG)" fill-opacity="0.35"/>
+
+  <!-- Waviness lines inside drop (water waves) -->
+  <path d="M21 43 Q26 40 32 43 Q38 46 43 43" fill="none" stroke="white" stroke-width="1"
+        stroke-linecap="round" stroke-opacity="0.3"/>
+</svg>

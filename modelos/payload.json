@@ -1,0 +1,63 @@
+{
+  "emisor": {
+    "ruc": "80062286-1",
+    "razon_social": "Empresa de Ejemplo S.A.",
+    "nombre_fantasia": "Ejemplo",
+    "actividades_economicas": [
+      {
+        "codigo": "47300",
+        "descripcion": "Venta al por menor de combustible para vehículos automotores en comercios especializados"
+      }
+    ],
+    "direccion": {
+      "departamento": 11,
+      "distrito": 143,
+      "ciudad": 3344,
+      "direccion": "Av. Ejemplo 123"
+    },
+    "telefono": "021-123456",
+    "email": "ejemplo@empresa.com"
+  },
+  "receptor": {
+    "documento_tipo": 1,
+    "documento_numero": "12345678",
+    "razon_social": "Cliente de Ejemplo",
+    "direccion": {
+      "departamento": 11,
+      "distrito": 143,
+      "ciudad": 3344,
+      "direccion": "Calle Cliente 456"
+    },
+    "telefono": "021-654321",
+    "email": "cliente@ejemplo.com"
+  },
+  "conceptos": [
+    {
+      "codigo": "001",
+      "descripcion": "Producto de ejemplo",
+      "cantidad": 2,
+      "unidad_medida": 77,
+      "precio_unitario": 50000,
+      "descuento": 0,
+      "iva_tipo": 1,
+      "iva_base": 90909,
+      "iva": 9091
+    }
+  ],
+  "formas_pagos": [
+    {
+      "forma_pago": 1,
+      "monto": 100000,
+      "moneda": "PYG"
+    }
+  ],
+  "ndoc": "001-001-0000001",
+  "condicion": 1,
+  "timbrado": "12345678",
+  "fec_timbrado": "2024-12-31",
+  "cod_establecimiento": "001",
+  "cod_expedicion": "001",
+  "moneda": "PYG",
+  "cambio": 1,
+  "plazo": null
+}

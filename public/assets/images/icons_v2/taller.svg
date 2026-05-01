@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="tl-bg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#64748b"/><stop offset="100%" stop-color="#1e293b"/></linearGradient>
+    <linearGradient id="tl-metal" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#e2e8f0"/><stop offset="100%" stop-color="#cbd5e1"/></linearGradient>
+    <linearGradient id="tl-gear" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#94a3b8"/><stop offset="100%" stop-color="#64748b"/></linearGradient>
+    <linearGradient id="tl-gl" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="white" stop-opacity="0.3"/><stop offset="100%" stop-color="white" stop-opacity="0"/></linearGradient>
+    <filter id="tl-sh"><feDropShadow dx="0" dy="2.5" stdDeviation="2.5" flood-color="#0006"/></filter>
+    <filter id="tl-sm"><feDropShadow dx="0" dy="1" stdDeviation="1.5" flood-color="#0004"/></filter>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="url(#tl-bg)"/>
+  <rect width="64" height="32" rx="14" fill="url(#tl-gl)"/>
+  <rect y="18" width="64" height="14" fill="url(#tl-gl)"/>
+  <!-- Gear -->
+  <g filter="url(#tl-sh)">
+    <circle cx="40" cy="36" r="14" fill="url(#tl-gear)"/>
+    <!-- Gear teeth -->
+    <rect x="38" y="19" width="4" height="5" rx="1" fill="url(#tl-gear)"/>
+    <rect x="38" y="48" width="4" height="5" rx="1" fill="url(#tl-gear)"/>
+    <rect x="23" y="34" width="5" height="4" rx="1" fill="url(#tl-gear)"/>
+    <rect x="52" y="34" width="5" height="4" rx="1" fill="url(#tl-gear)"/>
+    <rect x="27" y="23" width="5" height="4" rx="1" fill="url(#tl-gear)" transform="rotate(45 29.5 25)"/>
+    <rect x="48" y="23" width="5" height="4" rx="1" fill="url(#tl-gear)" transform="rotate(-45 50.5 25)"/>
+    <rect x="27" y="43" width="5" height="4" rx="1" fill="url(#tl-gear)" transform="rotate(-45 29.5 45)"/>
+    <rect x="48" y="43" width="5" height="4" rx="1" fill="url(#tl-gear)" transform="rotate(45 50.5 45)"/>
+    <circle cx="40" cy="36" r="6" fill="#1e293b"/>
+    <circle cx="40" cy="36" r="3.5" fill="#94a3b8"/>
+  </g>
+  <!-- Wrench -->
+  <g transform="rotate(-40, 22, 32)" filter="url(#tl-sh)">
+    <!-- Handle -->
+    <rect x="16" y="26" width="6" height="24" rx="3" fill="url(#tl-metal)"/>
+    <!-- Head top -->
+    <path d="M13 22 C13 16 31 16 31 22 L29 26 L15 26 Z" fill="url(#tl-metal)"/>
+    <!-- Head opening -->
+    <ellipse cx="22" cy="22" rx="5" ry="4" fill="#1e293b"/>
+    <rect x="14" y="22" width="16" height="4" fill="url(#tl-metal)"/>
+  </g>
+  <!-- Shine on gear -->
+  <ellipse cx="35" cy="29" rx="5" ry="3" fill="white" fill-opacity="0.2"/>
+</svg>

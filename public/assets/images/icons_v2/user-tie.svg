@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="bgG" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6366f1"/>
+      <stop offset="100%" stop-color="#4338ca"/>
+    </linearGradient>
+    <linearGradient id="skinG" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fde8d0"/>
+      <stop offset="100%" stop-color="#fcd4b0"/>
+    </linearGradient>
+    <linearGradient id="suitG" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#e0e7ff"/>
+      <stop offset="100%" stop-color="#c7d2fe"/>
+    </linearGradient>
+    <linearGradient id="tieG" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#f43f5e"/>
+      <stop offset="100%" stop-color="#be123c"/>
+    </linearGradient>
+    <linearGradient id="glossG" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="white" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="white" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="sh" x="-25%" y="-25%" width="150%" height="150%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#0004"/>
+    </filter>
+    <filter id="shSm" x="-40%" y="-40%" width="180%" height="180%">
+      <feDropShadow dx="0" dy="1" stdDeviation="1" flood-color="#0003"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="64" height="64" rx="14" fill="url(#bgG)"/>
+  <rect width="64" height="32" rx="14" fill="url(#glossG)"/>
+  <rect y="18" width="64" height="14" fill="url(#glossG)"/>
+
+  <!-- Shoulders / suit body -->
+  <path d="M10 58 C10 44 18 38 32 38 C46 38 54 44 54 58 Z" fill="url(#suitG)" filter="url(#sh)"/>
+  <!-- Suit lapel lines -->
+  <line x1="32" y1="38" x2="22" y2="48" stroke="#a5b4fc" stroke-width="1.5" stroke-opacity="0.6"/>
+  <line x1="32" y1="38" x2="42" y2="48" stroke="#a5b4fc" stroke-width="1.5" stroke-opacity="0.6"/>
+  <!-- Collar white shirt -->
+  <path d="M26,38 L32,44 L38,38" fill="white" fill-opacity="0.9"/>
+
+  <!-- Tie -->
+  <polygon points="32,43 30,50 32,58 34,50" fill="url(#tieG)" filter="url(#shSm)"/>
+  <!-- Tie knot -->
+  <polygon points="30,43 32,46 34,43 32,41" fill="#f43f5e"/>
+  <!-- Tie shine -->
+  <polygon points="32,43.5 31.2,46.5 32,47" fill="white" fill-opacity="0.2"/>
+
+  <!-- Head (face) -->
+  <ellipse cx="32" cy="21" rx="10" ry="11" fill="url(#skinG)" filter="url(#sh)"/>
+  <!-- Hair -->
+  <path d="M22 19 C22 10 42 10 42 19" fill="#4a3728"/>
+  <path d="M22 19 L22 22 C22 13 42 13 42 22 L42 19" fill="#4a3728"/>
+  <!-- Eyes -->
+  <circle cx="28" cy="20" r="1.5" fill="#4a3728"/>
+  <circle cx="36" cy="20" r="1.5" fill="#4a3728"/>
+  <!-- Eye shine -->
+  <circle cx="28.7" cy="19.4" r="0.5" fill="white" fill-opacity="0.7"/>
+  <circle cx="36.7" cy="19.4" r="0.5" fill="white" fill-opacity="0.7"/>
+  <!-- Smile -->
+  <path d="M28 25 Q32 28 36 25" fill="none" stroke="#c97c50" stroke-width="1" stroke-linecap="round"/>
+  <!-- Ears -->
+  <ellipse cx="22" cy="21" rx="2" ry="3" fill="#fcd4b0"/>
+  <ellipse cx="42" cy="21" rx="2" ry="3" fill="#fcd4b0"/>
+  <!-- Neck -->
+  <rect x="29" y="31" width="6" height="8" rx="1" fill="url(#skinG)"/>
+</svg>

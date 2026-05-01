@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<env:Envelope xmlns:env="http://www.w3.org/2003/05/soap-envelope">
+  <env:Header/>
+  <env:Body>
+    <ns2:rResEnviConsLoteDe xmlns:ns2="http://ekuatia.set.gov.py/sifen/xsd">
+      <ns2:dFecProc>2026-02-02T19:23:06-03:00</ns2:dFecProc>
+      <ns2:dCodResLot>0362</ns2:dCodResLot>
+      <ns2:dMsgResLot>Procesamiento de lote {876655922016438882} concluido</ns2:dMsgResLot>
+      <ns2:gResProcLote>
+        <ns2:id>06801051223001001000000112026020210000000016</ns2:id>
+        <ns2:dEstRes>Rechazado</ns2:dEstRes>
+        <ns2:gResProc>
+          <ns2:dCodRes>1101</ns2:dCodRes>
+          <ns2:dMsgRes>Número de timbrado inválido</ns2:dMsgRes>
+        </ns2:gResProc>
+      </ns2:gResProcLote>
+    </ns2:rResEnviConsLoteDe>
+  </env:Body>
+</env:Envelope>

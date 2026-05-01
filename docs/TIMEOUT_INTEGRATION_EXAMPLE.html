@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejemplo: Integración de Timeout de Sesión</title>
+    <style>
+        body {
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .section {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .section h2 {
+            color: #667eea;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Monaco', monospace;
+        }
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+        .alert {
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid;
+        }
+        .alert.info {
+            background: #e3f2fd;
+            border-color: #2196f3;
+            color: #1565c0;
+        }
+        .alert.warning {
+            background: #fff3e0;
+            border-color: #ff9800;
+            color: #e65100;
+        }
+        .alert.success {
+            background: #e8f5e9;
+            border-color: #4caf50;
+            color: #2e7d32;
+        }
+        .step {
+            background: #f9f9f9;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 4px 4px 0;
+        }
+        .step h3 {
+            margin-top: 0;
+            color: #667eea;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        table th, table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        table th {
+            background: #f5f5f5;
+            font-weight: 600;
+            color: #333;
+        }
+        table tr:hover {
+            background: #f9f9f9;
+        }
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+        .highlight {
+            background: #fff9c4;
+            padding: 2px 4px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>🔐 Integración de Timeout de Sesión</h1>
+    <p>Guía de implementación del sistema de cierre de sesión automático después de 20 minutos de inactividad</p>
+</div>
+
+<div class="section">
+    <h2>📋 Introducción</h2>
+    <p>El sistema de timeout de sesión cierra automáticamente la sesión del usuario después de 20 minutos sin actividad, mejorando la seguridad de la aplicación.</p>
+
+    <div class="alert info">
+        <strong>ℹ️ Información:</strong> El sistema incluye validación tanto en servidor como en cliente, con advertencias visuales para el usuario.
+    </div>
+</div>
+
+<div class="section">
+    <h2>🚀 Instalación Rápida</h2>
+
+    <div class="step">
+        <h3>Paso 1: Ya está instalado</h3>
+        <p>El middleware de timeout se carga automáticamente en <code>config/bootstrap.php</code></p>
+        <p>No requiere instalación adicional en el servidor.</p>
+    </div>
+
+    <div class="step">
+        <h3>Paso 2: Agregar script en tus páginas</h3>
+        <p>En cualquier página donde quieras mostrar la advertencia de timeout:</p>
+        <pre>&lt;!-- Agregar antes de &lt;/body&gt; --&gt;
+&lt;script src="/public/assets/js/session-timeout-warning.js"&gt;&lt;/script&gt;</pre>
+    </div>
+
+    <div class="step">
+        <h3>Paso 3: Verificar que funciona</h3>
+        <p>Abre el navegador (F12) → Console y busca el mensaje:</p>
+        <code>[Session Timeout Warning] Sistema de advertencia de timeout iniciado</code>
+    </div>
+</div>
+
+<div class="section">
+    <h2>📝 Ejemplo de Integración en Layout Base</h2>
+
+    <p>Si tienes un layout o template base que se usa en todas las páginas:</p>
+
+    <pre>&lt;?php
+require_once __DIR__ . '/../config/bootstrap.php';
+Session::requireLogin();
+?&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;Mi Aplicación&lt;/title&gt;
+&lt;/head&gt;
+&lt;body data-session-active="true"&gt;
+
+    &lt;!-- Contenido de tu página --&gt;
+
+    &lt;!-- Script de timeout SOLO si la sesión está activa --&gt;
+    &lt;?php if (Session::isLoggedIn()): ?&gt;
+        &lt;script src="/public/assets/js/session-timeout-warning.js"&gt;&lt;/script&gt;
+    &lt;?php endif; ?&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</div>
+
+<div class="section">
+    <h2>⚙️ Configuración</h2>
+
+    <h3>Cambiar tiempo de timeout</h3>
+
+    <p><strong>En PHP:</strong> Editar <code>config/session-timeout-middleware.php</code></p>
+    <pre>define('SESSION_TIMEOUT_MINUTES', 20);  // Cambiar a otro valor</pre>
+
+    <p><strong>En JavaScript:</strong> Editar <code>public/assets/js/session-timeout-warning.js</code></p>
+    <pre>const CONFIG = {
+    timeoutMinutes: 20,        // Timeout total
+    warningTimeMinutes: 2,     // Mostrar advertencia a los 18 minutos
+    checkIntervalSeconds: 10,  // Verificar cada 10 segundos
+};</pre>
+
+    <div class="alert warning">
+        <strong>⚠️ Nota:</strong> Cambiar timeout a menos de 5 minutos puede causar problemas con operaciones lentas.
+    </div>
+</div>
+
+<div class="section">
+    <h2>🔄 Flujo de Funcionamiento</h2>
+
+    <table>
+        <tr>
+            <th>Evento</th>
+            <th>Lo que sucede</th>
+            <th>Tiempo</th>
+        </tr>
+        <tr>
+            <td>Usuario inicia sesión</td>
+            <td>Se registra el tiempo de actividad</td>
+            <td>0 min</td>
+        </tr>
+        <tr>
+            <td>Usuario hace clic, escribe, etc.</td>
+            <td>Se actualiza el tiempo de actividad</td>
+            <td>Continuamente</td>
+        </tr>
+        <tr>
+            <td>Usuario se va, sin actividad</td>
+            <td>Contador de inactividad comienza</td>
+            <td>-</td>
+        </tr>
+        <tr>
+            <td>Faltan 2 minutos para timeout</td>
+            <td>Se muestra modal de advertencia</td>
+            <td>18 min</td>
+        </tr>
+        <tr>
+            <td>Usuario hace clic en "Continuar"</td>
+            <td>Sesión se extiende 20 minutos más</td>
+            <td>18 min</td>
+        </tr>
+        <tr>
+            <td>Usuario no responde</td>
+            <td>Sesión se cierra, redirige a login</td>
+            <td>20 min</td>
+        </tr>
+    </table>
+</div>
+
+<div class="section">
+    <h2>💾 Métodos PHP Disponibles</h2>
+
+    <table>
+        <tr>
+            <th>Método</th>
+            <th>Descripción</th>
+            <th>Retorna</th>
+        </tr>
+        <tr>
+            <td><code>Session::checkInactivity($min)</code></td>
+            <td>Verifica y valida inactividad</td>
+            <td>bool</td>
+        </tr>
+        <tr>
+            <td><code>Session::updateActivityTime()</code></td>
+            <td>Actualiza tiempo de actividad manual</td>
+            <td>void</td>
+        </tr>
+        <tr>
+            <td><code>Session::getTimeRemainingBeforeTimeout()</code></td>
+            <td>Obtiene segundos restantes</td>
+            <td>int|null</td>
+        </tr>
+    </table>
+
+    <h3>Ejemplo: Operación Larga</h3>
+    <pre>&lt;?php
+// Procesamiento largo
+while ($procesando) {
+    // ... hacer algo ...
+
+    // Cada 5 minutos, actualizar actividad
+    if ($iteraciones % 50 == 0) {
+        Session::updateActivityTime();
+    }
+}
+?&gt;</pre>
+</div>
+
+<div class="section">
+    <h2>📱 Endpoints de API</h2>
+
+    <h3>GET /api/auth/check-session</h3>
+    <p>Verifica estado actual de la sesión</p>
+    <pre>{
+  "success": true,
+  "isLoggedIn": true,
+  "timeRemaining": 1043
+}</pre>
+
+    <h3>POST /api/auth/register-activity</h3>
+    <p>Registra actividad del usuario</p>
+    <pre>{
+  "success": true,
+  "isLoggedIn": true,
+  "timeRemaining": 1200
+}</pre>
+
+    <h3>POST /api/auth/refresh-activity</h3>
+    <p>Extiende la sesión</p>
+    <pre>{
+  "success": true,
+  "message": "Sesión extendida exitosamente",
+  "timeRemaining": 1200
+}</pre>
+</div>
+
+<div class="section">
+    <h2>🐛 Debugging</h2>
+
+    <h3>Ver estado actual de sesión</h3>
+    <pre>&lt;?php
+$remaining = Session::getTimeRemainingBeforeTimeout();
+echo "Tiempo restante: " . ($remaining / 60) . " minutos";
+?&gt;</pre>
+
+    <h3>Verificar en consola del navegador</h3>
+    <pre>// Copiar en Console (F12)
+fetch('/api/auth/check-session')
+    .then(r =&gt; r.json())
+    .then(d =&gt; console.log('Sesión:', d))</pre>
+
+    <h3>Ver logs</h3>
+    <p>Logs de PHP: <code>logs/php_errors.log</code></p>
+    <p>Console del navegador: <code>F12 → Console</code></p>
+</div>
+
+<div class="section">
+    <h2>❓ Preguntas Frecuentes</h2>
+
+    <h3>¿Qué pasa si el navegador se cierra?</h3>
+    <p>La sesión se destruye automáticamente (comportamiento por defecto de PHP).</p>
+
+    <h3>¿El usuario es forzado a cerrar sesión?</h3>
+    <p>No, recibe una advertencia a los 18 minutos. Puede extender la sesión haciendo clic en "Continuar sesión".</p>
+
+    <h3>¿Se puede desactivar el timeout?</h3>
+    <p>Sí, cambiando <code>SESSION_TIMEOUT_MINUTES</code> a un valor muy alto (ej: 99999).</p>
+
+    <h3>¿Funciona sin JavaScript?</h3>
+    <p>Sí, el servidor valida en cada request. Sin JS no hay advertencia visual, pero la sesión se cierra igual.</p>
+
+    <h3>¿Afecta a APIs/Tokens JWT?</h3>
+    <p>No, solo afecta a sesiones PHP. Los tokens JWT tienen su propio sistema de expiración.</p>
+</div>
+
+<div class="section">
+    <h2>✅ Checklist de Implementación</h2>
+
+    <div>
+        <input type="checkbox"> Sistema instalado en servidor
+        <br>
+        <input type="checkbox"> Script agregado en páginas protegidas
+        <br>
+        <input type="checkbox"> Timeout configurado (por defecto 20 min)
+        <input type="checkbox"> Probado en navegador (F12 → Console)
+        <br>
+        <input type="checkbox"> Testeado manteniendo inactividad 20+ minutos
+        <br>
+        <input type="checkbox"> Modal de advertencia aparece a los 18 minutos
+        <br>
+        <input type="checkbox"> Botón "Continuar sesión" funciona
+        <br>
+        <input type="checkbox"> En producción con HTTPS
+    </div>
+</section>
+
+<div class="section">
+    <h2>📚 Archivos Modificados/Creados</h2>
+
+    <table>
+        <tr>
+            <th>Archivo</th>
+            <th>Tipo</th>
+            <th>Descripción</th>
+        </tr>
+        <tr>
+            <td><code>config/session.php</code></td>
+            <td>Modificado</td>
+            <td>Agregar métodos de timeout</td>
+        </tr>
+        <tr>
+            <td><code>config/bootstrap.php</code></td>
+            <td>Modificado</td>
+            <td>Cargar middleware de timeout</td>
+        </tr>
+        <tr>
+            <td><code>config/session-timeout-middleware.php</code></td>
+            <td>Creado</td>
+            <td>Middleware de validación</td>
+        </tr>
+        <tr>
+            <td><code>public/assets/js/session-timeout-warning.js</code></td>
+            <td>Creado</td>
+            <td>Script de advertencia en cliente</td>
+        </tr>
+        <tr>
+            <td><code>public/api/auth/check-session.php</code></td>
+            <td>Creado</td>
+            <td>Endpoint para verificar sesión</td>
+        </tr>
+        <tr>
+            <td><code>public/api/auth/register-activity.php</code></td>
+            <td>Creado</td>
+            <td>Endpoint para registrar actividad</td>
+        </tr>
+        <tr>
+            <td><code>public/api/auth/refresh-activity.php</code></td>
+            <td>Creado</td>
+            <td>Endpoint para extender sesión</td>
+        </tr>
+    </table>
+</div>
+
+<div class="section" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+    <h2>✨ ¡Listo para usar!</h2>
+    <p>El sistema de timeout de sesión está completamente implementado y listo para usar en tu aplicación.</p>
+    <p><strong>Próximo paso:</strong> Agregar el script JavaScript en tus páginas protegidas.</p>
+</div>
+
+</body>
+</html>

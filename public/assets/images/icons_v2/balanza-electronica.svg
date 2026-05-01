@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="bgG" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#11c4a0"/>
+      <stop offset="100%" stop-color="#0f7a6e"/>
+    </linearGradient>
+    <linearGradient id="termG" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#e4f5f2"/>
+      <stop offset="100%" stop-color="#bce0da"/>
+    </linearGradient>
+    <linearGradient id="trayG" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#d8f0ec"/>
+      <stop offset="100%" stop-color="#a8d8d0"/>
+    </linearGradient>
+    <linearGradient id="screenG" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0f2e2a"/>
+      <stop offset="100%" stop-color="#081a17"/>
+    </linearGradient>
+    <linearGradient id="glossG" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="white" stop-opacity="0.32"/>
+      <stop offset="100%" stop-color="white" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="sh" x="-25%" y="-25%" width="150%" height="150%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2.5" flood-color="#0005"/>
+    </filter>
+    <filter id="shSm" x="-40%" y="-40%" width="180%" height="180%">
+      <feDropShadow dx="0" dy="1" stdDeviation="1" flood-color="#0003"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="64" height="64" rx="14" fill="url(#bgG)"/>
+  <rect width="64" height="32" rx="14" fill="url(#glossG)"/>
+  <rect y="18" width="64" height="14" fill="url(#glossG)"/>
+
+  <!-- Terminal head -->
+  <rect x="13" y="7" width="38" height="22" rx="4" fill="url(#termG)" filter="url(#sh)"/>
+  <!-- Screen -->
+  <rect x="15.5" y="9.5" width="30" height="12" rx="2" fill="url(#screenG)"/>
+  <text x="30.5" y="16.5" text-anchor="middle" dominant-baseline="middle"
+        font-family="'Courier New',monospace" font-size="7" font-weight="700" fill="#4ade80">0.000</text>
+  <text x="41" y="12" text-anchor="middle" font-family="Arial,sans-serif" font-size="4" fill="#86efac">kg</text>
+  <!-- Screen gloss -->
+  <rect x="15.5" y="9.5" width="30" height="5" rx="2" fill="white" fill-opacity="0.07"/>
+  <!-- Keypad buttons -->
+  <rect x="16" y="23.5" width="7" height="3" rx="1.5" fill="white" fill-opacity="0.55" filter="url(#shSm)"/>
+  <rect x="28.5" y="23.5" width="7" height="3" rx="1.5" fill="white" fill-opacity="0.55" filter="url(#shSm)"/>
+  <rect x="41" y="23.5" width="7" height="3" rx="1.5" fill="#4ade80" fill-opacity="0.8" filter="url(#shSm)"/>
+
+  <!-- Pole / column -->
+  <rect x="29.5" y="30" width="5" height="13" rx="2.5" fill="url(#trayG)" filter="url(#shSm)"/>
+
+  <!-- Weighing tray -->
+  <rect x="7" y="43" width="50" height="10" rx="5" fill="url(#trayG)" filter="url(#sh)"/>
+  <!-- Tray shine -->
+  <rect x="9" y="44.5" width="46" height="4" rx="3" fill="white" fill-opacity="0.25"/>
+
+  <!-- Base foot -->
+  <rect x="16" y="53" width="32" height="4.5" rx="2.25" fill="url(#termG)" filter="url(#shSm)"/>
+  <ellipse cx="32" cy="58.5" rx="13" ry="1.5" fill="#0004"/>
+</svg>

@@ -1,0 +1,37 @@
+{
+  "name": "SistemaX",
+  "short_name": "SistemaX",
+  "description": "Sistema de Gestión Empresarial",
+  "start_url": "/public/login.php",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#1e40af",
+  "theme_color": "#3b82f6",
+  "icons": [
+    {
+      "src": "assets/logo-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/logo-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["business", "productivity"],
+  "lang": "es",
+  "dir": "ltr",
+  "scope": "/public/",
+  "shortcuts": [
+    {
+      "name": "POS",
+      "short_name": "POS",
+      "description": "Punto de Venta",
+      "url": "/public/pos/mobile.php",
+      "icons": [{ "src": "assets/icon-pos.png", "sizes": "96x96" }]
+    }
+  ]
+}
