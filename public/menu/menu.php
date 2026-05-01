@@ -152,7 +152,7 @@ function getCatalogIconSvgByRouteMap(PDO $db): array
         }
 
         // Normalizar path relativo a absoluto (ej: 'assets/...' → '/public/assets/...')
-        if ($iconoSvg !== '' && !str_starts_with($iconoSvg, '/') && !preg_match('~^https?://~i', $iconoSvg)) {
+        if ($iconoSvg !== '' && !isMenuInlineSvg($iconoSvg) && !str_starts_with($iconoSvg, '/') && !preg_match('~^https?://~i', $iconoSvg)) {
             $normalized = resolveMenuCatalogIconSvg($iconoSvg);
             $iconoSvg = $normalized !== '' ? $normalized : '/public/assets/images/icons_v2/' . basename($iconoSvg);
         }
@@ -393,6 +393,10 @@ function resolveMenuCatalogIconSvg(string $iconoSvg): string
         return '';
     }
 
+    if (isMenuInlineSvg($icon)) {
+        return sanitizeMenuInlineSvg($icon);
+    }
+
     if (preg_match('~^https?://~i', $icon)) {
         return $icon;
     }
@@ -431,6 +435,25 @@ function resolveMenuCatalogIconSvg(string $iconoSvg): string
     }
 
     return '';
+}
+
+function isMenuInlineSvg(string $value): bool
+{
+    return preg_match('~^\s*<svg\b~i', $value) === 1;
+}
+
+function sanitizeMenuInlineSvg(string $svg): string
+{
+    $svg = trim($svg);
+    if ($svg === '' || !isMenuInlineSvg($svg) || stripos($svg, '</svg>') === false) {
+        return '';
+    }
+
+    $svg = preg_replace('~<script\b[^>]*>.*?</script>~is', '', $svg) ?? '';
+    $svg = preg_replace('~\s+on[a-z]+\s*=\s*("[^"]*"|\'[^\']*\'|[^\s>]+)~i', '', $svg) ?? '';
+    $svg = preg_replace('~javascript\s*:~i', '', $svg) ?? '';
+
+    return $svg;
 }
 
 // Obtener logo de empresa
@@ -689,6 +712,13 @@ function resolveMenuIconSvg(array $item): string
 
     // 1. Ruta a archivo SVG custom — render como <img>
     if ($iconoSvg !== '') {
+        if (isMenuInlineSvg($iconoSvg)) {
+            $inlineSvg = sanitizeMenuInlineSvg($iconoSvg);
+            if ($inlineSvg !== '') {
+                return $inlineSvg;
+            }
+        }
+
         $safe = htmlspecialchars($iconoSvg, ENT_QUOTES, 'UTF-8');
         $alt  = htmlspecialchars(basename($iconoSvg, '.svg'), ENT_QUOTES, 'UTF-8');
         return '<img src="' . $safe . '" alt="' . $alt . '">';
