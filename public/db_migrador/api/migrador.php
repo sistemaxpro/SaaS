@@ -180,10 +180,6 @@ try {
             throw new Exception('Nombre, host y usuario son obligatorios');
         }
         if ($row['port'] <= 0) $row['port'] = 3306;
-        if ($row['password'] === '') {
-            throw new Exception('Password es obligatorio');
-        }
-
         if ($row['id_server'] > 0) {
             $stmt = $db->prepare("
                 UPDATE saas_db_migrador_servers

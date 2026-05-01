@@ -247,7 +247,7 @@ if (!$tieneAppAsignada || !$tienePermiso) {
                     <div class="grid grid-cols-2 gap-2">
                         <input x-model="serverForm.user" class="px-3 py-2 rounded-lg border border-slate-600 bg-slate-900 text-slate-100 text-sm" placeholder="Usuario">
                         <div class="relative">
-                            <input x-model="serverForm.password" :type="serverForm.showPassword ? 'text' : 'password'" class="w-full pr-16 px-3 py-2 rounded-lg border border-slate-600 bg-slate-900 text-slate-100 text-sm" placeholder="Password">
+                            <input x-model="serverForm.password" :type="serverForm.showPassword ? 'text' : 'password'" class="w-full pr-16 px-3 py-2 rounded-lg border border-slate-600 bg-slate-900 text-slate-100 text-sm" placeholder="Password (opcional)">
                             <button type="button" @click="serverForm.showPassword = !serverForm.showPassword" class="absolute right-2 top-1/2 -translate-y-1/2 text-xs px-2 py-1 rounded-md bg-slate-700 text-slate-200 hover:bg-slate-600" x-text="serverForm.showPassword ? 'Ocultar' : 'Ver'"></button>
                         </div>
                     </div>
