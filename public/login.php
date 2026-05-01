@@ -507,6 +507,60 @@ $csrfToken = Security::generateCSRFToken();
             background-size: 200% 100%;
         }
 
+        /* Fallback layout for the login form if utility CSS is not applied */
+        #login-card {
+            color: #e2e8f0;
+        }
+
+        #login-title {
+            color: #ffffff;
+            line-height: 1.1;
+        }
+
+        #login-subtitle {
+            color: #cbd5e1;
+        }
+
+        #login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        #login-form label {
+            display: block;
+            color: #cbd5e1;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        #login-form input[type="text"],
+        #login-form input[type="password"] {
+            width: 100%;
+            min-height: 52px;
+            padding: 14px 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(71, 85, 105, 0.9);
+            background: rgba(15, 23, 42, 0.9);
+            color: #f8fafc;
+            box-sizing: border-box;
+        }
+
+        #login-form input[type="text"]::placeholder,
+        #login-form input[type="password"]::placeholder {
+            color: #94a3b8;
+        }
+
+        #login-submit {
+            width: 100%;
+            min-height: 52px;
+        }
+
+        #login-form a,
+        #login-form span {
+            color: #cbd5e1;
+        }
+
         .locale-pill {
             display: inline-flex;
             align-items: center;
@@ -673,7 +727,7 @@ $csrfToken = Security::generateCSRFToken();
                 md:max-w-md
                 mobile-safe-area">
         <!-- Login Card -->
-        <div class="liquid-glass-card relative overflow-hidden
+        <div id="login-card" class="liquid-glass-card relative overflow-hidden
                     rounded-2xl md:rounded-2xl 
                     p-6 md:p-8 animate-slide-up
                     transition-all duration-500 hover:shadow-2xl">
@@ -731,8 +785,8 @@ $csrfToken = Security::generateCSRFToken();
                 <div class="flex items-start justify-center select-none" style="line-height:1;">
                     <span style="font-size:2.6rem;font-weight:800;background:linear-gradient(135deg,#60a5fa 0%,#2563eb 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-0.03em;">Sistemax</span><span style="font-size:0.6rem;font-weight:700;background:linear-gradient(135deg,#818cf8,#4f46e5);color:#fff;padding:2px 7px;border-radius:99px;margin-left:2px;margin-top:4px;letter-spacing:0.06em;line-height:1.5;box-shadow:0 2px 8px rgba(99,102,241,0.4);">PRO</span>
                 </div>
-                <h1 class="mt-5 text-2xl md:text-3xl font-semibold text-slate-900 dark:text-white"><?php echo h(t('login.welcome')); ?></h1>
-                <p class="mt-2 text-sm md:text-base text-slate-600 dark:text-slate-300"><?php echo h(t('login.subtitle')); ?></p>
+                <h1 id="login-title" class="mt-5 text-2xl md:text-3xl font-semibold text-slate-900 dark:text-white"><?php echo h(t('login.welcome')); ?></h1>
+                <p id="login-subtitle" class="mt-2 text-sm md:text-base text-slate-600 dark:text-slate-300"><?php echo h(t('login.subtitle')); ?></p>
             </div>
 
             <?php if ($isBlocked): ?>
@@ -777,14 +831,14 @@ $csrfToken = Security::generateCSRFToken();
                 </div>
             <?php endif; ?>
 
-            <form method="post" autocomplete="off">
+            <form id="login-form" method="post" autocomplete="off">
                 <input type="hidden" name="csrf_token" value="<?php echo h($csrfToken); ?>">
                 <input type="hidden" name="redirect" value="<?php echo h($redirectUrl); ?>">
                 <input type="hidden" name="locale" id="locale-input" value="<?php echo h($currentLocale); ?>">
 
                 <!-- Usuario -->
                 <div class="mb-3 md:mb-4">
-                    <label class="block text-gray-700 dark:text-slate-300 text-sm font-semibold mb-2" for="usuario">
+                    <label id="usuario-label" class="block text-gray-700 dark:text-slate-300 text-sm font-semibold mb-2" for="usuario">
                         <i class="fas fa-user mr-2 text-blue-600 dark:text-blue-400"></i><?php echo h(t('login.user')); ?>
                     </label>
                     <input
@@ -809,7 +863,7 @@ $csrfToken = Security::generateCSRFToken();
 
                 <!-- Contraseña -->
                 <div class="mb-4 md:mb-6">
-                    <label class="block text-gray-700 dark:text-slate-300 text-sm font-semibold mb-2" for="password">
+                    <label id="password-label" class="block text-gray-700 dark:text-slate-300 text-sm font-semibold mb-2" for="password">
                         <i class="fas fa-lock mr-2 text-blue-600 dark:text-blue-400"></i><?php echo h(t('login.password')); ?>
                     </label>
                     <div class="relative">
@@ -854,6 +908,7 @@ $csrfToken = Security::generateCSRFToken();
 
                 <!-- Botón -->
                 <button
+                    id="login-submit"
                     type="submit"
                     <?php if ($isBlocked): ?>disabled<?php endif; ?>
                     class="liquid-glass-button w-full 
